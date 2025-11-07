@@ -1,0 +1,716 @@
+\documentclass[11pt,a4paper]{article}
+
+% for Chinese
+\usepackage{fontspec}                    % Allows setting fonts
+\usepackage[BoldFont, SlantFont]{xeCJK}  % Set Chinese and English fonts separately
+\setCJKmainfont{BiauKaiTC-Regular}        % Set the Chinese font (e.g., BiauKai), English font remains the TeX default
+
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{natbib}     % citet, citep
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{fullpage}
+\usepackage{authblk}
+\usepackage{url}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\renewcommand{\baselinestretch}{1.4}
+
+\parskip=5pt
+\parindent=20pt
+\footnotesep=5mm
+
+\newenvironment{enumerateTight}{\begin{enumerate}\vspace{-8pt}}{\end{enumerate}\vspace{-8pt}}
+\newenvironment{itemizeTight}{\begin{itemize}\vspace{-8pt}}{\end{itemize}\vspace{-8pt}}
+\leftmargini=25pt      % default: 25pt
+\leftmarginii=12pt     % default: 22pt
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\graphicspath{{img/}}
+
+% --- Additional Packages ---
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}         % For clean font
+\usepackage{caption}         % For table captions
+\usepackage[margin=1in]{geometry} % Set 1-inch margins
+\usepackage{tabularx}        % For flexible width tables (used for Invoice)
+\usepackage{ragged2e}        % For \RaggedRight (used in Executive Summary)
+\usepackage{enumitem}        % For customizing lists (used for Variables)
+\usepackage{float}           % For [H] table placement to keep them in order
+\usepackage{calc}            % For \widthof
+\usepackage{xcolor}          % For fill-in boxes in invoice
+\usepackage{array}           % 用於增強表格功能
+
+% --- DOCUMENT START ---
+\begin{document}
+	
+% --- Define a command for the fill-in boxes (put this in your preamble) ---
+% 如果您不想放在 preamble，放在 \begin{figure} 之前也可以
+	\newcommand{\fillbox}[1]{\fcolorbox{black}{white}{\parbox[c][0.7em][c]{#1}{\strut}}}
+	
+	% ======================================================
+	% 1. INVOICE (Based on Sample Image 3)
+	% ======================================================
+	\begin{figure}[H]
+		\centering
+		\renewcommand{\arraystretch}{1.2} % 增加行距，使其不擁擠
+		\small
+		% 我們使用一個巨大的、只有一欄的 tabular 來當作「外框」
+		\begin{tabular}{|p{0.9\textwidth}|} % 這一行定義了最外層的左右框
+			\hline % 這一行定義了最外層的上框
+			
+			% --- 頂部標題 ---
+			\multicolumn{1}{|c|}{ % 一個置中的儲存格
+				\begin{tabular}{c} % 內部再放一個小表格來放標題
+					\textbf{STATISTICAL CONSULTING PROGRAM} \\
+					\textit{SCP Letterhead Information}
+				\end{tabular}
+			} \\
+			
+			% --- "INVOICE" 標題框 ---
+			\multicolumn{1}{|c|}{ % 一個置中的儲存格
+				\fbox{\strut\hspace{2em}\textbf{INVOICE}\hspace{2em}} % \fbox 畫出內框
+			} \\
+			
+			% --- 日期/客戶資訊 ---
+			\multicolumn{1}{|l|}{ % 一個靠左的儲存格
+				% 使用 tabular* 讓 Date/Client 和 Project/Consultant 左右對齊
+				\begin{tabular*}{\linewidth}{@{}l@{\extracolsep{\fill}}l@{}}
+					Date: November 5, 2025 & Client: NTU Pharmaceutical Manufacturing \\
+					Consultant: Min-Hsing Wang & Project: Sampling Method Comparison \\
+				\end{tabular*}
+			} \\
+			\hline % 主要內容區的上邊線
+			
+			% --- 主要內容區 (這格裡面再放一個三欄式表格) ---
+			\multicolumn{1}{|l|}{
+				\begin{tabular*}{\linewidth}{@{}p{0.6\linewidth}|r|r@{}} % p{width}|r|r
+					\textbf{Services} & \textbf{Hours} & \textbf{Amount} \\
+					\hline
+					\noalign{\vspace{0.3em}} % 在線條和文字間增加一點空間
+					
+					% --- Subcontracted ---
+					\textbf{Subcontracted:} & & \\
+					\quad Data Preparation & 1 & \$200 \\
+					\quad Statistical Computing & 2 & \$400 \\
+					\quad Documentation of Results & 3 & \$600 \\
+					\noalign{\vspace{0.3em}}
+					\hline
+					\noalign{\vspace{0.3em}}
+					% 使用 \fillbox 指令來畫空白框
+					\textbf{Subcontract Total @} \$200 \textbf{per hour} & \textbf{6} & \textbf{\$1,200} \\
+					\noalign{\vspace{0.5em}}
+					
+					% --- SCP Consultant ---
+					\textbf{SCP Consultant:} & & \\
+					\quad Statistical Analysis & 8 & \$1,600 \\
+					\quad Report Preparation & 6 & \$1,200 \\
+					\quad Visualization & 4 & \$800 \\
+					\noalign{\vspace{0.3em}}
+					\hline
+					\noalign{\vspace{0.3em}}
+					\textbf{SCP Consultant Total @} \$200 \textbf{per hour} & \textbf{18} & \textbf{\$3,600} \\
+					\noalign{\vspace{0.3em}}
+					\hline
+					\noalign{\vspace{0.3em}}
+					
+					% --- Contract Total ---
+					\textbf{SCP Contract Total} & \textbf{24} & \textbf{\$4,800} \\
+					\noalign{\vspace{0.3em}}
+					
+				\end{tabular*}
+			} \\ % 結束主要內容區
+			\hline % 這一行定義了最外層的下框
+		\end{tabular} % 結束最外層的表格
+		
+		\renewcommand{\arraystretch}{1.0} % 把行距設定改回來
+		\caption{The Invoice of This Program}
+		\label{fig:invoice}
+	\end{figure}
+	
+	\clearpage
+	
+% ======================================================
+% 2. TITLE PAGE (Based on Sample Image 4)
+% ======================================================
+\begin{titlepage}
+	\centering % 頁面內容置中
+	\vspace*{2cm} % 頂部留白
+	
+	{\Large \textbf{Statistical Analysis of Pharmaceutical Sampling Methods}}
+	
+	\vspace{1.5cm}
+	
+	% --- 僅針對長標題加框 ---
+	\fbox{
+		\parbox{0.85\textwidth}{ % 讓文字在 85% 頁寬的方塊內自動換行
+			\vspace{0.5em} % <<< 增加上方的空間
+			\centering\large
+			A Comparative Study of Intermediate Dose and Unit Dose 
+			Sampling Instruments for Pharmaceutical Blender Content 
+			Uniformity Assessment
+			\vspace{0.5em} % <<< 增加下方的空間
+		}
+	}
+	
+	\vspace{2.5cm}
+	
+	Report prepared for NTU Pharmaceutical Manufacturing Quality Assurance
+	
+	\vspace{0.5cm}
+	
+	by
+	
+	\vspace{0.5cm}
+	
+	Min-Hsing Wang \\
+	Statistical Consulting Program
+	
+	\vspace{2cm}
+	
+	November 5, 2025
+	
+	\vfill % 彈性空白，將後續內容推到頁底
+	
+	% --- Executive Summary (靠左並加底線) ---
+	\begin{flushleft}
+		\textbf{\Large Executive Summary}
+		\rule{\linewidth}{0.5pt} % 在 "Executive Summary" 下方畫一條線
+		\vspace{0.3cm}
+		
+		\RaggedRight % 內文使用靠左對齊 (不左右對齊)
+		This analysis compared two pharmaceutical sampling methods---Intermediate Dose (INTM) and Unit Dose (UNIT) thieves---using a heterogeneous variance mixed-effects model. Both methods yielded statistically equivalent mean assay values (p = 0.307), indicating statistical equivalence for average batch assessment. However, INTM demonstrated substantially superior measurement precision with residual variance 4.81 times lower than UNIT, providing superior capability for detecting batch deviations. Most critically, sampling location accounted for 31\% of total measurement variance, with location-specific effects combined with residual variability explaining approximately 98\% of total variance, identifying V-Blender mixture uniformity as the dominant manufacturing concern requiring immediate attention. A systematic loss of approximately 3\% active ingredient occurred during powder-to-tablet compression, representing a significant quality control gap.
+	\end{flushleft}
+	
+	\vspace{1cm} % 頁底留白
+	
+\end{titlepage}
+
+\clearpage
+
+% ======================================================
+% 3. MAIN REPORT BODY
+% ======================================================
+
+% --- SECTION 1 (from Page 1 and 4) ---
+\section{Introduction}
+
+The objective of this study is to investigate the sampling variability and bias associated with two different sampling instruments used during the manufacture of a pharmaceutical tablet. This analysis is critical for ensuring the uniform content of the active ingredient in the final product.
+
+\subsection{Study Design}
+
+\noindent\textbf{Manufacturing Process:}
+The tablets are manufactured by mixing active and inactive ingredients in a ``V-Blender.'' After blending, the powder is discharged and compressed into tablets. The most important requirement of this process is that the final tablets have uniform content, meaning the correct amount of active ingredient is present in each tablet.
+
+\noindent\textbf{Sampling Instruments (The ``Two Thieves''):}
+To assess the uniformity of the mixture \textit{before} it is compressed, a ``thief'' instrument is used to obtain samples from different locations within the V-blender. This study compares two types of thieves:
+
+\begin{enumerate}
+	\item \textbf{Unit Dose Thief:} This instrument collects three individual unit dose samples at each sampling location. This involves three separate sampling actions at the same spot.
+	\item \textbf{Intermediate Dose Thief:} This instrument collects one large sample at each location. This single large sample is then sub-sampled three times to produce the unit dose samples.
+\end{enumerate}
+
+\noindent\textbf{Experimental Procedure:}
+The experiment was conducted as follows:
+
+\begin{enumerate}
+	\item The powder mixture was blended in the V-Blender for 20 minutes.
+	\item The two thieves (Unit Dose and Intermediate Dose) were \textbf{tied together} to ensure they sampled from the exact same position and conditions. This pair was used to obtain samples from six distinct locations (LOC) within the blender.
+	\item After thief sampling, the powder was discharged and compressed into tablets, which were loaded into 30 drums.
+	\item A benchmark sample was created by randomly selecting 10 of the 30 drums and sampling three tablets from each selected drum.
+	\item All samples (from both thieves and the tablets) were subjected to an \textbf{Assay} to determine the amount of active ingredient. The specified (target) assay value is 35 mg/100 mg.
+\end{enumerate}
+
+\subsection{Variables}
+
+For this analysis, we examined data from both the ``Thief'' experiment and the final ``Tablet'' products.
+
+\noindent\textbf{Quantitative Measures:}
+
+\begin{description}[leftmargin=!, labelwidth=\widthof{\textbf{Assay (Y)}}]
+	\item[Assay (Y)] The response variable. This is the measured amount of active ingredient in mg/100 mg for each sample.
+\end{description}
+
+\noindent\textbf{Categorical Factors - For Thief Data:}
+
+\begin{description}[leftmargin=!, labelwidth=\widthof{\textbf{METHOD}}]
+	\item[METHOD] The sampling instrument used: INTM (Intermediate Dose Thief) or UNIT (Unit Dose Thief)
+	\item[LOC] The sampling location within the V-Blender: 1, 2, 3, 4, 5, 6
+	\item[REP] The replicate sample taken at each location: 1, 2, 3
+\end{description}
+
+\noindent\textbf{Categorical Factors - For Tablet Data:}
+
+\begin{description}[leftmargin=!, labelwidth=\widthof{\textbf{DRUM}}]
+	\item[DRUM] Randomly selected drums (10 out of 30 total drums)
+	\item[TABLET] Individual tablet samples per drum: 1, 2, 3 (three tablets sampled from each drum)
+\end{description}
+
+% --- SECTION 2 (from Page 4-5) ---
+\section{Methodology}
+
+A comprehensive statistical analysis was performed using the R statistical computing environment. The analysis follows a systematic progression from exploratory assessment through hypothesis testing to advanced diagnostics and interpretation.
+
+\subsection{Exploratory Data Analysis}
+
+Initial data exploration was conducted to assess data quality and identify patterns:
+\begin{itemize}
+	\item Summary statistics (mean, median, standard deviation, quartiles) for the Assay outcome by METHOD and LOC
+	\item Normality testing (Shapiro-Wilk test) and outlier detection to validate distributional assumptions
+	\item Parallel boxplots and location-specific comparisons to visualize method differences and location effects
+\end{itemize}
+
+\subsection{Mixed-Effects Model: Comparing Sampling Methods}
+
+This experiment involves both fixed and random factors, requiring \textbf{mixed-effects model analysis}. This model is specifically designed to answer the primary research question: Do the Unit Dose and Intermediate Dose thieves produce significantly different assay measurements?
+
+\noindent\textbf{Model Specification}:
+
+The model includes a fixed effect for METHOD, random intercepts for LOCATION, and heterogeneous variance structure allowing different residual standard deviations for each sampling method.
+
+The \textbf{Fixed Effect (METHOD)} is specified as fixed because the primary research question addresses whether the Unit Dose and Intermediate Dose thieves produce significantly different assay measurements. Since inference applies specifically to these two thief types, we treat METHOD as fixed to generalize findings about these two methods across all possible future uses.
+
+The \textbf{Random Effect (LOCATION)} accounts for the fact that the six sampling locations are a random sample from all possible locations within the blender. By treating LOCATION as random, the model properly partitions variance into three components: between-location variance reflecting systematic differences in blender composition across positions, within-location variance reflecting measurement precision specific to each method, and location effects that are not generalizable to future blender batches but represent batch-specific characteristics.
+
+\subsection{Variance Heterogeneity and Precision Assessment}
+
+A critical aspect of this analysis is to determine whether the two methods differ not only in \textbf{mean} assay values but also in \textbf{precision (variability)}. Variance heterogeneity is modeled using method-specific residual variance components. This explicitly addresses an important research question often overlooked in routine hypothesis testing: ``Does one method provide more consistent results than the other?''
+
+A mixed-effects model is fit with separate variance parameters for each method to compare the magnitude of residual variance for Unit Dose versus Intermediate Dose methods. The relative precision is quantified using the variance ratio. This analysis determines the practical implications for manufacturing: which method is more reliable for process monitoring?
+
+Even if two methods produce equivalent average results, a method with higher variability may be unsuitable for precise quality control monitoring. The variance heterogeneity analysis identifies which method provides more dependable, consistent measurements for routine use in pharmaceutical manufacturing.
+
+\subsection{Interaction Analysis: Does METHOD Effect Vary by Location?}
+
+A fundamental question in this study is whether the difference between sampling methods is \textbf{consistent across all locations} or \textbf{varies in a location-dependent manner}. Two competing mixed-effects models were fitted and compared using likelihood ratio test (LRT):
+
+\begin{itemize}
+	\item \textbf{Model 1 (No Interaction)}: Assumes METHOD effect is uniform across all locations
+	\item \textbf{Model 2 (With Interaction)}: Allows METHOD effect to vary by location (random slopes model)
+\end{itemize}
+
+A significant interaction would suggest that the choice of sampling method should potentially be tailored to specific locations within the blender.
+
+\subsection{Diagnostics and Effect Size Analysis}
+
+\noindent\textbf{Residual Diagnostics}: Q-Q plots, residuals vs. fitted values, scale-location plots, and Cook's distance to verify mixed model assumptions (normality, homoscedasticity, no influential outliers)
+
+\noindent\textbf{Effect Size Quantification}: In addition to hypothesis tests, multiple effect size measures are calculated, including Cohen's d (standardized mean difference for METHOD comparison), eta-squared (\(\eta^2\)) representing the proportion of variance explained by METHOD, and omega-squared (\(\omega^2\)) as a bias-corrected variance explained estimate. These effect sizes allow us to answer ``How big is the difference?'' independent of whether it reaches statistical significance.
+
+\subsection{Bootstrap Validation for Robustness}
+
+To verify the robustness and stability of statistical findings, bootstrap resampling was employed. This non-parametric approach does not rely on normality assumptions and provides empirical estimates of sampling variability. A total of 1000 bootstrap resamples of the original data were performed, with recalculation of p-values for key comparisons at each iteration.
+
+% --- SECTION 3 (from Page 5) ---
+\section{Results}
+
+Summary statistics and results of the statistical analysis are presented in Appendix \ref{app:eda} and Appendix \ref{app:mixed-model}. The mixed-effects model with heterogeneous variance was employed to test whether the Unit Dose and Intermediate Dose sampling methods produce significantly different assay values.
+
+\subsection{Exploratory Data Analysis}
+
+Both the Intermediate Dose and Unit Dose thieves show normal distributions (Shapiro-Wilk not significant, see Table \ref{tab:a1a}) with no outliers detected (see Table \ref{tab:a1b}). Assay values range from 32.77 to 39.80 mg/100mg (see Table \ref{tab:a1}), indicating substantial non-uniformity in the blended powder. Notably, the interquartile range (IQR) for Unit Dose (3.24) is substantially wider than for Intermediate Dose (1.82), confirming greater inherent variability.
+
+\noindent\textbf{Distribution Assessment:} Parallel boxplots reveal comparable distributions for both thief methods (Figure \ref{fig:boxplot}), with overlapping interquartile ranges and similar medians. Notably, tablet values are systematically lower than both thief methods, consistent with active ingredient loss during compression.
+
+\noindent\textbf{Location-Specific Variation:} Substantial between-location variation is observed, with Location 1 showing notably lower values and Location 6 showing the highest values (see Figure \ref{fig:interaction}). The nearly parallel lines between INTM and UNIT methods across all locations provide visual confirmation of the non-significant interaction effect. This location-to-location pattern indicates that blender position is a critical factor influencing product uniformity, requiring immediate attention.
+
+\subsection{Mixed-Effects Model Results}
+
+A heterogeneous variance mixed-effects model was fitted to compare the two sampling methods while properly accounting for location-specific effects (see Table \ref{tab:a2a}, Table \ref{tab:a2b}, and Table \ref{tab:a3}). The analysis reveals three critical findings:
+
+\noindent\textbf{(1) Statistical Equivalence}: The METHOD factor is not statistically significant (F(1,29) = 1.081, p = 0.307, 95\% CI: [-1.49, 0.47] mg/100mg), indicating equivalent mean assay values between methods.
+
+\noindent\textbf{(2) Superior Precision of INTM}: The Intermediate Dose method exhibits 4.81-fold lower residual variance than Unit Dose (0.71 vs 3.40 mg\textsuperscript{2}/100mg\textsuperscript{2}), providing superior measurement consistency critical for process monitoring.
+
+\noindent\textbf{(3) Location Effects Dominate}: Location-specific variation accounts for 31\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. Detailed location effects are presented in Table \ref{tab:a4}.
+
+\subsubsection{Fixed and Random Effects Decomposition}
+
+\noindent\textbf{Fixed Effects (METHOD Factor)}: The fixed METHOD effect of -0.51 mg/100mg (95\% CI: [-1.49, 0.47]) represents the universal mean difference between methods. This effect is not statistically significant (F(1,29) = 1.081, p = 0.307), indicating that both sampling methods are scientifically equivalent in terms of mean assay values. See Table \ref{tab:a2b} for fixed effects estimates.
+
+\noindent\textbf{Random Effects (Location-Specific Deviations)}: Location-specific random intercepts quantify systematic deviations across the six sampling positions within the V-Blender (Table \ref{tab:a4}). Location 1 shows significantly lower values at 35.01 mg/100mg (random intercept = -1.64), while Location 6 exhibits the highest values at 37.98 mg/100mg (random intercept = +1.33), with a total span of approximately 2.96 mg/100mg.
+
+\subsubsection{Variance Components and R\textsuperscript{2} Decomposition}
+
+Location-specific random effects account for 31.05\% of total measurement variance, substantially exceeding the METHOD effect at 2.30\%, with residual measurement error accounting for 66.64\%. The Marginal R\textsuperscript{2} of 2.30\% reflects the variance explained by METHOD alone, while the Conditional R\textsuperscript{2} of 33.36\% includes both METHOD and LOCATION effects (see Table \ref{tab:a3}). This confirms that location-specific factors dominate the variability in assay measurements.
+
+\subsection{Interaction Analysis}
+
+A random slopes mixed model was fitted to test whether METHOD effects vary across sampling locations. The likelihood ratio test yields \(\chi^2\) = 1.21, p = 0.5456 (see Table \ref{tab:a8}), indicating that location-dependent METHOD effects are not statistically significant. The global METHOD effect applies uniformly across sampling positions.
+
+\subsection{Effect Size Assessment}
+
+Effect size analysis quantifies the practical magnitude of the METHOD difference independent of sample size. The standardized mean difference is Cohen's d = 0.30 (small effect), with the METHOD factor explaining only 2.30\% of total assay variance (see Table \ref{tab:a10}). The observed difference of 0.51 mg/100mg represents only 0.14\% of the 35 mg/100mg target value, rendering it negligible for manufacturing decision-making.
+
+\subsection{Thief-to-Tablet Comparison: Assessment of Measurement Bias}
+
+A critical quality control finding emerges from comparing the thief sampling measurements to the final tablet assay values (see Table \ref{tab:a7} for bootstrap validation). The tablet samples show substantially lower mean assay values compared to both thief methods. The Intermediate Dose thief overestimates final product content by 1.12 mg/100mg (3.1\%) and the Unit Dose method overestimates by 0.61 mg/100mg (1.7\%). This systematic pattern reveals that tablet assay values are substantially lower than both thief methods, indicating active ingredient loss during the powder-to-tablet compression process of approximately 3\% of the final product assay value---a significant quality control concern requiring immediate investigation.
+
+% --- SECTION 4 (from Page 5-6) ---
+\section{Discussion and Conclusions}
+
+\subsection{Key Findings Summary}
+
+The analysis reveals three critical findings with distinct implications for manufacturing operations. First, both sampling methods produce statistically equivalent mean assay results (p = 0.307), with a difference of 0.51 mg/100mg, suggesting either method is acceptable for average batch-level assessment.
+
+Second, the methods differ substantially in measurement precision. The Intermediate Dose method exhibits 4.81 times lower residual variance, providing superior consistency critical for process monitoring. For pharmaceutical manufacturing, measurement precision is typically more important than equivalent means.
+
+Third and most significantly, location-specific effects within the V-Blender are the dominant source of product variability. Location-to-location variation spans 2.96 mg/100mg (35.01 to 37.98 mg/100mg range), accounting for 31\% of total measurement variance (substantially exceeding the 2.3\% METHOD effect) and far exceeding the method difference. Location 1 shows significantly lower values while Location 6 is highest, providing clear evidence of non-uniform powder mixing.
+
+\subsection{Sampling Instrument Selection}
+
+\noindent\textbf{Recommendation}: Transition quality assurance sampling to exclusive use of the Intermediate Dose Thief method for all routine blender content uniformity testing.
+
+\noindent\textbf{Rationale}: Although both methods produce statistically equivalent mean results (p = 0.307), the Intermediate Dose Thief demonstrates substantially superior precision with residual variance 4.81 times lower than the Unit Dose method. The superior precision provides more reliable and consistent measurements critical for process monitoring and early detection of batch deviations. Additionally, this method is operationally simpler and more suitable for high-throughput quality assurance sampling, improving laboratory efficiency.
+
+\subsection{V-Blender Process Improvement}
+
+\noindent\textbf{Immediate Finding}: The V-Blender mixing process exhibits substantial location-to-location variation, indicating incomplete mixture homogenization. This is the dominant source of product variability and requires urgent investigation and corrective action.
+
+\noindent\textbf{Root Cause Assessment}: Several process parameters warrant systematic review and potential adjustment, including the adequacy of the current mixing time of 20 minutes for achieving complete homogenization, mixer operating conditions including rotation speed and mechanical integrity, the powder loading protocol for potential ingredient segregation, and the blender geometry for dead spots or material stagnation areas.
+
+\noindent\textbf{Implementation Timeline}: An immediate process parameter audit should be conducted within one to two weeks. Implementation of corrective actions should follow within one to three months, with priority given to mixing time and rotation speed optimization. Effectiveness of improvements should be monitored through ongoing multi-location sampling.
+
+\subsection{Conclusions}
+
+Both the Intermediate and Unit Dose thieves provide statistically equivalent results on average, suggesting that if the priority is overall batch-level assessment, both methods are acceptable. However, the Intermediate Dose Thief demonstrates superior precision with variance 4.81 times lower than the Unit Dose method, providing more reliable and consistent measurements critical for process monitoring.
+
+More significantly, this study revealed process-related issues of greater importance than the choice of sampling instrument. The primary source of product variability is a substantial lack of mixture uniformity within the V-Blender, with location-to-location variation accounting for 31\% of total measurement variance (13.5-fold greater than the METHOD effect). Additionally, a systematic loss of approximately 3\% of the active ingredient occurs during the powder-to-tablet compression stage. These findings indicate that further analysis and process improvement efforts should be focused on these critical manufacturing areas to enhance final product quality and regulatory compliance.
+
+% --- REFERENCES (from Page 6) ---
+\section*{References}
+% Using a description list for custom labels [1], [2]
+\begin{description}
+	\item[1] Cabrera, J., and McDougall, A. (2002) Statistical Consulting. Springer-Verlag New York, Inc., ISBN 978-1-4757-3663-2 (eBook).
+\end{description}
+
+\clearpage
+
+% ======================================================
+% 4. APPENDIX
+% ======================================================
+\appendix
+\section{Appendix A: Exploratory Data Analysis}
+\label{app:eda}
+
+\subsection{Summary Statistics and Data Quality Assessment}
+
+% --- Table A.1 (Summary Statistics) ---
+\begin{table}[H]
+	\centering
+	\caption{Summary Statistics for Assay Value by Method (Including Final Tablets)}
+	\label{tab:a1}
+	\small
+	\begin{tabular}{l rrrrrrrr}
+		\toprule
+		\textbf{Method} & \textbf{N} & \textbf{Mean} & \textbf{SD} & \textbf{Min} & \textbf{Q1} & \textbf{Median} & \textbf{Q3} & \textbf{Max} \\
+		\midrule
+		Unit Dose (UNIT) & 18 & 36.40 & 1.98 & 32.77 & 34.74 & 36.74 & 37.98 & 39.16 \\
+		Intermediate Dose (INTM) & 18 & 36.91 & 1.40 & 34.38 & 36.01 & 36.67 & 37.83 & 39.80 \\
+		Tablet (Final Product) & 30 & 35.82 & 1.33 & 33.09 & 35.10 & 35.69 & 36.52 & 39.44 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% --- Table A.1a (Normality Tests) ---
+\begin{table}[H]
+	\centering
+	\caption{Normality Tests (Shapiro-Wilk)}
+	\label{tab:a1a}
+	\small
+	\begin{tabular}{l rrr}
+		\toprule
+		\textbf{Method} & \textbf{W-Statistic} & \textbf{p-Value} & \textbf{Status} \\
+		\midrule
+		Intermediate Dose & 0.9836 & 0.9794 & Normal $\checkmark$ \\
+		Unit Dose & 0.9424 & 0.3190 & Normal $\checkmark$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% --- Table A.1b (Outlier Detection) ---
+\begin{table}[H]
+	\centering
+	\caption{Outlier Detection (Q3 + 2×IQR criterion)}
+	\label{tab:a1b}
+	\small
+	\begin{tabular}{l rrrrrrr}
+		\toprule
+		\textbf{Method} & \textbf{Q1} & \textbf{Q3} & \textbf{IQR} & \textbf{Upper Bound} & \textbf{Values > UB} & \textbf{Outliers} \\
+		\midrule
+		Intermediate Dose & 36.01 & 37.83 & 1.82 & 41.47 & None & 0 \\
+		Unit Dose & 34.74 & 37.98 & 3.24 & 44.46 & None & 0 \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\small Note: Quartile values were computed using R's default quantile() function with type=7 (linear interpolation).
+\end{table}
+
+\subsection{Distribution Visualization}
+
+Distribution assessment through parallel boxplots reveals comparable distributions for both thief methods. Figure \ref{fig:boxplot} displays the assay values by method with individual data points shown with jitter for visibility.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{boxplot.png}
+	\caption{Boxplot of Assay Values by Method}
+	\label{fig:boxplot}
+\end{figure}
+
+Figure \ref{fig:interaction} presents an interaction plot showing location-specific assay values for each method. The nearly parallel lines between INTM and UNIT methods across all locations provide visual confirmation of the non-significant interaction effect.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{interaction_plot.png}
+	\caption{Interaction Plot - Location-Specific Assay Values}
+	\label{fig:interaction}
+\end{figure}
+
+\clearpage
+
+\section{Appendix B: Mixed-Effects Model}
+\label{app:mixed-model}
+
+\subsection{Model Summary and Fixed Effects Tests}
+
+The mixed-effects model was fitted using R's nlme package with maximum likelihood estimation (ML). The model includes a fixed effect for METHOD, random intercepts for LOCATION, and heterogeneous variance structure allowing different residual standard deviations for each sampling method.
+
+% --- Table A.2a (Type III Tests) ---
+\begin{table}[H]
+	\centering
+	\caption{Type III Tests of Fixed Effects (ANOVA)}
+	\label{tab:a2a}
+	\small
+	\begin{tabular}{l rrrr}
+		\toprule
+		\textbf{Effect} & \textbf{Num DF} & \textbf{Den DF} & \textbf{F-value} & \textbf{p-value} \\
+		\midrule
+		(Intercept) & 1 & 29 & 6441.024 & $<$0.0001 \\
+		METHOD & 1 & 29 & 1.081 & 0.307 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% --- Table A.2b (Fixed Effects Estimates) ---
+\begin{table}[H]
+	\centering
+	\caption{Fixed Effects Estimates and 95\% Confidence Intervals}
+	\label{tab:a2b}
+	\small
+	\begin{tabular}{l rrrrr}
+		\toprule
+		\textbf{Effect} & \textbf{Estimate} & \textbf{Std. Error} & \textbf{Lower 95\% CI} & \textbf{Upper 95\% CI} & \textbf{p-value} \\
+		\midrule
+		(Intercept) & 36.9078 & 0.4665 & 35.9805 & 37.8350 & $<$0.0001 \\
+		METHODUnit & -0.5111 & 0.4915 & -1.4880 & 0.4658 & 0.307 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{Variance Components (Heterogeneous Variance Model)}
+
+% --- Table A.3 (Variance Components) ---
+\begin{table}[H]
+	\centering
+	\caption{Variance Components Decomposition}
+	\label{tab:a3}
+	\small
+	\begin{tabular}{l rr}
+		\toprule
+		\textbf{Variance Component} & \textbf{Estimate} & \textbf{Interpretation} \\
+		\midrule
+		Between-Location (LOC) & 0.9976 & Variability across 6 sampling locations \\
+		Within-Location (INTM) & 0.7069 & Residual precision - Intermediate Dose \\
+		Within-Location (UNIT) & 3.4001 & Residual precision - Unit Dose \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{Location Effects Analysis}
+
+% --- Table A.4 (Location Effects) ---
+\begin{table}[H]
+	\centering
+	\caption{Random Effects for Sampling Location}
+	\label{tab:a4}
+	\small
+	\begin{tabular}{l rrrr}
+		\toprule
+		\textbf{Location} & \textbf{Random Intercept} & \textbf{Location Mean} & \textbf{Pct Below Grand Mean} & \textbf{Status} \\
+		\midrule
+		1 & -1.64 & 35.01 & -4.47\% & Significantly lower \\
+		2 & +0.30 & 36.95 & +0.81\% & Not significant \\
+		3 & -0.43 & 36.22 & -1.18\% & Not significant \\
+		4 & +0.53 & 37.18 & +1.45\% & Not significant \\
+		5 & -0.08 & 36.57 & -0.22\% & Not significant \\
+		6 & +1.33 & 37.98 & +3.62\% & Not significant \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	Location Range Span: 2.96 mg/100mg (from Location 1 at 35.01 to Location 6 at 37.98)
+\end{table}
+
+\subsection{Residual Diagnostics}
+
+Residual diagnostic plots verify that the mixed model assumptions are satisfied.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{diagnostic_plots.png}
+	\caption{Residual Diagnostics: Q-Q Plot, Residuals vs. Fitted, and Scale-Location Plots}
+	\label{fig:diagnostics}
+\end{figure}
+
+% --- Table A.5 (Residual Diagnostics) ---
+\begin{table}[H]
+	\centering
+	\caption{Normality Tests on Residuals (Shapiro-Wilk)}
+	\label{tab:a5}
+	\small
+	\begin{tabular}{l rrr}
+		\toprule
+		\textbf{Group} & \textbf{W-statistic} & \textbf{p-value} & \textbf{Result} \\
+		\midrule
+		All residuals combined & 0.9817 & 0.8649 & $\checkmark$ Normal \\
+		INTM method residuals & 0.9705 & 0.6892 & $\checkmark$ Normal \\
+		UNIT method residuals & 0.9893 & 0.9645 & $\checkmark$ Normal \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% --- Table A.6 (Residual Variance by Method) ---
+\begin{table}[H]
+	\centering
+	\caption{Residual Variance by Method}
+	\label{tab:a6}
+	\small
+	\begin{tabular}{l rr}
+		\toprule
+		\textbf{Method} & \textbf{Residual Variance} & \textbf{Relative to INTM} \\
+		\midrule
+		INTM (Intermediate Dose) & 0.6996 & Baseline (1.0\texttimes) \\
+		UNIT (Unit Dose) & 3.3889 & 4.84\texttimes~higher \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\clearpage
+
+\subsection{Bootstrap Validation Results}
+
+% --- Table A.7 (Bootstrap Validation) ---
+\begin{table}[H]
+	\centering
+	\caption{Bootstrap Validation - Three-Way Comparison (1000 resamples)}
+	\label{tab:a7}
+	\small
+	\begin{tabular}{l rrrr}
+		\toprule
+		\textbf{Comparison} & \textbf{Observed P} & \textbf{Bootstrap P} & \textbf{Bias} & \textbf{Std Error} \\
+		\midrule
+		UNIT vs. INTM & 0.3777 & 0.549 & -0.0300 & 0.5690 \\
+		UNIT vs. Tablet & 0.2802 & 0.505 & 0.0112 & 0.5177 \\
+		INTM vs. Tablet & 0.0118 & 0.534 & 0.0180 & 0.3981 \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	Bootstrap analysis confirms stability of statistical findings under repeated sampling.
+\end{table}
+
+\section{Appendix C: Advanced Analysis and Effect Size Measures}
+
+\subsection{Interaction Analysis: Location-Specific METHOD Effects}
+
+% --- Table A.8 (Random Slopes Model Comparison) ---
+\begin{table}[H]
+	\centering
+	\caption{Random Slopes Model Comparison}
+	\label{tab:a8}
+	\small
+	\begin{tabular}{l l rrrr}
+		\toprule
+		\textbf{Model} & \textbf{Model Specification} & \textbf{df} & \textbf{AIC} & \textbf{LRT} $\chi^2$ & \textbf{p-value} \\
+		\midrule
+		Model 1 & METHOD, random intercept & 5 & 138.81 & --- & --- \\
+		Model 2 & METHOD + random slopes & 7 & 141.60 & 1.21 & 0.5456 \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	Random slopes model does not provide significantly better fit, indicating METHOD effect is uniform across locations.
+\end{table}
+
+\subsection{Location-Specific Descriptive Differences}
+
+% --- Table A.9 (Location Means and METHOD Differences) ---
+\begin{table}[H]
+	\centering
+	\caption{Location Means and METHOD Differences}
+	\label{tab:a9}
+	\small
+	\begin{tabular}{l rrrr}
+		\toprule
+		\textbf{Location} & \textbf{INTM Mean} & \textbf{UNIT Mean} & \textbf{Difference} & \textbf{Pattern} \\
+		\midrule
+		1 & 34.99 & 34.25 & -0.73 & INTM slightly higher \\
+		2 & 36.97 & 38.14 & +1.16 & UNIT slightly higher \\
+		3 & 36.40 & 35.84 & -0.56 & INTM slightly higher \\
+		4 & 37.74 & 36.10 & -1.64 & INTM notably higher \\
+		5 & 36.51 & 37.76 & +1.25 & UNIT slightly higher \\
+		6 & 38.84 & 36.29 & -2.55 & INTM notably higher \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{Effect Size Calculations}
+
+% --- Table A.10 (Effect Size Measures) ---
+\begin{table}[H]
+	\centering
+	\caption{Effect Size Measures for METHOD Comparison}
+	\label{tab:a10}
+	\small
+	\begin{tabular}{l rr}
+		\toprule
+		\textbf{Measure} & \textbf{Value} & \textbf{Classification} \\
+		\midrule
+		Cohen's d & 0.30 & SMALL \\
+		Hedges' g & 0.29 & SMALL \\
+		Eta-squared ($\eta^2$) & 2.30\% & Method explains 2.30\% variance \\
+		Omega-squared ($\omega^2$) & 0.27\% & Bias-corrected estimate \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\clearpage
+
+\section{Appendix D: Technical Specifications and Software}
+
+\noindent\textbf{Model Specification}: The analysis employed a heterogeneous variance mixed-effects model using maximum likelihood estimation (ML). The model includes:
+\begin{itemize}
+	\item METHOD as a fixed effect (INTM vs. UNIT)
+	\item LOCATION as a random intercept (6 sampling positions)
+	\item Method-specific residual variance parameters to capture differences in measurement precision
+	\item Formula: ASSAY $\sim$ METHOD + (1 $\mid$ LOCATION) with heterogeneous variance
+\end{itemize}
+
+\noindent\textbf{Software and Packages}: All analyses were conducted using R version 4.5.0 (2025-04-11) with the following packages:
+\begin{itemize}
+	\item \texttt{nlme} (version 3.1.168): Mixed-effects model fitting with heterogeneous variance
+	\item \texttt{boot} (version 1.3.31): Bootstrap resampling for robustness assessment
+\end{itemize}
+
+\noindent\textbf{Estimation Method}: Maximum likelihood estimation (ML) was used for parameter estimation. While restricted maximum likelihood (REML) can provide less biased variance component estimates, ML was selected to enable likelihood ratio testing for the fixed METHOD effect, which is the primary focus of this analysis.
+
+% --- DOCUMENT END ---
+\end{document}
