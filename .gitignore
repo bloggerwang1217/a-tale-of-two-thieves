@@ -1,0 +1,33 @@
+# LaTeX generated files
+*.aux
+*.log
+*.synctex.gz
+*.synctex
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+.Rhistory
+*.Rdata
