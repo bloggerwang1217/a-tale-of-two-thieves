@@ -8,8 +8,18 @@
 ## Methodology
 
 - Mothodology 整體結構較混亂
+- Normality 應該在 Model Assessment 而不是 EDA
 - Mixed Model 的公式沒有放出來（一般和 Random Slope Model）
 - Interaction Model 沒有把參數定義寫出來
+
+## Result
+
+- 後面的小節混亂，應該整理成一個 Model Assessment
+
+### EDA
+- Normality 應該在 Model Assessment 而不是 EDA
+
+### Model Assessment
 
 ## 問題回應統計
 
