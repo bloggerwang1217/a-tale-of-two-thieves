@@ -5,6 +5,10 @@
 - 沒有目錄 "TABLE OF CONTENT"
 - 沒有一個段落回答客戶問題
 
+## Methodology
+
+Mothodology 整體結構較混亂
+
 ## 問題回應統計
 
 | 問題 | 狀態 | 報告位置 | 說明 |

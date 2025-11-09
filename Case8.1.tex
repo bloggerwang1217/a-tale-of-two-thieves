@@ -283,13 +283,11 @@ The \textbf{Fixed Effect (METHOD)} is specified as fixed because the primary res
 
 The \textbf{Random Effect (LOCATION)} accounts for the fact that the six sampling locations are a random sample from all possible locations within the blender. By treating LOCATION as random, the model properly partitions variance into three components: between-location variance reflecting systematic differences in blender composition across positions, within-location variance reflecting measurement precision specific to each method, and location effects that are not generalizable to future blender batches but represent batch-specific characteristics.
 
-\subsection{Variance Heterogeneity and Precision Assessment}
+\noindent\textbf{Heterogeneous Variance Structure (Precision Assessment)}:
 
-A critical aspect of this analysis is to determine whether the two methods differ not only in \textbf{mean} assay values but also in \textbf{precision (variability)}. Variance heterogeneity is modeled using method-specific residual variance components. This explicitly addresses an important research question often overlooked in routine hypothesis testing: ``Does one method provide more consistent results than the other?''
+A critical aspect of this analysis is to determine whether the two methods differ not only in \textbf{mean} assay values but also in \textbf{precision (variability)}. The model includes method-specific residual variance parameters, allowing each sampling method to have its own variance estimate. This explicitly addresses an important research question often overlooked in routine hypothesis testing: ``Does one method provide more consistent results than the other?''
 
-A mixed-effects model is fit with separate variance parameters for each method to compare the magnitude of residual variance for Unit Dose versus Intermediate Dose methods. The relative precision is quantified using the variance ratio. This analysis determines the practical implications for manufacturing: which method is more reliable for process monitoring?
-
-Even if two methods produce equivalent average results, a method with higher variability may be unsuitable for precise quality control monitoring. The variance heterogeneity analysis identifies which method provides more dependable, consistent measurements for routine use in pharmaceutical manufacturing.
+The relative precision is quantified using the variance ratio (Unit Dose variance divided by Intermediate Dose variance). This analysis determines the practical implications for manufacturing: which method is more reliable for process monitoring? Even if two methods produce equivalent average results, a method with higher variability may be unsuitable for precise quality control monitoring. The heterogeneous variance analysis identifies which method provides more dependable, consistent measurements for routine use in pharmaceutical manufacturing.
 
 \subsection{Interaction Analysis: Does METHOD Effect Vary by Location?}
 
@@ -302,15 +300,13 @@ A fundamental question in this study is whether the difference between sampling 
 
 A significant interaction would suggest that the choice of sampling method should potentially be tailored to specific locations within the blender.
 
-\subsection{Diagnostics and Effect Size Analysis}
+\subsection{Model Assessment}
 
 \noindent\textbf{Residual Diagnostics}: Q-Q plots, residuals vs. fitted values, scale-location plots, and Cook's distance to verify mixed model assumptions (normality, homoscedasticity, no influential outliers)
 
 \noindent\textbf{Effect Size Quantification}: In addition to hypothesis tests, multiple effect size measures are calculated, including Cohen's d (standardized mean difference for METHOD comparison), eta-squared (\(\eta^2\)) representing the proportion of variance explained by METHOD, and omega-squared (\(\omega^2\)) as a bias-corrected variance explained estimate. These effect sizes allow us to answer ``How big is the difference?'' independent of whether it reaches statistical significance.
 
-\subsection{Bootstrap Validation for Robustness}
-
-To verify the robustness and stability of statistical findings, bootstrap resampling was employed. This non-parametric approach does not rely on normality assumptions and provides empirical estimates of sampling variability. A total of 1000 bootstrap resamples of the original data were performed, with recalculation of p-values for key comparisons at each iteration.
+\noindent\textbf{Bootstrap Validation for Robustness}: To verify the robustness and stability of statistical findings, bootstrap resampling was employed. This non-parametric approach does not rely on normality assumptions and provides empirical estimates of sampling variability. A total of 1000 bootstrap resamples of the original data were performed, with recalculation of p-values for key comparisons at each iteration.
 
 % --- SECTION 3 (from Page 5) ---
 \section{Results}
