@@ -7,7 +7,8 @@
 
 ## Methodology
 
-Mothodology 整體結構較混亂
+- Mothodology 整體結構較混亂
+- Mixed Model 的公式沒有放出來（一般和 Random Slope Model）
 
 ## 問題回應統計
 

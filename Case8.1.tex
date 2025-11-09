@@ -279,6 +279,18 @@ This experiment involves both fixed and random factors, requiring \textbf{mixed-
 
 The model includes a fixed effect for METHOD, random intercepts for LOCATION, and heterogeneous variance structure allowing different residual standard deviations for each sampling method.
 
+\begin{equation}
+\text{ASSAY}_{ijk} = \mu + \beta \cdot \text{METHOD} + b_i + \varepsilon_{ijk}
+\end{equation}
+
+Where:
+\begin{itemize}
+	\item $\mu$ = Grand mean (population average assay)
+	\item $\beta \cdot \text{METHOD}$ = Fixed effect for sampling method
+	\item $b_i$ = Random intercept for each location $i$
+	\item $\varepsilon_{ijk}$ = Error term (method-specific variance)
+\end{itemize}
+
 The \textbf{Fixed Effect (METHOD)} is specified as fixed because the primary research question addresses whether the Unit Dose and Intermediate Dose thieves produce significantly different assay measurements. Since inference applies specifically to these two thief types, we treat METHOD as fixed to generalize findings about these two methods across all possible future uses.
 
 The \textbf{Random Effect (LOCATION)} accounts for the fact that the six sampling locations are a random sample from all possible locations within the blender. By treating LOCATION as random, the model properly partitions variance into three components: between-location variance reflecting systematic differences in blender composition across positions, within-location variance reflecting measurement precision specific to each method, and location effects that are not generalizable to future blender batches but represent batch-specific characteristics.
@@ -293,12 +305,23 @@ The relative precision is quantified using the variance ratio (Unit Dose varianc
 
 A fundamental question in this study is whether the difference between sampling methods is \textbf{consistent across all locations} or \textbf{varies in a location-dependent manner}. Two competing mixed-effects models were fitted and compared using likelihood ratio test (LRT):
 
-\begin{itemize}
-	\item \textbf{Model 1 (No Interaction)}: Assumes METHOD effect is uniform across all locations
-	\item \textbf{Model 2 (With Interaction)}: Allows METHOD effect to vary by location (random slopes model)
-\end{itemize}
+\noindent\textbf{Model 1 (No Interaction)}: Assumes METHOD effect is uniform across all locations
 
-A significant interaction would suggest that the choice of sampling method should potentially be tailored to specific locations within the blender.
+\begin{equation}
+\text{ASSAY}_{ijk} = \mu + \beta \cdot \text{METHOD} + b_i + \varepsilon_{ijk}
+\end{equation}
+
+The global METHOD effect applies equally at each sampling position, with the model structure identical to Equation (1).
+
+\noindent\textbf{Model 2 (With Interaction)}: Allows METHOD effect to vary by location (random slopes model)
+
+\begin{equation}
+\text{ASSAY}_{ijk} = \mu + (\beta + b_{i,\text{METHOD}}) \cdot \text{METHOD} + b_i + \varepsilon_{ijk}
+\end{equation}
+
+This model enables each location to have its own method-specific response pattern, where $b_{i,\text{METHOD}}$ represents location-specific deviations from the global METHOD effect.
+
+A significant interaction would suggest that the choice of sampling method should potentially be tailored to specific locations within the blender, with some locations potentially favoring one method over the other.
 
 \subsection{Model Assessment}
 
