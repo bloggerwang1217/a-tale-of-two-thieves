@@ -335,6 +335,15 @@ The global METHOD effect applies equally at each sampling position, with the mod
 \text{ASSAY}_{ijk} = \mu + (\beta + b_{i,\text{METHOD}}) \cdot \text{METHOD} + b_i + \varepsilon_{ijk}
 \end{equation}
 
+\noindent\textbf{Where:}
+\begin{itemize}
+	\item $\mu$ = Grand mean (population average assay)
+	\item $\beta$ = Global fixed METHOD effect
+	\item $b_i$ = Random intercept for each location $i$
+	\item $b_{i,\text{METHOD}}$ = Location-specific random slope (METHOD effect deviation)
+	\item $\varepsilon_{ijk}$ = Error term (method-specific variance)
+\end{itemize}
+
 This model enables each location to have its own method-specific response pattern, where $b_{i,\text{METHOD}}$ represents location-specific deviations from the global METHOD effect.
 
 A significant interaction would suggest that the choice of sampling method should potentially be tailored to specific locations within the blender, with some locations potentially favoring one method over the other.

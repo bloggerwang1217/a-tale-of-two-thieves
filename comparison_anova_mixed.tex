@@ -107,7 +107,73 @@ Variance decomp. & Not explicit & 31\% LOC + 2.3\% METHOD \\
 \end{frame}
 
 % ============================================================
-% SLIDE 4: Why Mixed Model - Reason 1
+% SLIDE 4: Random Slope Model (Mixed Model with Interaction)
+% ============================================================
+\begin{frame}{Random Slope Model: Allowing METHOD Effects to Vary by Location}
+
+\textbf{Model Specification:}
+\begin{equation*}
+\text{ASSAY}_{ijk} = \mu + (\beta + b_{i,\text{METHOD}}) \cdot \text{METHOD} + b_i + \varepsilon_{ijk}
+\end{equation*}
+
+\vspace{0.15cm}
+
+\textbf{Where:}
+\begin{itemize}
+	\item $\beta$ = Global METHOD effect (fixed)
+	\item $b_i$ = Location-specific random intercept
+	\item $b_{i,\text{METHOD}}$ = Location-specific METHOD effect (random slope)
+	\item $\varepsilon_{ijk}$ = Random error term
+\end{itemize}
+
+\vspace{0.1cm}
+
+\textbf{Distributional Assumptions:}
+\begin{align*}
+b_i &\sim N(0, \sigma^2_b) \\
+b_{i,\text{METHOD}} &\sim N(0, \sigma^2_{b,\text{METHOD}}) \\
+\varepsilon_{ijk} &\sim N(0, \sigma^2_i)
+\end{align*}
+
+\end{frame}
+
+% ============================================================
+% SLIDE 4.5: Three Models Comparison
+% ============================================================
+\begin{frame}{Three Models Comparison}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{llll}
+\toprule
+\textbf{Feature} & \textbf{Two-Way ANOVA} & \textbf{Mixed Model} & \textbf{Random Slope} \\
+\midrule
+METHOD effect & Fixed $\beta_i$ & Fixed $\beta$ & Fixed $\beta$ \\
+LOCATION effect & Fixed $\alpha_j$ & Random $b_i$ & Random $b_i$ \\
+Interaction & Fixed $\gamma_{ij}$ & Absorbed & Random $b_{i,\text{METHOD}}$ \\
+\midrule
+Variance & Homogeneous & Heterogeneous & Heterogeneous \\
+Flexibility & Low & Medium & High \\
+Complexity & Simple & Moderate & Complex \\
+\midrule
+Use when: & LOCs fixed & LOCs random & LOCs random + \\
+ &  &  & METHOD varies \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{In Our Data:}
+\begin{itemize}
+	\item \textcolor{blue}{Likelihood Ratio Test:} $\chi^2 = 1.21$, $p = 0.546$ (not significant)
+	\item Conclusion: \textcolor{red}{Random Slope NOT needed} $\rightarrow$ basic Mixed Model is adequate
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% SLIDE 5: Why Mixed Model - Reason 1
 % ============================================================
 \begin{frame}{Why Mixed Model? (1/4)}
 
