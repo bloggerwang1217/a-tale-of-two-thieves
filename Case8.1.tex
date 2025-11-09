@@ -293,13 +293,29 @@ Where:
 
 The \textbf{Fixed Effect (METHOD)} is specified as fixed because the primary research question addresses whether the Unit Dose and Intermediate Dose thieves produce significantly different assay measurements. Since inference applies specifically to these two thief types, we treat METHOD as fixed to generalize findings about these two methods across all possible future uses.
 
-The \textbf{Random Effect (LOCATION)} accounts for the fact that the six sampling locations are a random sample from all possible locations within the blender. By treating LOCATION as random, the model properly partitions variance into three components: between-location variance reflecting systematic differences in blender composition across positions, within-location variance reflecting measurement precision specific to each method, and location effects that are not generalizable to future blender batches but represent batch-specific characteristics.
+\noindent\textbf{Random Effect (LOCATION) and Variance Decomposition}:
+
+The six sampling locations are a random sample from all possible locations within the blender. By treating LOCATION as random, we enable \textbf{generalization of findings beyond these six specific locations} to any location that could be sampled from the blender in the future. The model partitions total variance into three distinct components, each corresponding to specific elements of the mathematical model in Equation (1):
+
+\begin{enumerate}
+	\item \textbf{Between-Location Variance} [$\text{Var}(b_i)$]: Quantifies the systematic differences in blender composition across the six sampling positions. This variance component reflects how much the location-specific random intercepts $b_i$ deviate from zero, indicating location-to-location heterogeneity in the blender contents. Large between-location variance signals that sampling position is a critical factor in determining assay values.
+
+	\item \textbf{Within-Location Variance (Method-Specific)} [$\text{Var}(\varepsilon_{ijk})$]: Reflects measurement precision specific to each sampling method, modeled through the heterogeneous variance structure. The error term $\varepsilon_{ijk}$ is allowed to have different variance for INTM and UNIT methods ($\sigma^2_{\text{INTM}} \neq \sigma^2_{\text{UNIT}}$), enabling direct comparison of measurement consistency between methods independent of location effects.
+
+	\item \textbf{Location-Specific Random Intercepts} [$b_i$]: Represent batch-level manufacturing conditions and individual deviations from the overall mean $\mu$ at each location. These are not generalizable to future batches but are essential for understanding current batch-specific characteristics and for partitioning the total variability appropriately in the current analysis.
+\end{enumerate}
+
+This three-way variance decomposition enables us to simultaneously answer three critical questions: (1) Do the two sampling methods differ on average? (2) Which source of variation—location or method—is more important? (3) Which method provides more reliable, consistent measurements for quality control purposes?
 
 \noindent\textbf{Heterogeneous Variance Structure (Precision Assessment)}:
 
 A critical aspect of this analysis is to determine whether the two methods differ not only in \textbf{mean} assay values but also in \textbf{precision (variability)}. The model includes method-specific residual variance parameters, allowing each sampling method to have its own variance estimate. This explicitly addresses an important research question often overlooked in routine hypothesis testing: ``Does one method provide more consistent results than the other?''
 
-The relative precision is quantified using the variance ratio (Unit Dose variance divided by Intermediate Dose variance). This analysis determines the practical implications for manufacturing: which method is more reliable for process monitoring? Even if two methods produce equivalent average results, a method with higher variability may be unsuitable for precise quality control monitoring. The heterogeneous variance analysis identifies which method provides more dependable, consistent measurements for routine use in pharmaceutical manufacturing.
+The relative precision is quantified using the \textbf{variance ratio}:
+$$\text{Variance Ratio} =
+\frac{\sigma^2_{\text{UNIT}}}{\sigma^2_{\text{INTM}}}$$
+
+This analysis determines the practical implications for manufacturing: which method is more reliable for process monitoring? Even if two methods produce equivalent average results, a method with higher variability may be unsuitable for precise quality control monitoring. The heterogeneous variance analysis identifies which method provides more dependable, consistent measurements for routine use in pharmaceutical manufacturing.
 
 \subsection{Interaction Analysis: Does METHOD Effect Vary by Location?}
 

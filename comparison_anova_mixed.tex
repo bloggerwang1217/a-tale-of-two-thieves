@@ -1,0 +1,251 @@
+\documentclass{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+
+% For Chinese
+\usepackage{fontspec}                    % Allows setting fonts
+\usepackage[BoldFont, SlantFont]{xeCJK}  % Set Chinese and English fonts separately
+\setCJKmainfont{BiauKaiTC-Regular}        % Set the Chinese font (e.g., BiauKai), English font remains the TeX default
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\title{Two-Way ANOVA vs. Mixed Model}
+\subtitle{A Tale of Two Thieves}
+\author{Statistical Consulting}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+% ============================================================
+% SLIDE 1: Traditional Two-Way ANOVA
+% ============================================================
+\begin{frame}[fragile]{Traditional Two-Way ANOVA (Both Fixed)}
+
+\textbf{Model Specification:}
+
+\begin{equation*}
+\text{ASSAY}_{ijk} = \mu + \beta_i \cdot \text{METHOD}_i + \alpha_j + \gamma_{ij} + \varepsilon_{ijk}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{Where:}
+\begin{itemize}
+	\item $\mu$ = Grand mean
+	\item $\beta_i$ = Fixed METHOD effect (INTM or UNIT)
+	\item $\alpha_j$ = Fixed LOCATION effect ($j = 1, \ldots, 6$)
+	\item $\gamma_{ij}$ = Fixed METHOD $\times$ LOCATION interaction
+	\item $\varepsilon_{ijk}$ = Random error, $\varepsilon_{ijk} \sim N(0, \sigma^2)$
+\end{itemize}
+
+\textbf{Key Assumption:}
+\begin{itemize}
+	\item Inference applies \textcolor{red}{only to these 6 specific locations}
+	\item Cannot generalize to other locations
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% SLIDE 2: Mixed Model
+% ============================================================
+\begin{frame}[fragile]{Mixed Model (METHOD Fixed, LOCATION Random)}
+
+\textbf{Model Specification:}
+
+\begin{equation*}
+\text{ASSAY}_{ijk} = \mu + \beta \cdot \text{METHOD} + b_i + \varepsilon_{ijk}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{Where:}
+\begin{itemize}
+	\item $\mu$ = Grand mean
+	\item $\beta$ = Fixed METHOD effect (applies to any method)
+	\item $b_i$ = Random LOCATION intercept, $b_i \sim N(0, \sigma^2_b)$
+	\item $\varepsilon_{ijk}$ = Error term, $\varepsilon_{ijk} \sim N(0, \sigma^2_i)$
+\end{itemize}
+
+\textbf{Key Feature: Heterogeneous Variance}
+\begin{equation*}
+\sigma^2_{\text{INTM}} = 0.7069 \neq \sigma^2_{\text{UNIT}} = 3.4001 \quad \text{(4.81× difference)}
+\end{equation*}
+
+\textbf{Generalizability:}
+\begin{itemize}
+	\item Inference \textcolor{blue}{generalizes to any location within the blender}
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% SLIDE 3: Key Differences Table
+% ============================================================
+\begin{frame}{Key Differences: Side-by-Side Comparison}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Aspect} & \textbf{Two-Way ANOVA} & \textbf{Mixed Model} \\
+\midrule
+METHOD effect & $\beta_i$ (fixed) & $\beta$ (fixed) \\
+LOCATION effect & $\alpha_j$ (fixed) & $b_i \sim N(0, \sigma^2_b)$ \\
+Interaction & Estimable & Absorbed in $b_i$ \\
+Variance & Homogeneous: $\sigma^2$ & Heterogeneous: $\sigma^2_i$ \\
+\midrule
+Generalization & \textcolor{red}{Limited to 6 LOCs} & \textcolor{blue}{Beyond 6 LOCs} \\
+Variance decomp. & Not explicit & 31\% LOC + 2.3\% METHOD \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+% ============================================================
+% SLIDE 4: Why Mixed Model - Reason 1
+% ============================================================
+\begin{frame}{Why Mixed Model? (1/4)}
+
+\textbf{1. Sampling Design}
+
+\begin{block}{Key Question}
+Are these 6 locations \textit{fixed} or a \textit{random sample}?
+\end{block}
+
+\textbf{Answer:} The 6 locations represent a \textcolor{blue}{random sample} from all possible locations within the V-blender.
+
+\begin{itemize}
+	\item We didn't pre-select ``important'' locations
+	\item They were chosen to represent the overall blender
+	\item We want to infer about \textit{any} future location
+\end{itemize}
+
+\textbf{Conclusion:} LOCATION should be \textcolor{blue}{random}, not fixed
+
+\end{frame}
+
+% ============================================================
+% SLIDE 5: Why Mixed Model - Reason 2
+% ============================================================
+\begin{frame}{Why Mixed Model? (2/4)}
+
+\textbf{2. Generalizability}
+
+\begin{block}{Research Goal}
+Understand blender uniformity for \textcolor{blue}{future production batches}
+\end{block}
+
+\begin{itemize}
+	\item Two-Way ANOVA: ``Are these 6 locations different?''
+	\item Mixed Model: ``Does location systematically affect content?''
+\end{itemize}
+
+\textbf{Example:}
+\begin{itemize}
+	\item ANOVA results apply \textcolor{red}{only to Locations 1-6}
+	\item Mixed Model generalizes to \textcolor{blue}{any location in any future batch}
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% SLIDE 6: Why Mixed Model - Reason 3
+% ============================================================
+\begin{frame}{Why Mixed Model? (3/4)}
+
+\textbf{3. Precision Comparison}
+
+\textbf{Question:} Do INTM and UNIT have different measurement precisions?
+
+\vspace{0.3cm}
+
+\textbf{Heterogeneous Variance Structure:}
+
+\begin{equation*}
+\sigma^2_{\text{INTM}} = 0.7069 \quad \text{vs} \quad \sigma^2_{\text{UNIT}} = 3.4001
+\end{equation*}
+
+\begin{itemize}
+	\item INTM is 4.81× more precise than UNIT
+	\item This difference \textcolor{red}{cannot be detected} with homogeneous variance
+	\item Precision matters for quality control!
+\end{itemize}
+
+\end{frame}
+
+% ============================================================
+% SLIDE 7: Why Mixed Model - Reason 4
+% ============================================================
+\begin{frame}{Why Mixed Model? (4/4)}
+
+\textbf{4. Explicit Variance Decomposition}
+
+Mixed model partitions total variation into three components:
+
+\vspace{0.2cm}
+
+\textbf{Variance Decomposition Formula:}
+\begin{equation*}
+\text{Var}(\text{ASSAY}_{ijk}) = \text{Var}(b_i) + \text{Var}(\varepsilon_{ijk}) + \text{Var}(\beta \cdot \text{METHOD})
+\end{equation*}
+
+\begin{equation*}
+= \underbrace{0.9977}_{\text{Location}} + \underbrace{2.0535}_{\text{Within-Location}} + \underbrace{0.0731}_{\text{METHOD}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{Percentage Decomposition:}
+\begin{itemize}
+	\item \textcolor{blue}{Between-Location Variance:} $\frac{0.9977}{3.1243} = 31.9\%$
+	\begin{itemize}
+		\item Random intercepts: $b_i \sim N(0, 0.9977)$
+		\item Range: 35.01 to 37.98 mg/100mg (2.96 span)
+	\end{itemize}
+
+	\item \textcolor{orange}{METHOD Effect:} $\frac{0.0731}{3.1243} = 2.3\%$
+	\begin{itemize}
+		\item Fixed effect: $\beta \cdot \text{METHOD}$
+	\end{itemize}
+
+	\item \textcolor{gray}{Residual Error:} $\frac{2.0535}{3.1243} = 65.7\%$
+	\begin{itemize}
+		\item Heterogeneous: $\sigma^2_{\text{INTM}} = 0.7069$, $\sigma^2_{\text{UNIT}} = 3.4001$
+	\end{itemize}
+\end{itemize}
+
+\textbf{Key Insight:} \textcolor{blue}{Location effect (31.9\%) dominates}, not method choice (2.3\%)!
+
+\end{frame}
+
+% ============================================================
+% SLIDE 8: Summary
+% ============================================================
+\begin{frame}{Summary: Mixed Model Choice}
+
+\begin{block}{When to Use Mixed Model}
+\begin{itemize}
+	\item Some factors are fixed (METHOD) $\rightarrow$ conditional inference
+	\item Other factors are random (LOCATION) $\rightarrow$ population inference
+	\item Want to partition variance explicitly
+	\item Need heterogeneous variance structure
+\end{itemize}
+\end{block}
+
+\begin{block}{Our Case}
+\begin{itemize}
+	\item METHOD: Fixed (only these 2 types matter)
+	\item LOCATION: Random (represents any location in blender)
+	\item Variance: Heterogeneous (INTM vs UNIT differ 4.81×)
+	\item Insight: Location effect (31\%) dominates METHOD (2.3\%)
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+\end{document}
