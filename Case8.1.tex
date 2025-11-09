@@ -316,6 +316,25 @@ $$\text{Variance Ratio} =
 
 This analysis determines the practical implications for manufacturing: which method is more reliable for process monitoring? Even if two methods produce equivalent average results, a method with higher variability may be unsuitable for precise quality control monitoring. The heterogeneous variance analysis identifies which method provides more dependable, consistent measurements for routine use in pharmaceutical manufacturing.
 
+\subsection{Regression Perspective: Fixed and Random Effects Decomposition}
+
+Beyond the standard ANOVA framework, the mixed model is interpreted as a regression model that decomposes variance into fixed effects (generalizable effect), random effects (individual differences), and residual error. The mathematical model specification is identical to that presented in Equation (1), including \textbf{(1) Fixed Effect (METHOD)}, \textbf{(2) Random Effect (LOCATION)}, and \textbf{(3) Residual Error}.
+
+This decomposition structure enables us to answer critical questions about variance allocation: How much total variation in assay measurements is attributable to the choice of sampling method (METHOD)? How much is attributable to the sampling location within the blender (LOCATION)? And how much represents random measurement error independent of either factor?
+
+\noindent\textbf{Marginal and Conditional R\textsuperscript{2} Analysis}:
+
+\begin{itemize}
+	\item \textbf{Marginal R\textsuperscript{2}}: Reflects the variance explained by fixed effects (METHOD) alone, representing the proportion of assay variation directly attributable to the sampling instrument choice.
+	$$R^2_{\text{Marginal}} = \frac{\text{Var}(\hat{\mu} + \beta \cdot \text{METHOD})}{\text{Var}(\text{ASSAY}_{ijk})}$$
+
+	\item \textbf{Conditional R\textsuperscript{2}}: Reflects the variance explained by both fixed effects (METHOD) and random effects (LOCATION) combined, representing the proportion of variation explained when accounting for location-specific differences.
+	$$R^2_{\text{Conditional}} = \frac{\text{Var}(\hat{\mu} + \beta \cdot \text{METHOD} + b_i)}{\text{Var}(\text{ASSAY}_{ijk})}$$
+
+\end{itemize}
+
+The difference between Conditional and Marginal R\textsuperscript{2} quantifies the relative importance of location-specific factors in determining assay variability, providing critical insight into variance component allocation for manufacturing quality control decisions and process improvement prioritization.
+
 \subsection{Interaction Analysis: Does METHOD Effect Vary by Location?}
 
 A fundamental question in this study is whether the difference between sampling methods is \textbf{consistent across all locations} or \textbf{varies in a location-dependent manner}. Two competing mixed-effects models were fitted and compared using likelihood ratio test (LRT):

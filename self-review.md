@@ -11,6 +11,7 @@
 - Normality 應該在 Model Assessment 而不是 EDA
 - Mixed Model 的公式沒有放出來（一般和 Random Slope Model）
 - Interaction Model 沒有把參數定義寫出來
+- Conditional R^2 和 Marginal R^2 沒有寫在 Methodology
 
 ## Result
 
