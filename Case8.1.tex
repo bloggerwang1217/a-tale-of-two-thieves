@@ -11,7 +11,7 @@
 \usepackage{amsthm}
 \usepackage{epsfig}
 \usepackage{graphicx}
-\usepackage{natbib}     % citet, citep
+\usepackage[square,numbers]{natbib}
 \usepackage{textcomp}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -425,9 +425,9 @@ Effect size analysis quantifies the practical magnitude of the METHOD difference
 
 \subsubsection{Thief-to-Tablet Mean Comparison and Robustness Check for Bias}
 
-A critical quality control finding emerges from comparing the thief sampling measurements to the final tablet assay values. \textit{This analysis directly addresses the client's Question 4 regarding whether thief-sampled values are comparable to tablet values (see Section \ref{sec:q4} for detailed discussion and recommendations).} Pairwise Welch's t-tests reveal that tablet samples show substantially lower mean assay values (35.82 mg/100mg) compared to both thief methods. The Intermediate Dose thief overestimates final product content by 1.09 mg/100mg (p = 0.0118, statistically significant), while the Unit Dose method overestimates by 0.58 mg/100mg (p = 0.2802, not statistically significant) (see Table \ref{tab:a6}).
+A critical quality control finding emerges from comparing the thief sampling measurements to the final tablet assay values. Pairwise Welch's t-tests reveal that tablet samples show substantially lower mean assay values (35.82 mg/100mg) compared to both thief methods. The Intermediate Dose thief overestimates final product content by 1.09 mg/100mg (p = 0.0118, statistically significant), while the Unit Dose method overestimates by 0.58 mg/100mg (p = 0.2802, not statistically significant) (see Table \ref{tab:a6}).
 
-Bootstrap validation (1000 resamples) confirms the systematic nature of these differences: the INTM vs. Tablet comparison yields a bootstrap p-value of 0.534 (Observed p = 0.0118), while UNIT vs. Tablet yields a bootstrap p-value of 0.505 (Observed p = 0.2802). The stabilized bootstrap p-values and non-zero bias estimates indicate that the observed differences represent systematic measurement bias rather than random sampling variation. This systematic pattern reveals that tablet assay values are substantially lower than both thief methods, indicating active ingredient loss during the powder-to-tablet compression process of approximately 3\% of the final product assay value---a significant quality control concern requiring immediate investigation (see Table \ref{tab:a7} for detailed bootstrap results).
+Bootstrap validation (1000 resamples) assesses the reliability of these p-values following the approach of \citet{Cabrera2002}. The INTM vs. Tablet comparison shows substantial positive bias: the observed p-value of 0.0118 has a bootstrap mean of 0.0556 (bias = 0.0438, SE = 0.1253), suggesting the observed significance may not be robust under resampling. Similarly, UNIT vs. Tablet shows positive bias: observed p = 0.2802, bootstrap mean = 0.3413 (bias = 0.0610, SE = 0.2986). These positive biases and considerable standard errors indicate that the apparent differences between thief and tablet measurements may reflect sampling variability rather than systematic manufacturing bias. The lower tablet mean (35.82 mg/100mg) compared to the model-estimated grand mean (36.91 mg/100mg) suggests approximately 3\% loss during compression, but this finding requires validation through properly designed paired-sampling studies (see Table \ref{tab:a7} for detailed bootstrap results).
 
 \section{Client Questions Analysis}
 \label{sec:client_questions}
@@ -471,21 +471,16 @@ The drum-to-drum variance is 0.4361 with a coefficient of variation of 1.84\%, s
 \subsection{Question 4: Are thief-sampled values comparable to tablet values?}
 \label{sec:q4}
 
-Thief-sampled values and final tablet assay values show significant systematic differences, representing a critical finding with important regulatory and operational implications. The Intermediate Dose thief method overestimates final tablet content by a mean difference of 1.12 mg/100mg (95\% CI: [0.45, 1.79], p = 0.009), while the Unit Dose thief overestimates by 0.61 mg/100mg (95\% CI: [-0.18, 1.40], p = 0.214).
+The client requested assessment of agreement between thief-sampled and tablet values, suggesting: ``One approach would be to consider the concordance correlation coefficient proposed by Lin (1989): quantify the agreement between two readings from the same sample by measuring the variation from the 45° line through the origin.''
 
-Bootstrap validation (1000 resamples) confirms the systematic nature of these differences: the INTM vs. Tablet comparison yields a bootstrap p-value of 0.0587, which stabilizes around the observed p-value of 0.0090 (see Table \ref{tab:a5}). This systematic bias pattern indicates process-related active ingredient loss rather than random variation.
+\noindent\textbf{Methodological Note for Lin's CCC:} Lin's concordance correlation coefficient (CCC) \citep{Lin1989} requires paired measurements from the same sample unit to quantify agreement. The current study design violates this fundamental requirement: thief sampling occurs during the powder-blending stage (6 locations $\times$ 2 methods = 18 independent samples), while tablet sampling occurs post-compression from 10 randomly selected drums (30 independent samples). These measurements represent different manufacturing stages on distinct, non-paired sample units. Consequently, Lin's CCC cannot be applied, and a direct assessment of agreement as originally requested is not feasible with this study design.
 
-\noindent\textbf{Root Cause Analysis:} The approximately 3\% loss of active ingredient during the powder-to-tablet compression process is systematic and reproducible. Root causes warrant investigation including: mechanical losses during compression (ingredient adherence to equipment, ejection force variations), heat-induced degradation during compression, binding agent interactions, and dust loss during handling and packaging.
+\noindent\textbf{Alternative Analysis:} In the absence of paired data, we employ Welch's t-test to compare mean assay values between thief and tablet measurements. The Intermediate Dose thief method shows significantly higher values than tablets (mean difference: 1.09 mg/100mg, 95\% CI: [0.258, 1.924], p = 0.0118), while the Unit Dose thief shows no statistically significant difference (mean difference: 0.58 mg/100mg, 95\% CI: [-0.500, 1.660], p = 0.2802) (see Table \ref{tab:a6}).
 
-\noindent\textbf{Regulatory and Operational Implications:} The poor agreement between thief samples and final tablets means that thief results alone cannot be reliably used to predict tablet content or make product release decisions without correction factors:
+To assess the reliability of these p-values, we applied bootstrap validation. For each comparison, 1000 bootstrap resamples were generated, and Welch's t-test was performed on each resample. The distribution of these bootstrap p-values reveals substantial positive bias for the INTM vs. Tablet comparison: the observed p-value of 0.0118 has a bootstrap mean of 0.0556 with bias = 0.0438 (see Table \ref{tab:a7}). Such positive bias suggests that ``the significant difference originally observed between the Intermediate Dose Thief and Tablet assay values may not necessarily be valid.'' The bootstrap standard error (0.1253) further indicates considerable variability in the p-value estimate under resampling.
 
-\begin{enumerate}
-	\item \textbf{Quality Control Risk:} Thief-based release testing would be insufficient to ensure final product potency meets specifications
-	\item \textbf{Regulatory Compliance:} Product release decisions must incorporate tablet-level testing or validated correction factors
-	\item \textbf{Correction Factors:} Develop empirical correction factors relating thief assay values (separately for INTM and UNIT methods) to expected final tablet potency
-	\item \textbf{In-Process Monitoring:} Consider adding sampling checkpoints after compression to monitor ingredient retention
-	\item \textbf{Process Investigation:} Conduct systematic investigation of compression parameters to identify and minimize active ingredient loss mechanisms
-\end{enumerate}
+\noindent\textbf{Conclusion:} Bootstrap validation indicates both comparisons are non-significant under resampling, suggesting the observed differences may reflect sampling variability. However, the INTM vs Tablet bootstrap mean (p = 0.0556) remains close to the conventional 0.05 threshold, warranting careful attention. This pattern, coupled with the observed mean difference of 1.09 mg/100mg, suggests potential active ingredient loss during the powder-to-tablet compression process of approximately 3\% (INTM: 36.91 mg/100mg vs Tablet: 35.82 mg/100mg). This potential process-related loss requires further investigation through properly designed paired-sampling studies at equivalent manufacturing stages.
+
 
 % --- SECTION 4 (from Page 5-6) ---
 \section{Discussion and Conclusions}
@@ -521,11 +516,13 @@ Both the Intermediate and Unit Dose thieves provide statistically equivalent res
 More significantly, this study revealed process-related issues of greater importance than the choice of sampling instrument. The primary source of product variability is a substantial lack of mixture uniformity within the V-Blender, with location-to-location variation accounting for 31\% of total measurement variance (13.5-fold greater than the METHOD effect). Additionally, a systematic loss of approximately 3\% of the active ingredient occurs during the powder-to-tablet compression stage. These findings indicate that further analysis and process improvement efforts should be focused on these critical manufacturing areas to enhance final product quality and regulatory compliance.
 
 % --- REFERENCES (from Page 6) ---
-\section*{References}
-% Using a description list for custom labels [1], [2]
-\begin{description}
-	\item[1] Cabrera, J., and McDougall, A. (2002) Statistical Consulting. Springer-Verlag New York, Inc., ISBN 978-1-4757-3663-2 (eBook).
-\end{description}
+\begin{thebibliography}{99}
+
+\bibitem{Cabrera2002} Cabrera, J., and McDougall, A. (2002) \textit{Statistical Consulting}. Springer-Verlag New York, Inc., ISBN 978-1-4757-3663-2 (eBook).
+
+\bibitem{Lin1989} Lin, L. I.-K. (1989) A Concordance Correlation Coefficient to Evaluate Reproducibility. \textit{Biometrics}, 45(1), 255--268. DOI: 10.2307/2532051.
+
+\end{thebibliography}
 
 \clearpage
 
@@ -781,21 +778,22 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 % --- Table A.7 (Bootstrap Validation) ---
 \begin{table}[H]
 	\centering
-	\caption{Bootstrap Validation - Three-Way Comparison (1000 resamples)}
+	\caption{Bootstrap Assessment of P-Value Reliability (1000 resamples)}
 	\label{tab:a7}
 	\small
 	\begin{tabular}{l rrrr}
 		\toprule
-		\textbf{Comparison} & \textbf{Observed P} & \textbf{Bootstrap P} & \textbf{Bias} & \textbf{Std Error} \\
+		\textbf{Comparison} & \textbf{Observed P} & \textbf{Bootstrap Mean} & \textbf{Bias} & \textbf{Std Error} \\
 		\midrule
-		UNIT vs. INTM & 0.3777 & 0.549 & -0.0300 & 0.5690 \\
-		UNIT vs. Tablet & 0.2802 & 0.505 & 0.0112 & 0.5177 \\
-		INTM vs. Tablet & 0.0118 & 0.534 & 0.0180 & 0.3981 \\
+		UNIT vs. INTM & 0.3777 & 0.3744 & -0.0033 & 0.2942 \\
+		UNIT vs. Tablet & 0.2802 & 0.3413 & 0.0610 & 0.2986 \\
+		INTM vs. Tablet & 0.0118 & 0.0556 & 0.0438 & 0.1253 \\
 		\bottomrule
 	\end{tabular}
 	\\ \vspace{0.2cm}
-	Bootstrap analysis confirms stability of statistical findings under repeated sampling.
 \end{table}
+
+\textbf{Note:} Bootstrap Mean = average of 1000 bootstrap p-values; Bias = Bootstrap Mean - Observed P. Substantial positive bias suggests the observed significance may not be reliable.
 
 \clearpage
 

@@ -25,6 +25,7 @@
 
 - 沒有詳細的 Diagnotics 的說明（資料有沒有 outlier, 模型假設有沒有成立...）
 - Methodology Bootstrap 段落在 Results 找不到（標題文不對題）
+- Bootstrap 程式寫錯，這計算的是一個 permutation-style p-value，不是書中的 bootstrap distribution of p-values。
 
 ## 問題回應統計
 

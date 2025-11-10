@@ -454,54 +454,56 @@ cat("Interpretation: The difference is negligible (<0.15% of specification)\n\n"
 
 
 # Bootstrap Validation (1000 resamples)
+# Following Cabrera & McDougall (2002, p. 284):
+# Bootstrap assessment of p-value reliability by resampling observed data
+# and computing the distribution of p-values from repeated t-tests
 
 set.seed(12345)  # For reproducibility
 n_boot <- 1000
 
-# Bootstrap for Unit vs Intm
-boot_diffs_ui <- numeric(n_boot)
+# Bootstrap for Unit vs Intm: distribution of p-values
+boot_pvalues_ui <- numeric(n_boot)
 for (i in 1:n_boot) {
   boot_unit <- sample(unit_data, replace = TRUE)
   boot_intm <- sample(intm_data, replace = TRUE)
-  boot_diffs_ui[i] <- mean(boot_unit) - mean(boot_intm)
+  boot_test <- t.test(boot_unit, boot_intm)
+  boot_pvalues_ui[i] <- boot_test$p.value
 }
-boot_p_ui <- mean(abs(boot_diffs_ui) >= abs(mean_unit - mean_intm))
+boot_mean_p_ui <- mean(boot_pvalues_ui)
+boot_bias_ui <- boot_mean_p_ui - t_test_ui$p.value
+boot_se_ui <- sd(boot_pvalues_ui)
 
-# Bootstrap for Unit vs Tablet
-boot_diffs_ut <- numeric(n_boot)
+# Bootstrap for Unit vs Tablet: distribution of p-values
+boot_pvalues_ut <- numeric(n_boot)
 for (i in 1:n_boot) {
   boot_unit <- sample(unit_data, replace = TRUE)
   boot_tablet <- sample(tablet_assay, replace = TRUE)
-  boot_diffs_ut[i] <- mean(boot_unit) - mean(boot_tablet)
+  boot_test <- t.test(boot_unit, boot_tablet)
+  boot_pvalues_ut[i] <- boot_test$p.value
 }
-boot_p_ut <- mean(abs(boot_diffs_ut) >= abs(mean_unit - mean(tablet_assay)))
+boot_mean_p_ut <- mean(boot_pvalues_ut)
+boot_bias_ut <- boot_mean_p_ut - t_test_ut$p.value
+boot_se_ut <- sd(boot_pvalues_ut)
 
-# Bootstrap for Intm vs Tablet
-boot_diffs_it <- numeric(n_boot)
+# Bootstrap for Intm vs Tablet: distribution of p-values
+boot_pvalues_it <- numeric(n_boot)
 for (i in 1:n_boot) {
   boot_intm <- sample(intm_data, replace = TRUE)
   boot_tablet <- sample(tablet_assay, replace = TRUE)
-  boot_diffs_it[i] <- mean(boot_intm) - mean(boot_tablet)
+  boot_test <- t.test(boot_intm, boot_tablet)
+  boot_pvalues_it[i] <- boot_test$p.value
 }
-boot_p_it <- mean(abs(boot_diffs_it) >= abs(mean_intm - mean(tablet_assay)))
+boot_mean_p_it <- mean(boot_pvalues_it)
+boot_bias_it <- boot_mean_p_it - t_test_it$p.value
+boot_se_it <- sd(boot_pvalues_it)
 
-# Calculate bootstrap bias and standard error for each comparison
-boot_bias_ui <- mean(boot_diffs_ui) - (mean_unit - mean_intm)
-boot_se_ui <- sd(boot_diffs_ui)
-
-boot_bias_ut <- mean(boot_diffs_ut) - (mean_unit - mean_tablet)
-boot_se_ut <- sd(boot_diffs_ut)
-
-boot_bias_it <- mean(boot_diffs_it) - (mean_intm - mean_tablet)
-boot_se_it <- sd(boot_diffs_it)
-
-# Create bootstrap validation table (Table A.5)
+# Create bootstrap validation table (Table A.7)
 bootstrap_table <- data.frame(
   Comparison = c("UNIT vs. INTM", "UNIT vs. TABLET", "INTM vs. TABLET"),
   Observed_Pvalue = round(c(t_test_ui$p.value, t_test_ut$p.value, t_test_it$p.value), 4),
-  Bootstrap_Pvalue = round(c(boot_p_ui, boot_p_ut, boot_p_it), 4),
+  Bootstrap_Mean = round(c(boot_mean_p_ui, boot_mean_p_ut, boot_mean_p_it), 4),
   Bias = round(c(boot_bias_ui, boot_bias_ut, boot_bias_it), 4),
-  StdError = round(c(boot_se_ui, boot_se_ut, boot_se_it), 4)
+  Std_Error = round(c(boot_se_ui, boot_se_ut, boot_se_it), 4)
 )
 
 cat("\n========== TABLE A.7: BOOTSTRAP VALIDATION - 1000 RESAMPLES (2.7 Bootstrap) ==========\n")
@@ -513,7 +515,6 @@ cat("\n")
 #   4 Client Question Analysis
 # ================================================================================
 
-# Q4
 
 
 # ================================================================================
