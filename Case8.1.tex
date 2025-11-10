@@ -429,6 +429,64 @@ A critical quality control finding emerges from comparing the thief sampling mea
 
 Bootstrap validation (1000 resamples) confirms the systematic nature of these differences: the INTM vs. Tablet comparison yields a bootstrap p-value of 0.534 (Observed p = 0.0118), while UNIT vs. Tablet yields a bootstrap p-value of 0.505 (Observed p = 0.2802). The stabilized bootstrap p-values and non-zero bias estimates indicate that the observed differences represent systematic measurement bias rather than random sampling variation. This systematic pattern reveals that tablet assay values are substantially lower than both thief methods, indicating active ingredient loss during the powder-to-tablet compression process of approximately 3\% of the final product assay value---a significant quality control concern requiring immediate investigation (see Table \ref{tab:a7} for detailed bootstrap results).
 
+\section{Client Questions Analysis}
+\label{sec:client_questions}
+
+This section provides comprehensive answers to the four specific questions posed by the client regarding this case study. Each question is addressed with reference to relevant findings from the statistical analysis and their implications for manufacturing operations.
+
+\subsection{Question 1: Are the assay values generally well behaved?}
+\label{sec:q1}
+
+The assay values are generally well behaved and suitable for mixed-effects analysis. All three methods---Intermediate Dose, Unit Dose, and final Tablet products---show normal distributions with Shapiro-Wilk p-values exceeding 0.18 (see Table \ref{tab:b1}). Conservative outlier detection using the criterion Q3 + 2 $\times$ IQR identified zero outliers across all methods (see Table \ref{tab:b2}).
+
+\noindent\textit{Important caveat:} When treating thief samples as repeated measures (three replicates per location), the correlation structure within each location should ideally be incorporated into outlier detection criteria. However, the data quality is sufficiently high that no outliers are detected even with conservative criteria. Overall, the data satisfy distributional assumptions for mixed-effects ANOVA analysis with no concerns identified. The assay response variable demonstrates excellent measurement properties with normal residuals and homogeneous variance across methods.
+
+\subsection{Question 2: Is there evidence of a location effect?}
+\label{sec:q2}
+
+Strong evidence of location effects exists, with profound implications requiring urgent management attention. Location 1 shows significantly lower assay values of 35.01 mg/100mg (random intercept = -1.64, p $<$ 0.01), while Location 6 exhibits the highest values of 37.98 mg/100mg (random intercept = +1.33, p $<$ 0.05). The total location-to-location range spans 2.96 mg/100mg, representing 8.46\% of the 35 mg/100mg target specification.
+
+Location-specific variance components account for 31\% of total measurement variance (see Section 3.2.2 and Table \ref{tab:a3}), which is 13.5 times greater than the METHOD effect. This establishes unambiguously that V-Blender position is the dominant source of product variability.
+
+\noindent\textbf{Manufacturing Implications:} The location effect provides clear evidence of incomplete mixture homogenization within the blender. The current 20-minute mixing protocol appears insufficient. Management should immediately:
+
+\begin{enumerate}
+	\item Review mixing time adequacy (potential primary cause)
+	\item Examine mixer rotation speed, direction, and mechanical integrity
+	\item Audit powder loading sequence for ingredient segregation effects
+	\item Assess blender geometry for dead spots or stratification patterns
+	\item Implement a multi-location quality assurance monitoring protocol
+	\item Consider equipment upgrades if parameter optimization cannot achieve acceptable uniformity
+\end{enumerate}
+
+\subsection{Question 3: Do tablet data show drum or time effects?}
+\label{sec:q3}
+
+Temporal analysis of the tablet data (30 tablets from 10 randomly selected drums) reveals no significant drum or time-dependent effects. The sequence of drum sampling was randomly selected from the 30 total drums, and linear regression of assay values against drum sequence order yields a slope of -0.0029 mg/100mg per drum (p = 0.47, not statistically significant). This indicates no meaningful downward drift across the production sequence.
+
+The drum-to-drum variance is 0.4361 with a coefficient of variation of 1.84\%, suggesting relatively consistent drum-to-drum production performance. An autoregressive AR(1) covariance structure applied to the temporal sequence reveals no strong temporal correlation (autocorrelation coefficient approximately 0.12, not significant). This contrasts with the heterogeneous variance structure necessary for the thief methods, indicating that compression and drumming operations maintain more uniform processing than the blending stage.
+
+\noindent\textbf{Quality Assurance Recommendation:} Continue monitoring drum-to-drum variation through ongoing tablet sampling. Implement statistical process control (SPC) charts for the tablet production stage to enable long-term trend detection and early warning of process drift. The AR(1) analysis confirms that standard independence assumptions are appropriate for tablet-level quality monitoring.
+
+\subsection{Question 4: Are thief-sampled values comparable to tablet values?}
+\label{sec:q4}
+
+Thief-sampled values and final tablet assay values show significant systematic differences, representing a critical finding with important regulatory and operational implications. The Intermediate Dose thief method overestimates final tablet content by a mean difference of 1.12 mg/100mg (95\% CI: [0.45, 1.79], p = 0.009), while the Unit Dose thief overestimates by 0.61 mg/100mg (95\% CI: [-0.18, 1.40], p = 0.214).
+
+Bootstrap validation (1000 resamples) confirms the systematic nature of these differences: the INTM vs. Tablet comparison yields a bootstrap p-value of 0.0587, which stabilizes around the observed p-value of 0.0090 (see Table \ref{tab:a5}). This systematic bias pattern indicates process-related active ingredient loss rather than random variation.
+
+\noindent\textbf{Root Cause Analysis:} The approximately 3\% loss of active ingredient during the powder-to-tablet compression process is systematic and reproducible. Root causes warrant investigation including: mechanical losses during compression (ingredient adherence to equipment, ejection force variations), heat-induced degradation during compression, binding agent interactions, and dust loss during handling and packaging.
+
+\noindent\textbf{Regulatory and Operational Implications:} The poor agreement between thief samples and final tablets means that thief results alone cannot be reliably used to predict tablet content or make product release decisions without correction factors:
+
+\begin{enumerate}
+	\item \textbf{Quality Control Risk:} Thief-based release testing would be insufficient to ensure final product potency meets specifications
+	\item \textbf{Regulatory Compliance:} Product release decisions must incorporate tablet-level testing or validated correction factors
+	\item \textbf{Correction Factors:} Develop empirical correction factors relating thief assay values (separately for INTM and UNIT methods) to expected final tablet potency
+	\item \textbf{In-Process Monitoring:} Consider adding sampling checkpoints after compression to monitor ingredient retention
+	\item \textbf{Process Investigation:} Conduct systematic investigation of compression parameters to identify and minimize active ingredient loss mechanisms
+\end{enumerate}
+
 % --- SECTION 4 (from Page 5-6) ---
 \section{Discussion and Conclusions}
 
@@ -453,64 +511,6 @@ Third and most significantly, location-specific effects within the V-Blender are
 \noindent\textbf{Root Cause Assessment}: Several process parameters warrant systematic review and potential adjustment, including the adequacy of the current mixing time of 20 minutes for achieving complete homogenization, mixer operating conditions including rotation speed and mechanical integrity, the powder loading protocol for potential ingredient segregation, and the blender geometry for dead spots or material stagnation areas.
 
 \noindent\textbf{Implementation Timeline}: An immediate process parameter audit should be conducted within one to two weeks. Implementation of corrective actions should follow within one to three months, with priority given to mixing time and rotation speed optimization. Effectiveness of improvements should be monitored through ongoing multi-location sampling.
-
-\subsection{Client Questions Analysis}
-\label{sec:client_questions}
-
-This section provides comprehensive answers to the four specific questions posed by the client regarding this case study. Each question is addressed with reference to relevant findings from the statistical analysis and their implications for manufacturing operations.
-
-\subsubsection{Question 1: Are the assay values generally well behaved?}
-\label{sec:q1}
-
-The assay values are generally well behaved and suitable for mixed-effects analysis. All three methods---Intermediate Dose, Unit Dose, and final Tablet products---show normal distributions with Shapiro-Wilk p-values exceeding 0.18 (see Table \ref{tab:b1}). Conservative outlier detection using the criterion Q3 + 2 $\times$ IQR identified zero outliers across all methods (see Table \ref{tab:b2}).
-
-\noindent\textit{Important caveat:} When treating thief samples as repeated measures (three replicates per location), the correlation structure within each location should ideally be incorporated into outlier detection criteria. However, the data quality is sufficiently high that no outliers are detected even with conservative criteria. Overall, the data satisfy distributional assumptions for mixed-effects ANOVA analysis with no concerns identified. The assay response variable demonstrates excellent measurement properties with normal residuals and homogeneous variance across methods.
-
-\subsubsection{Question 2: Is there evidence of a location effect?}
-\label{sec:q2}
-
-Strong evidence of location effects exists, with profound implications requiring urgent management attention. Location 1 shows significantly lower assay values of 35.01 mg/100mg (random intercept = -1.64, p $<$ 0.01), while Location 6 exhibits the highest values of 37.98 mg/100mg (random intercept = +1.33, p $<$ 0.05). The total location-to-location range spans 2.96 mg/100mg, representing 8.46\% of the 35 mg/100mg target specification.
-
-Location-specific variance components account for 31\% of total measurement variance (see Section 3.2.2 and Table \ref{tab:a3}), which is 13.5 times greater than the METHOD effect. This establishes unambiguously that V-Blender position is the dominant source of product variability.
-
-\noindent\textbf{Manufacturing Implications:} The location effect provides clear evidence of incomplete mixture homogenization within the blender. The current 20-minute mixing protocol appears insufficient. Management should immediately:
-
-\begin{enumerate}
-	\item Review mixing time adequacy (potential primary cause)
-	\item Examine mixer rotation speed, direction, and mechanical integrity
-	\item Audit powder loading sequence for ingredient segregation effects
-	\item Assess blender geometry for dead spots or stratification patterns
-	\item Implement a multi-location quality assurance monitoring protocol
-	\item Consider equipment upgrades if parameter optimization cannot achieve acceptable uniformity
-\end{enumerate}
-
-\subsubsection{Question 3: Do tablet data show drum or time effects?}
-\label{sec:q3}
-
-Temporal analysis of the tablet data (30 tablets from 10 randomly selected drums) reveals no significant drum or time-dependent effects. The sequence of drum sampling was randomly selected from the 30 total drums, and linear regression of assay values against drum sequence order yields a slope of -0.0029 mg/100mg per drum (p = 0.47, not statistically significant). This indicates no meaningful downward drift across the production sequence.
-
-The drum-to-drum variance is 0.4361 with a coefficient of variation of 1.84\%, suggesting relatively consistent drum-to-drum production performance. An autoregressive AR(1) covariance structure applied to the temporal sequence reveals no strong temporal correlation (autocorrelation coefficient approximately 0.12, not significant). This contrasts with the heterogeneous variance structure necessary for the thief methods, indicating that compression and drumming operations maintain more uniform processing than the blending stage.
-
-\noindent\textbf{Quality Assurance Recommendation:} Continue monitoring drum-to-drum variation through ongoing tablet sampling. Implement statistical process control (SPC) charts for the tablet production stage to enable long-term trend detection and early warning of process drift. The AR(1) analysis confirms that standard independence assumptions are appropriate for tablet-level quality monitoring.
-
-\subsubsection{Question 4: Are thief-sampled values comparable to tablet values?}
-\label{sec:q4}
-
-Thief-sampled values and final tablet assay values show significant systematic differences, representing a critical finding with important regulatory and operational implications. The Intermediate Dose thief method overestimates final tablet content by a mean difference of 1.12 mg/100mg (95\% CI: [0.45, 1.79], p = 0.009), while the Unit Dose thief overestimates by 0.61 mg/100mg (95\% CI: [-0.18, 1.40], p = 0.214).
-
-Bootstrap validation (1000 resamples) confirms the systematic nature of these differences: the INTM vs. Tablet comparison yields a bootstrap p-value of 0.0587, which stabilizes around the observed p-value of 0.0090 (see Table \ref{tab:a5}). This systematic bias pattern indicates process-related active ingredient loss rather than random variation.
-
-\noindent\textbf{Root Cause Analysis:} The approximately 3\% loss of active ingredient during the powder-to-tablet compression process is systematic and reproducible. Root causes warrant investigation including: mechanical losses during compression (ingredient adherence to equipment, ejection force variations), heat-induced degradation during compression, binding agent interactions, and dust loss during handling and packaging.
-
-\noindent\textbf{Regulatory and Operational Implications:} The poor agreement between thief samples and final tablets means that thief results alone cannot be reliably used to predict tablet content or make product release decisions without correction factors:
-
-\begin{enumerate}
-	\item \textbf{Quality Control Risk:} Thief-based release testing would be insufficient to ensure final product potency meets specifications
-	\item \textbf{Regulatory Compliance:} Product release decisions must incorporate tablet-level testing or validated correction factors
-	\item \textbf{Correction Factors:} Develop empirical correction factors relating thief assay values (separately for INTM and UNIT methods) to expected final tablet potency
-	\item \textbf{In-Process Monitoring:} Consider adding sampling checkpoints after compression to monitor ingredient retention
-	\item \textbf{Process Investigation:} Conduct systematic investigation of compression parameters to identify and minimize active ingredient loss mechanisms
-\end{enumerate}
 
 Concordance analysis and agreement quantification (e.g., Bland-Altman plots or concordance correlation coefficients per Lin 1989) would provide additional insight into the practical limitations of using thief measurements as surrogates for final product content.
 

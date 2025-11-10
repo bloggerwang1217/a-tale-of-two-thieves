@@ -407,6 +407,10 @@ t_test_ui <- t.test(unit_data, intm_data)
 t_test_ut <- t.test(unit_data, tablet_assay)
 t_test_it <- t.test(intm_data, tablet_assay)
 
+t_test_ui
+t_test_ut
+t_test_it
+
 # Recalculate descriptive statistics for effect size calculations
 sd_intm <- sd(intm_data)
 sd_unit <- sd(unit_data)
@@ -436,7 +440,16 @@ cat("\n========== TABLE A.10: EFFECT SIZE MEASURES (3.4 Effect Size Assessment) 
 print("Effect Size Analysis:")
 print(effect_size_table)
 
+# Practical Significance Assessment
 
+# Calculate the mean difference as percentage of target specification
+mean_diff <- mean_unit - mean_intm
+pct_of_target <- (abs(mean_diff) / 35) * 100
+
+cat("\n=== Practical Significance ===\n")
+cat("Mean difference:", round(mean_diff, 2), "mg/100mg\n")
+cat("Percentage of target (35 mg/100mg):", round(pct_of_target, 2), "%\n")
+cat("Interpretation: The difference is negligible (<0.15% of specification)\n\n")
 
 
 
@@ -497,16 +510,11 @@ print(bootstrap_table)
 cat("\n")
 
 # ================================================================================
-# ?? Practical Significance Assessment
+#   4 Client Question Analysis
 # ================================================================================
-# Calculate the mean difference as percentage of target specification
-mean_diff <- mean_unit - mean_intm
-pct_of_target <- (abs(mean_diff) / 35) * 100
 
-cat("\n=== Practical Significance ===\n")
-cat("Mean difference:", round(mean_diff, 2), "mg/100mg\n")
-cat("Percentage of target (35 mg/100mg):", round(pct_of_target, 2), "%\n")
-cat("Interpretation: The difference is negligible (<0.15% of specification)\n\n")
+# Q4
+
 
 # ================================================================================
 # Results Summary - Figures and Visualization
