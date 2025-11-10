@@ -92,29 +92,6 @@ cat("\n========== TABLE A.1: SUMMARY STATISTICS (3.1 Exploratory Data Analysis) 
 print(combined_stats)
 cat("\n")
 
-# Data Screening
-for (method in c("Intm", "Unit")) {
-  subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
-  sw_test <- shapiro.test(subset_data)
-  status <- if (sw_test$p.value > 0.05) "NORMAL" else "NON-NORMAL"
-  print(sw_test)
-  print(status)
-}
-
-for (method in c("Intm", "Unit")) {
-  subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
-  Q1 <- quantile(subset_data, 0.25)
-  Q3 <- quantile(subset_data, 0.75)
-  IQR <- Q3 - Q1
-  upper_bound <- Q3 + 2*IQR
-  outliers <- subset_data[subset_data > upper_bound]
-  print(Q1)
-  print(Q3)
-  print(IQR)
-  print(upper_bound)
-  print(outliers)
-}
-
 # ================================================================================
 #   2.2 Mixed-Effects Model
 # ================================================================================
@@ -350,8 +327,31 @@ cat("Range of Location-Specific Effects:",
     round(max(location_slopes$Total_Method_Effect), 4), "\n\n")
 
 # ================================================================================
-#   2.6 Effect Size and Diagnostics Setup
+#   2.6 Model Assessment
 # ================================================================================
+
+# Data Quality
+for (method in c("Intm", "Unit")) {
+  subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
+  sw_test <- shapiro.test(subset_data)
+  status <- if (sw_test$p.value > 0.05) "NORMAL" else "NON-NORMAL"
+  print(sw_test)
+  print(status)
+}
+
+for (method in c("Intm", "Unit")) {
+  subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
+  Q1 <- quantile(subset_data, 0.25)
+  Q3 <- quantile(subset_data, 0.75)
+  IQR <- Q3 - Q1
+  upper_bound <- Q3 + 2*IQR
+  outliers <- subset_data[subset_data > upper_bound]
+  print(Q1)
+  print(Q3)
+  print(IQR)
+  print(upper_bound)
+  print(outliers)
+}
 
 # Extract data by method and tablet for bootstrap analyses
 intm_data <- thief_data$ASSAY[thief_data$METHOD == "Intm"]

@@ -383,9 +383,9 @@ Summary statistics and results of the statistical analysis are presented in Appe
 
 Assay values range from 32.77 to 39.80 mg/100mg (see Table \ref{tab:a1}), indicating substantial non-uniformity in the blended powder. Notably, the interquartile range (IQR) for Unit Dose (3.24) is substantially wider than for Intermediate Dose (1.82), confirming greater inherent variability.
 
-\noindent\textbf{Distribution Assessment:} Parallel boxplots reveal comparable distributions for both thief methods (Figure \ref{fig:boxplot}), with overlapping interquartile ranges and similar medians. Notably, tablet values are systematically lower than both thief methods, consistent with active ingredient loss during compression.
+\noindent\textbf{Assay Distributions by Method:} Parallel boxplots reveal comparable distributions for both thief methods (Figure \ref{fig:boxplot}), with overlapping interquartile ranges and similar medians. Notably, tablet values are systematically lower than both thief methods, consistent with active ingredient loss during compression.
 
-\noindent\textbf{Location-Specific Variation:} Substantial between-location variation is observed, with Location 1 showing notably lower values and Location 6 showing the highest values (see Figure \ref{fig:interaction}). \textit{This finding directly addresses the client's Question 2 regarding evidence of location effects (see Section \ref{sec:q2} for comprehensive analysis).} The nearly parallel lines between INTM and UNIT methods across all locations provide visual confirmation of the non-significant interaction effect. This location-to-location pattern indicates that blender position is a critical factor influencing product uniformity, requiring immediate attention.
+\noindent\textbf{Assay Values Across Locations:} Substantial between-location variation is observed, with Location 1 showing notably lower values and Location 6 showing the highest values (see Figure \ref{fig:interaction}). \textit{This finding directly addresses the client's Question 2 regarding evidence of location effects (see Section \ref{sec:q2} for comprehensive analysis).} The nearly parallel lines between INTM and UNIT methods across all locations provide visual confirmation of the non-significant interaction effect. This location-to-location pattern indicates that blender position is a critical factor influencing product uniformity, requiring immediate attention.
 
 \subsection{Mixed-Effects Model Results}
 
@@ -415,9 +415,9 @@ A random slopes mixed model was fitted to test whether METHOD effects vary acros
 
 \subsubsection{Diagnostic Check}
 
-\noindent\textbf{Normality Assessment:} Both the Intermediate Dose and Unit Dose thieves show normal distributions based on Shapiro-Wilk testing (see Table \ref{tab:a1a}). Intermediate Dose yields W-statistic = 0.9836 (p = 0.9794) and Unit Dose yields W-statistic = 0.9424 (p = 0.3190), both with p-values well above the conventional significance level of 0.05, confirming normal distributions. \textit{This finding addresses the client's Question 1 regarding whether assay values are generally well-behaved (see Section \ref{sec:q1} for detailed discussion).}
+\noindent\textbf{Normality Assessment:} Both the Intermediate Dose and Unit Dose thieves show normal distributions based on Shapiro-Wilk testing (see Table \ref{tab:b1}). Intermediate Dose yields W-statistic = 0.9836 (p = 0.9794) and Unit Dose yields W-statistic = 0.9424 (p = 0.3190), both with p-values well above the conventional significance level of 0.05, confirming normal distributions. \textit{This finding addresses the client's Question 1 regarding whether assay values are generally well-behaved (see Section \ref{sec:q1} for detailed discussion).}
 
-\noindent\textbf{Outlier Detection:} Conservative outlier detection using the criterion Q3 + 2×IQR identified zero outliers for both methods (see Table \ref{tab:a1b}). The Intermediate Dose upper outlier boundary is 41.47 mg/100mg and Unit Dose is 44.46 mg/100mg, both substantially above the observed maximum values, confirming absence of extreme values that could violate model assumptions.
+\noindent\textbf{Outlier Detection:} Conservative outlier detection using the criterion Q3 + 2 $\times$ IQR identified zero outliers for both methods (see Table \ref{tab:b2}). The Intermediate Dose upper outlier boundary is 41.47 mg/100mg and Unit Dose is 44.46 mg/100mg, both substantially above the observed maximum values, confirming absence of extreme values that could violate model assumptions.
 
 \subsubsection{Effect Size Quantification}
 
@@ -460,7 +460,7 @@ This section provides comprehensive answers to the four specific questions posed
 \subsubsection{Question 1: Are the assay values generally well behaved?}
 \label{sec:q1}
 
-The assay values are generally well behaved and suitable for mixed-effects analysis. All three methods---Intermediate Dose, Unit Dose, and final Tablet products---show normal distributions with Shapiro-Wilk p-values exceeding 0.18 (see Table \ref{tab:a1a}). Conservative outlier detection using the criterion Q3 + 2×IQR identified zero outliers across all methods (see Table \ref{tab:a1b}).
+The assay values are generally well behaved and suitable for mixed-effects analysis. All three methods---Intermediate Dose, Unit Dose, and final Tablet products---show normal distributions with Shapiro-Wilk p-values exceeding 0.18 (see Table \ref{tab:b1}). Conservative outlier detection using the criterion Q3 + 2 $\times$ IQR identified zero outliers across all methods (see Table \ref{tab:b2}).
 
 \noindent\textit{Important caveat:} When treating thief samples as repeated measures (three replicates per location), the correlation structure within each location should ideally be incorporated into outlier detection criteria. However, the data quality is sufficiently high that no outliers are detected even with conservative criteria. Overall, the data satisfy distributional assumptions for mixed-effects ANOVA analysis with no concerns identified. The assay response variable demonstrates excellent measurement properties with normal residuals and homogeneous variance across methods.
 
@@ -551,40 +551,6 @@ More significantly, this study revealed process-related issues of greater import
 		Tablet (Final Product) & 30 & 35.82 & 1.33 & 33.09 & 35.10 & 35.69 & 36.52 & 39.44 \\
 		\bottomrule
 	\end{tabular}
-\end{table}
-
-% --- Table A.1a (Normality Tests) ---
-\begin{table}[H]
-	\centering
-	\caption{Normality Tests (Shapiro-Wilk)}
-	\label{tab:a1a}
-	\small
-	\begin{tabular}{l rrr}
-		\toprule
-		\textbf{Method} & \textbf{W-Statistic} & \textbf{p-Value} & \textbf{Status} \\
-		\midrule
-		Intermediate Dose & 0.9836 & 0.9794 & Normal $\checkmark$ \\
-		Unit Dose & 0.9424 & 0.3190 & Normal $\checkmark$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-% --- Table A.1b (Outlier Detection) ---
-\begin{table}[H]
-	\centering
-	\caption{Outlier Detection (Q3 + 2×IQR criterion)}
-	\label{tab:a1b}
-	\small
-	\begin{tabular}{l rrrrrrr}
-		\toprule
-		\textbf{Method} & \textbf{Q1} & \textbf{Q3} & \textbf{IQR} & \textbf{Upper Bound} & \textbf{Values > UB} & \textbf{Outliers} \\
-		\midrule
-		Intermediate Dose & 36.01 & 37.83 & 1.82 & 41.47 & None & 0 \\
-		Unit Dose & 34.74 & 37.98 & 3.24 & 44.46 & None & 0 \\
-		\bottomrule
-	\end{tabular}
-	\\ \vspace{0.2cm}
-	\small Note: Quartile values were computed using R's default quantile() function with type=7 (linear interpolation).
 \end{table}
 
 \subsection{Distribution Visualization}
@@ -691,9 +657,43 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 	Location Range Span: 2.96 mg/100mg (from Location 1 at 35.01 to Location 6 at 37.98)
 \end{table}
 
-\subsection{Residual Diagnostics}
+\subsection{Diagnostic Checks}
 
-Residual diagnostic plots verify that the mixed model assumptions are satisfied.
+Diagnostic checks verify that the mixed model assumptions are satisfied through residual diagnostic plots and normality tests on residuals.
+
+% --- Table B.1 (Normality Tests on Raw Data) ---
+\begin{table}[H]
+	\centering
+	\caption{Normality Tests on Raw Data (Shapiro-Wilk)}
+	\label{tab:b1}
+	\small
+	\begin{tabular}{l rrr}
+		\toprule
+		\textbf{Method} & \textbf{W-Statistic} & \textbf{p-Value} & \textbf{Status} \\
+		\midrule
+		Intermediate Dose & 0.9836 & 0.9794 & Normal $\checkmark$ \\
+		Unit Dose & 0.9424 & 0.3190 & Normal $\checkmark$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% --- Table B.2 (Outlier Detection) ---
+\begin{table}[H]
+	\centering
+	\caption{Outlier Detection (Q3 + 2×IQR criterion)}
+	\label{tab:b2}
+	\small
+	\begin{tabular}{l rrrrrrr}
+		\toprule
+		\textbf{Method} & \textbf{Q1} & \textbf{Q3} & \textbf{IQR} & \textbf{Upper Bound} & \textbf{Values > UB} & \textbf{Outliers} \\
+		\midrule
+		Intermediate Dose & 36.01 & 37.83 & 1.82 & 41.47 & None & 0 \\
+		Unit Dose & 34.74 & 37.98 & 3.24 & 44.46 & None & 0 \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\small Note: Quartile values were computed using R's default quantile() function with type=7 (linear interpolation).
+\end{table}
 
 \begin{figure}[H]
 	\centering
