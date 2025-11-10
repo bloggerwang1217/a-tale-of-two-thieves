@@ -342,27 +342,6 @@ for (method in c("Intm", "Unit")) {
   print(outliers)
 }
 
-# Extract data by method and tablet for bootstrap analyses
-intm_data <- thief_data$ASSAY[thief_data$METHOD == "Intm"]
-unit_data <- thief_data$ASSAY[thief_data$METHOD == "Unit"]
-tablet_assay <- tablet_data$ASSAY
-
-# Calculate means for comparisons
-mean_intm <- mean(intm_data)
-mean_unit <- mean(unit_data)
-mean_tablet <- mean(tablet_assay)
-
-# Get sample sizes
-n_intm <- length(intm_data)
-n_unit <- length(unit_data)
-n_tablet <- length(tablet_assay)
-
-# Two-sample t-tests (Welch's) for all three comparisons
-t_test_ui <- t.test(unit_data, intm_data)
-t_test_ut <- t.test(unit_data, tablet_assay)
-t_test_it <- t.test(intm_data, tablet_assay)
-
-
 
 
 # Residual Diagnostics
@@ -406,40 +385,51 @@ print("Diagnostic plots saved as 'diagnostic_plots.png'")
 
 # Effect Size Analysis
 
+# Basic statistics and tests
+
+# Extract data by method and tablet for bootstrap analyses
+intm_data <- thief_data$ASSAY[thief_data$METHOD == "Intm"]
+unit_data <- thief_data$ASSAY[thief_data$METHOD == "Unit"]
+tablet_assay <- tablet_data$ASSAY
+
+# Calculate means for comparisons
+mean_intm <- mean(intm_data)
+mean_unit <- mean(unit_data)
+mean_tablet <- mean(tablet_assay)
+
+# Get sample sizes
+n_intm <- length(intm_data)
+n_unit <- length(unit_data)
+n_tablet <- length(tablet_assay)
+
+# Two-sample t-tests (Welch's) for all three comparisons
+t_test_ui <- t.test(unit_data, intm_data)
+t_test_ut <- t.test(unit_data, tablet_assay)
+t_test_it <- t.test(intm_data, tablet_assay)
+
 # Recalculate descriptive statistics for effect size calculations
 sd_intm <- sd(intm_data)
 sd_unit <- sd(unit_data)
+
+
+# Effect size
 
 # 1. Cohen's d (pooled)
 pooled_sd <- sqrt(((n_intm - 1) * sd_intm^2 + (n_unit - 1) * sd_unit^2) / (n_intm + n_unit - 2))
 cohens_d <- (mean_intm - mean_unit) / pooled_sd
 
-# 2. Hedges' g (unbiased correction for Cohen's d)
-correction_factor <- 1 - (3 / (4 * (n_intm + n_unit) - 9))
-hedges_g <- cohens_d * correction_factor
-
-# 3. Glass's Delta (uses control group SD)
-glass_delta <- (mean_intm - mean_unit) / sd_unit
-
-# 4. Standardized Mean Difference (SMD)
-smd <- (mean_intm - mean_unit) / ((sd_intm + sd_unit) / 2)
-
-# 5. Effect size from F-statistic
-# Extract F-statistic from anova output (more robust method)
-f_stat <- as.numeric(anova_results$`F-value`[1])  # Extract F-value safely
-df_num <- 1
+# 2. Eta-squared and Omega-squared (proportion of variance explained)
+f_stat <- as.numeric(anova_results$`F-value`[2])  # Extract F-value for METHOD (row 2)
 df_den <- 29  # From mixed model output
-effect_size_f <- sqrt(f_stat / (f_stat + df_den))
-
-# 6. Eta-squared (proportion of variance explained)
 eta_squared <- r2_marginal_1 * 100  # In percentage
-omega_squared <- ((f_stat - 1) / (f_stat + df_den)) * 100  # In percentage
+
+omega_squared <- ((f_stat - 1) / (f_stat - 1 + df_den)) * 100  # In percentage
 
 # Create effect size summary table
 effect_size_table <- data.frame(
-  Measure = c("Cohen's d", "Hedges' g", "Glass's Δ", "SMD", "Effect Size (f)", "Eta-squared (%)", "Omega-squared (%)"),
-  Value = round(c(cohens_d, hedges_g, glass_delta, smd, effect_size_f, eta_squared, omega_squared), 4),
-  Interpretation = c("Small", "Small", "Small", "Small", "Small", "2.3%", "0.27%")
+  Measure = c("Cohen's d", "Eta-squared (%)", "Omega-squared (%)"),
+  Value = round(c(cohens_d, eta_squared, omega_squared), 4),
+  Interpretation = c("Small", "2.30%", "0.27%")
 )
 
 cat("\n========== TABLE A.10: EFFECT SIZE MEASURES (3.4 Effect Size Assessment) ==========\n")

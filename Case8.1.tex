@@ -421,7 +421,7 @@ Diagnostic checks confirm that mixed model assumptions are reasonably satisfied.
 
 \subsubsection{Effect Size Quantification}
 
-Effect size analysis quantifies the practical magnitude of the METHOD difference independent of sample size. The standardized mean difference is Cohen's d = 0.30 (small effect), with the METHOD factor explaining only 2.30\% of total assay variance (see Table \ref{tab:a10}). The observed difference of 0.51 mg/100mg represents only 0.14\% of the 35 mg/100mg target value, rendering it negligible for manufacturing decision-making.
+Effect size analysis quantifies the practical magnitude of the METHOD difference independent of sample size. The standardized mean difference is Cohen's d = 0.2984 (small effect), with the METHOD factor explaining only 2.3025\% of total assay variance ($\eta^2$) or 0.2797\% ($\omega^2$, bias-corrected) (see Table \ref{tab:a10}). The observed difference of 0.51 mg/100mg represents only 1.46\% of the 35 mg/100mg target specification value, rendering it negligible for manufacturing decision-making.
 
 \subsubsection{Thief-to-Tablet Comparison: Assessment of Measurement Bias}
 
@@ -731,7 +731,27 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 	\end{tabular}
 \end{table}
 
-\clearpage
+\subsection{Effect Size Calculations}
+
+% --- Table A.10 (Effect Size Measures) ---
+\begin{table}[H]
+	\centering
+	\caption{Effect Size Measures for METHOD Comparison}
+	\label{tab:a10}
+	\small
+	\begin{tabular}{l rrr}
+		\toprule
+		\textbf{Measure} & \textbf{Value} & \textbf{Formula} & \textbf{Interpretation Benchmark} \\
+		\midrule
+		Cohen's d & 0.2984 & $\frac{M_1 - M_2}{SD_{pooled}}$ & Small: 0.2, Medium: 0.5, Large: 0.8 \\
+		Eta-squared ($\eta^2$) & 2.3025\% & $\frac{SS_{eff}}{SS_{total}}$ & Small: 1\%, Medium: 6\%, Large: 14\% \\
+		Omega-squared ($\omega^2$) & 0.2797\% & $\frac{MS_{eff} - MS_{err}}{MS_{total} + MS_{err}}$ & Small: 1\%, Medium: 6\%, Large: 14\% \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+
+\end{table}
+\textbf{Variable Definitions:} $M_1$, $M_2$ = group means (INTM and UNIT); $SD_{pooled}$ = pooled standard deviation; $SS_{eff}$ = sum of squares for METHOD effect; $SS_{total}$ = total sum of squares; $MS_{eff}$ = mean square for METHOD effect; $MS_{err}$ = mean square for error; $MS_{total}$ = total mean square. Omega-squared is preferred over eta-squared as it provides less biased estimates of population effect size.
 
 \subsection{Bootstrap Validation Results}
 
@@ -754,7 +774,9 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 	Bootstrap analysis confirms stability of statistical findings under repeated sampling.
 \end{table}
 
-\section{Appendix C: Advanced Analysis and Effect Size Measures}
+\clearpage
+
+\section{Appendix C: Advanced Analysis}
 
 \subsection{Interaction Analysis: Location-Specific METHOD Effects}
 
@@ -798,25 +820,6 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 	\end{tabular}
 \end{table}
 
-\subsection{Effect Size Calculations}
-
-% --- Table A.10 (Effect Size Measures) ---
-\begin{table}[H]
-	\centering
-	\caption{Effect Size Measures for METHOD Comparison}
-	\label{tab:a10}
-	\small
-	\begin{tabular}{l rr}
-		\toprule
-		\textbf{Measure} & \textbf{Value} & \textbf{Classification} \\
-		\midrule
-		Cohen's d & 0.30 & SMALL \\
-		Hedges' g & 0.29 & SMALL \\
-		Eta-squared ($\eta^2$) & 2.30\% & Method explains 2.30\% variance \\
-		Omega-squared ($\omega^2$) & 0.27\% & Bias-corrected estimate \\
-		\bottomrule
-	\end{tabular}
-\end{table}
 
 \clearpage
 

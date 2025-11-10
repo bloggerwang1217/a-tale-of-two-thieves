@@ -4,6 +4,7 @@
 
 - 沒有目錄 "TABLE OF CONTENT"
 - 沒有一個段落回答客戶問題
+- Appendix 順序與編號混亂
 
 ## Methodology
 
