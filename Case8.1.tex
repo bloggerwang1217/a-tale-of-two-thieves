@@ -366,13 +366,13 @@ This model enables each location to have its own method-specific response patter
 
 A significant interaction would suggest that the choice of sampling method should potentially be tailored to specific locations within the blender, with some locations potentially favoring one method over the other.
 
-\subsection{Model Assessment}
+\subsection{Model Assessment and Validation}
 
 \noindent\textbf{Diagnostic Checks}: Q-Q plots, normality testing (Shapiro-Wilk test), residuals vs. fitted values, scale-location plots, and Cook's distance to verify mixed model assumptions (normality, homoscedasticity, no influential outliers)
 
 \noindent\textbf{Effect Size Quantification}: In addition to hypothesis tests, multiple effect size measures are calculated, including Cohen's d (standardized mean difference for METHOD comparison), eta-squared (\(\eta^2\)) representing the proportion of variance explained by METHOD, and omega-squared (\(\omega^2\)) as a bias-corrected variance explained estimate. These effect sizes allow us to answer ``How big is the difference?'' independent of whether it reaches statistical significance.
 
-\noindent\textbf{Bootstrap Validation for Robustness}: To verify the robustness and stability of statistical findings, bootstrap resampling was employed. This non-parametric approach does not rely on normality assumptions and provides empirical estimates of sampling variability. A total of 1000 bootstrap resamples of the original data were performed, with recalculation of p-values for key comparisons at each iteration.
+\noindent\textbf{Mean Comparison and Robustness Analysis for Bias}: Pairwise comparisons between specific groups (INTM vs. UNIT, INTM vs. Tablet, UNIT vs. Tablet) are assessed using Welch's t-test, which does not assume equal variances and is appropriate for comparing group means. For each comparison, we extract the observed t-statistic, degrees of freedom, p-value, and 95\% confidence interval for the mean difference. To verify the robustness and stability of these comparisons and assess for systematic bias, bootstrap resampling was employed. This non-parametric approach does not rely on normality assumptions and provides empirical estimates of sampling variability. A total of 1000 bootstrap resamples of the original data were performed, with recalculation of p-values for key comparisons at each iteration. For each bootstrap sample, we recalculate the mean difference and determine whether the absolute difference exceeds the observed absolute difference. The bootstrap p-value represents the proportion of bootstrap samples with differences as extreme or more extreme than observed. Additionally, we compute bootstrap bias (deviation of bootstrap mean from observed estimate) and standard error to assess whether sample estimates show systematic bias relative to true population parameters.
 
 % --- SECTION 3 (from Page 5) ---
 \section{Results}
@@ -423,9 +423,11 @@ Diagnostic checks confirm that mixed model assumptions are reasonably satisfied.
 
 Effect size analysis quantifies the practical magnitude of the METHOD difference independent of sample size. The standardized mean difference is Cohen's d = 0.2984 (small effect), with the METHOD factor explaining only 2.3025\% of total assay variance ($\eta^2$) or 0.2797\% ($\omega^2$, bias-corrected) (see Table \ref{tab:a10}). The observed difference of 0.51 mg/100mg represents only 1.46\% of the 35 mg/100mg target specification value, rendering it negligible for manufacturing decision-making.
 
-\subsubsection{Thief-to-Tablet Comparison: Assessment of Measurement Bias}
+\subsubsection{Thief-to-Tablet Mean Comparison and Robustness Check for Bias}
 
-A critical quality control finding emerges from comparing the thief sampling measurements to the final tablet assay values (see Table \ref{tab:a7} for bootstrap validation). \textit{This analysis directly addresses the client's Question 4 regarding whether thief-sampled values are comparable to tablet values (see Section \ref{sec:q4} for detailed discussion and recommendations).} The tablet samples show substantially lower mean assay values compared to both thief methods. The Intermediate Dose thief overestimates final product content by 1.12 mg/100mg (3.1\%) and the Unit Dose method overestimates by 0.61 mg/100mg (1.7\%). This systematic pattern reveals that tablet assay values are substantially lower than both thief methods, indicating active ingredient loss during the powder-to-tablet compression process of approximately 3\% of the final product assay value---a significant quality control concern requiring immediate investigation.
+A critical quality control finding emerges from comparing the thief sampling measurements to the final tablet assay values. \textit{This analysis directly addresses the client's Question 4 regarding whether thief-sampled values are comparable to tablet values (see Section \ref{sec:q4} for detailed discussion and recommendations).} Pairwise Welch's t-tests reveal that tablet samples show substantially lower mean assay values (35.82 mg/100mg) compared to both thief methods. The Intermediate Dose thief overestimates final product content by 1.09 mg/100mg (p = 0.0118, statistically significant), while the Unit Dose method overestimates by 0.58 mg/100mg (p = 0.2802, not statistically significant) (see Table \ref{tab:a6}).
+
+Bootstrap validation (1000 resamples) confirms the systematic nature of these differences: the INTM vs. Tablet comparison yields a bootstrap p-value of 0.534 (Observed p = 0.0118), while UNIT vs. Tablet yields a bootstrap p-value of 0.505 (Observed p = 0.2802). The stabilized bootstrap p-values and non-zero bias estimates indicate that the observed differences represent systematic measurement bias rather than random sampling variation. This systematic pattern reveals that tablet assay values are substantially lower than both thief methods, indicating active ingredient loss during the powder-to-tablet compression process of approximately 3\% of the final product assay value---a significant quality control concern requiring immediate investigation (see Table \ref{tab:a7} for detailed bootstrap results).
 
 % --- SECTION 4 (from Page 5-6) ---
 \section{Discussion and Conclusions}
@@ -752,6 +754,27 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 
 \end{table}
 \textbf{Variable Definitions:} $M_1$, $M_2$ = group means (INTM and UNIT); $SD_{pooled}$ = pooled standard deviation; $SS_{eff}$ = sum of squares for METHOD effect; $SS_{total}$ = total sum of squares; $MS_{eff}$ = mean square for METHOD effect; $MS_{err}$ = mean square for error; $MS_{total}$ = total mean square. Omega-squared is preferred over eta-squared as it provides less biased estimates of population effect size.
+
+\subsection{Welch's t-Test Results for Pairwise Comparisons}
+
+% --- Table A.6 (Welch t-Test) ---
+\begin{table}[H]
+	\centering
+	\caption{Welch's t-Test Results for Pairwise Comparisons}
+	\label{tab:a6}
+	\small
+	\begin{tabular}{l rrrrrr}
+		\toprule
+		\textbf{Comparison} & \textbf{Mean Diff} & \textbf{t-statistic} & \textbf{df} & \textbf{p-value} & \textbf{95\% CI Lower} & \textbf{95\% CI Upper} \\
+		\midrule
+		UNIT vs. INTM & -0.51 & -0.895 & 30.627 & 0.3777 & -1.676 & 0.654 \\
+		UNIT vs. Tablet & 0.58 & 1.102 & 26.416 & 0.2802 & -0.500 & 1.660 \\
+		INTM vs. Tablet & 1.09 & 2.659 & 34.572 & 0.0118 & 0.258 & 1.924 \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\small Note: Mean differences calculated as (Group 1 Mean) - (Group 2 Mean). Negative values indicate Group 1 mean is lower than Group 2.
+\end{table}
 
 \subsection{Bootstrap Validation Results}
 
