@@ -393,7 +393,7 @@ A heterogeneous variance mixed-effects model was fitted to compare the two sampl
 
 \noindent\textbf{(1) Statistical Equivalence}: The METHOD factor is not statistically significant (F(1,29) = 1.081, p = 0.307, 95\% CI: [-1.49, 0.47] mg/100mg), indicating equivalent mean assay values between methods.
 
-\noindent\textbf{(2) Superior Precision of INTM}: The Intermediate Dose method exhibits 4.81-fold lower residual variance than Unit Dose (0.71 vs 3.40 mg\textsuperscript{2}/100mg\textsuperscript{2}), providing superior measurement consistency critical for process monitoring.
+\noindent\textbf{(2) Superior Precision of INTM}: The Intermediate Dose method exhibits substantially lower residual variance (ML estimates: 0.7069 mg\textsuperscript{2}/100mg\textsuperscript{2}) compared to Unit Dose (3.4001 mg\textsuperscript{2}/100mg\textsuperscript{2}), representing a 4.81-fold improvement in measurement precision. This superior consistency is critical for process monitoring and early detection of batch deviations.
 
 \noindent\textbf{(3) Location Effects Dominate}: Location-specific variation accounts for 31\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with detailed location effects presented in Table \ref{tab:a4} and further discussed in Section \ref{sec:q2}.} Detailed location effects are presented in Table \ref{tab:a4}.
 
@@ -442,7 +442,7 @@ Third and most significantly, location-specific effects within the V-Blender are
 
 \noindent\textbf{Recommendation}: Transition quality assurance sampling to exclusive use of the Intermediate Dose Thief method for all routine blender content uniformity testing.
 
-\noindent\textbf{Rationale}: Although both methods produce statistically equivalent mean results (p = 0.307), the Intermediate Dose Thief demonstrates substantially superior precision with residual variance 4.81 times lower than the Unit Dose method. The superior precision provides more reliable and consistent measurements critical for process monitoring and early detection of batch deviations. Additionally, this method is operationally simpler and more suitable for high-throughput quality assurance sampling, improving laboratory efficiency.
+\noindent\textbf{Rationale}: Although both methods produce statistically equivalent mean results (p = 0.307), the Intermediate Dose Thief demonstrates substantially superior precision with iance 4.81 times lower than the Unit Dose method. The superior precision provides more reliable and consistent measurements critical for process monitoring and early detection of batch deviations. Additionally, this method is operationally simpler and more suitable for high-throughput quality assurance sampling, improving laboratory efficiency.
 
 \subsection{V-Blender Process Improvement}
 
@@ -727,22 +727,6 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 		All residuals combined & 0.9290 & 0.0234 & $\times$ Non-Normal \\
 		INTM method residuals & 0.9676 & 0.7511 & $\checkmark$ Normal \\
 		UNIT method residuals & 0.9287 & 0.1842 & $\checkmark$ Normal \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-% --- Table A.6 (Residual Variance by Method) ---
-\begin{table}[H]
-	\centering
-	\caption{Residual Variance by Method}
-	\label{tab:a6}
-	\small
-	\begin{tabular}{l rr}
-		\toprule
-		\textbf{Method} & \textbf{Residual Variance} & \textbf{Relative to INTM} \\
-		\midrule
-		INTM (Intermediate Dose) & 0.6996 & Baseline (1.0\texttimes) \\
-		UNIT (Unit Dose) & 3.3889 & 4.84\texttimes~higher \\
 		\bottomrule
 	\end{tabular}
 \end{table}
