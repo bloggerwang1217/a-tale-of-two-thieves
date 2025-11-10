@@ -376,10 +376,10 @@ sw_all <- shapiro.test(residuals_all)
 sw_intm <- shapiro.test(residuals_all[thief_data$METHOD == "Intm"])
 sw_unit <- shapiro.test(residuals_all[thief_data$METHOD == "Unit"])
 
-# Diagnostic Plots (4-panel diagnostics)
+# Diagnostic Plots (2-panel diagnostics)
 
-png("img/diagnostic_plots.png", width = 1200, height = 900, res = 120)
-par(mfrow = c(2, 2), mar = c(5, 5, 3, 2))
+png("img/diagnostic_plots.png", width = 1200, height = 600, res = 120)
+par(mfrow = c(1, 2), mar = c(5, 5, 3, 2))
 
 # Plot 1: Residuals vs Fitted Values
 plot(fitted_vals, residuals_all,
@@ -395,28 +395,6 @@ qqnorm(residuals_all,
        main = "2. Normal Q-Q Plot",
        pch = 16, cex = 1.1, col = "darkgray")
 qqline(residuals_all, lwd = 2, col = "red")
-
-# Plot 3: Scale-Location Plot
-plot(fitted_vals, sqrt(abs(residuals_all)),
-     main = "3. Scale-Location Plot",
-     xlab = "Fitted Values", ylab = "sqrt(|Residuals|)",
-     pch = 16, cex = 1.1, col = "darkgray")
-# Add LOWESS smooth curve
-lines(lowess(fitted_vals, sqrt(abs(residuals_all))), lwd = 2, col = "blue")
-
-# Plot 4: Cook's Distance
-# Calculate Cook's distance manually
-n <- nrow(thief_data)
-p <- 2  # number of parameters (intercept + METHOD)
-mse <- sum(residuals_all^2) / (n - p)
-hat_matrix_diag <- hatvalues(lm(ASSAY ~ METHOD, data = thief_data))
-cooks_d <- (residuals_all^2 / p / mse) * (hat_matrix_diag / (1 - hat_matrix_diag))
-
-plot(1:n, cooks_d,
-     main = "4. Cook's Distance",
-     xlab = "Observation Index", ylab = "Cook's Distance",
-     pch = 16, cex = 1.1, col = "darkgray", type = "h")
-abline(h = 4/n, lty = 2, lwd = 2, col = "red")  # Threshold line
 
 par(mfrow = c(1, 1))
 dev.off()

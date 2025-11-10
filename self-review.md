@@ -18,9 +18,11 @@
 - 後面的小節混亂，應該整理成一個 Model Assessment
 
 ### EDA
-- Normality 應該在 Model Assessment 而不是 EDA
+- Normality/Outliers 應該在 Model Assessment 而不是 EDA
 
 ### Model Assessment
+
+- 沒有詳細的 Diagnotics 的說明（資料有沒有 outlier, 模型假設有沒有成立...）
 
 ## 問題回應統計
 
