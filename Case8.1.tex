@@ -397,7 +397,9 @@ A heterogeneous variance mixed-effects model was fitted to compare the two sampl
 
 \noindent\textbf{(3) Location Effects Dominate}: Location-specific variation accounts for 31\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with detailed location effects presented in Table \ref{tab:a4} and further discussed in Section \ref{sec:q2}.} Detailed location effects are presented in Table \ref{tab:a4}.
 
-\subsubsection{Fixed and Random Effects Decomposition}
+\subsection{Regression Perspective: Fixed and Random Effects Decomposition}
+
+\subsubsection{Fixed and Random Effects Analysis}
 
 \noindent\textbf{Fixed Effects (METHOD Factor)}: The fixed METHOD effect of -0.51 mg/100mg (95\% CI: [-1.49, 0.47]) represents the universal mean difference between methods. This effect is not statistically significant (F(1,29) = 1.081, p = 0.307), indicating that both sampling methods are scientifically equivalent in terms of mean assay values. See Table \ref{tab:a2b} for fixed effects estimates.
 
@@ -407,13 +409,13 @@ A heterogeneous variance mixed-effects model was fitted to compare the two sampl
 
 Location-specific random effects account for 31.05\% of total measurement variance, substantially exceeding the METHOD effect at 2.30\%, with residual measurement error accounting for 66.64\%. The Marginal R\textsuperscript{2} of 2.30\% reflects the variance explained by METHOD alone, while the Conditional R\textsuperscript{2} of 33.36\% includes both METHOD and LOCATION effects (see Table \ref{tab:a3}). This confirms that location-specific factors dominate the variability in assay measurements.
 
-\subsection{Interaction Analysis}
+\subsection{Interaction Analysis: Does METHOD Effect Vary by Location?}
 
 A random slopes mixed model was fitted to test whether METHOD effects vary across sampling locations. The likelihood ratio test yields \(\chi^2\) = 1.21, p = 0.5456 (see Table \ref{tab:a8}), indicating that location-dependent METHOD effects are not statistically significant. The global METHOD effect applies uniformly across sampling positions.
 
 \subsection{Model Assessment}
 
-\subsubsection{Diagnostic Check}
+\subsubsection{Diagnostic Checks}
 
 \noindent\textbf{Normality Assessment:} Both the Intermediate Dose and Unit Dose thieves show normal distributions based on Shapiro-Wilk testing (see Table \ref{tab:b1}). Intermediate Dose yields W-statistic = 0.9836 (p = 0.9794) and Unit Dose yields W-statistic = 0.9424 (p = 0.3190), both with p-values well above the conventional significance level of 0.05, confirming normal distributions. \textit{This finding addresses the client's Question 1 regarding whether assay values are generally well-behaved (see Section \ref{sec:q1} for detailed discussion).}
 
