@@ -3,7 +3,7 @@
 # ================================================================================
 
 # ================================================================================
-# 1. INTRODUCTION
+# 3.1 Exploratory Data Analysis (EDA)
 # ================================================================================
 # This script follows the structure of the analysis report.
 # Data preparation and package loading are performed first.
@@ -67,13 +67,7 @@ combined_data$METHOD <- factor(combined_data$METHOD, levels = c("Intm", "Unit", 
 
 combined_data
 
-# ================================================================================
-# 2. METHODOLOGY
-# ================================================================================
 
-# ================================================================================
-#   2.1 Exploratory Data Analysis (EDA)
-# ================================================================================
 # Three-way comparison including tablets
 combined_stats <- data.frame(
   Method = c("Intm", "Unit", "Tablet"),
@@ -93,7 +87,7 @@ print(combined_stats)
 cat("\n")
 
 # ================================================================================
-#   2.2 Mixed-Effects Model
+#   3.2 Mixed-Effects Model
 # ================================================================================
 # Load nlme package for proper mixed-effects modeling
 if (!require(nlme, quietly = TRUE)) {
@@ -132,13 +126,13 @@ print(anova_results)
 cat("\n========== CONFIDENCE INTERVALS FOR FIXED EFFECTS ==========\n")
 print(ci_results)
 
+
 # ================================================================================
-# ================================================================================
-#   2.3 Regression Decomposition: Fixed and Random Effects
+#   3.3 Regression Decomposition: Fixed and Random Effects
 # ================================================================================
 
 # ================================================================================
-#   2.3.1 Fixed Effects (METHOD Factor)
+#   3.3.1 Fixed Effects (METHOD Factor)
 # ================================================================================
 # Extract and display fixed effects with statistics
 cat("\n========== FIXED EFFECTS: METHOD FACTOR (3.2.1) ==========\n")
@@ -168,68 +162,9 @@ cat("F-statistic:", round(f_value_method, 3), "\n")
 cat("p-value:", round(p_value_method, 4), "\n")
 cat("95% CI: [", round(ci_lower, 2), ",", round(ci_upper, 2), "]\n\n")
 
-# ================================================================================
-#   2.3.2 Location Effects (Random Intercepts)
-# ================================================================================
-# Extract random intercepts from the base model
-random_effects_base <- random.effects(mixed_model)
-location_intercepts <- as.numeric(random_effects_base[, 1])
 
-# Calculate grand mean
-grand_mean <- mean(thief_data$ASSAY)
+# Variance Heterogeneity by Sampling Method
 
-# Create location effects summary table
-location_effects_df <- data.frame(
-  Location = 1:6,
-  Random_Intercept = round(location_intercepts, 2),
-  Location_Mean = round(grand_mean + location_intercepts, 2),
-  Pct_Below_Grand_Mean = round((location_intercepts / grand_mean) * 100, 2)
-)
-
-cat("========== TABLE A.4: LOCATION EFFECTS SUMMARY (3.2.1 Random Effects) ==========\n")
-print(location_effects_df)
-cat("\nLocation Range Span:", round(max(location_intercepts) - min(location_intercepts), 2), "mg/100mg\n")
-cat("Lowest Location (1):", round(grand_mean + min(location_intercepts), 2), "mg/100mg\n")
-cat("Highest Location (6):", round(grand_mean + max(location_intercepts), 2), "mg/100mg\n\n")
-
-# ================================================================================
-#   2.4 Variance Decomposition: R² and Variance Heterogeneity
-# ================================================================================
-
-# ================================================================================
-#   2.4.1 R² Decomposition and Variance Component Contributions
-# ================================================================================
-# Calculate R² for the base model (Model 1: fixed METHOD + random LOCATION intercepts)
-fitted_marginal_1 <- predict(mixed_model, level = 0)
-fitted_conditional_1 <- predict(mixed_model, level = 1)
-
-ss_tot <- sum((thief_data$ASSAY - mean(thief_data$ASSAY))^2)
-
-# Model 1 R² components
-r2_marginal_1 <- 1 - sum((thief_data$ASSAY - fitted_marginal_1)^2) / ss_tot
-r2_conditional_1 <- 1 - sum((thief_data$ASSAY - fitted_conditional_1)^2) / ss_tot
-
-# Calculate variance component contributions for reporting
-method_variance_contribution <- r2_marginal_1 * 100  # 2.30%
-location_variance_contribution <- (r2_conditional_1 - r2_marginal_1) * 100  # 34.20%
-residual_variance_contribution <- 100 - (r2_conditional_1 * 100)  # 70.38%
-
-cat("========== VARIANCE DECOMPOSITION SUMMARY (3.2.2 R² Decomposition) ==========\n")
-cat("METHOD Effect Contribution:", round(method_variance_contribution, 2), "% of total variance\n")
-cat("LOCATION Random Effects Contribution:", round(location_variance_contribution, 2), "% of total variance\n")
-cat("Residual Measurement Error:", round(residual_variance_contribution, 2), "% of total variance\n")
-cat("Combined Location Effects (Location + residual influenced):", 
-    round(location_variance_contribution + residual_variance_contribution, 2), "%\n\n")
-
-cat("Marginal R² (METHOD only):", round(r2_marginal_1 * 100, 2), "%\n")
-cat("Conditional R² (METHOD + LOCATION):", round(r2_conditional_1 * 100, 2), "%\n")
-cat("Additional Variance Explained by Location Effects:", round((r2_conditional_1 - r2_marginal_1) * 100, 2), "%\n")
-cat("Ratio of Location Effects to Method Effects:", 
-    round(location_variance_contribution / method_variance_contribution, 1), "-fold\n\n")
-
-# ================================================================================
-#   2.4.2 Variance Heterogeneity by Sampling Method
-# ================================================================================
 # Extract variance components from the mixed model
 var_components <- VarCorr(mixed_model)
 
@@ -265,7 +200,60 @@ cat("UNIT Residual Variance:", round(var_unit, 4), "mg²/100mg²\n")
 cat("Heterogeneity Ratio (UNIT/INTM):", round(ratio_mixed, 2), "× (Unit Dose is more variable)\n\n")
 
 # ================================================================================
-#   2.5 Interaction Analysis: Location-Specific METHOD Effects (3.3)
+#   3.3.2 Location Effects (Random Intercepts)
+# ================================================================================
+# Extract random intercepts from the base model
+random_effects_base <- random.effects(mixed_model)
+location_intercepts <- as.numeric(random_effects_base[, 1])
+
+# Calculate grand mean
+grand_mean <- mean(thief_data$ASSAY)
+
+# Create location effects summary table
+location_effects_df <- data.frame(
+  Location = 1:6,
+  Random_Intercept = round(location_intercepts, 2),
+  Location_Mean = round(grand_mean + location_intercepts, 2),
+  Pct_Below_Grand_Mean = round((location_intercepts / grand_mean) * 100, 2)
+)
+
+cat("========== TABLE A.4: LOCATION EFFECTS SUMMARY (3.2.1 Random Effects) ==========\n")
+print(location_effects_df)
+cat("\nLocation Range Span:", round(max(location_intercepts) - min(location_intercepts), 2), "mg/100mg\n")
+cat("Lowest Location (1):", round(grand_mean + min(location_intercepts), 2), "mg/100mg\n")
+cat("Highest Location (6):", round(grand_mean + max(location_intercepts), 2), "mg/100mg\n\n")
+
+# Calculate R² for the base model (Model 1: fixed METHOD + random LOCATION intercepts)
+fitted_marginal_1 <- predict(mixed_model, level = 0)
+fitted_conditional_1 <- predict(mixed_model, level = 1)
+
+ss_tot <- sum((thief_data$ASSAY - mean(thief_data$ASSAY))^2)
+
+# Model 1 R² components
+r2_marginal_1 <- 1 - sum((thief_data$ASSAY - fitted_marginal_1)^2) / ss_tot
+r2_conditional_1 <- 1 - sum((thief_data$ASSAY - fitted_conditional_1)^2) / ss_tot
+
+# Calculate variance component contributions for reporting
+method_variance_contribution <- r2_marginal_1 * 100  # 2.30%
+location_variance_contribution <- (r2_conditional_1 - r2_marginal_1) * 100  # 34.20%
+residual_variance_contribution <- 100 - (r2_conditional_1 * 100)  # 70.38%
+
+cat("========== VARIANCE DECOMPOSITION SUMMARY (3.2.2 R² Decomposition) ==========\n")
+cat("METHOD Effect Contribution:", round(method_variance_contribution, 2), "% of total variance\n")
+cat("LOCATION Random Effects Contribution:", round(location_variance_contribution, 2), "% of total variance\n")
+cat("Residual Measurement Error:", round(residual_variance_contribution, 2), "% of total variance\n")
+cat("Combined Location Effects (Location + residual influenced):", 
+    round(location_variance_contribution + residual_variance_contribution, 2), "%\n\n")
+
+cat("Marginal R² (METHOD only):", round(r2_marginal_1 * 100, 2), "%\n")
+cat("Conditional R² (METHOD + LOCATION):", round(r2_conditional_1 * 100, 2), "%\n")
+cat("Additional Variance Explained by Location Effects:", round((r2_conditional_1 - r2_marginal_1) * 100, 2), "%\n")
+cat("Ratio of Location Effects to Method Effects:", 
+    round(location_variance_contribution / method_variance_contribution, 1), "-fold\n\n")
+
+
+# ================================================================================
+#   3.4 Interaction Analysis: Location-Specific METHOD Effects (3.3)
 # ================================================================================
 # Fit model WITH interaction (using Random Slopes)
 mixed_interaction <- lme(
@@ -327,10 +315,10 @@ cat("Range of Location-Specific Effects:",
     round(max(location_slopes$Total_Method_Effect), 4), "\n\n")
 
 # ================================================================================
-#   2.6 Model Assessment
+#  3.5 Model Assessment
 # ================================================================================
 
-# Data Quality
+# Normality tests on RAW DATA (before model fitting) - Table B.1
 for (method in c("Intm", "Unit")) {
   subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
   sw_test <- shapiro.test(subset_data)
@@ -339,6 +327,7 @@ for (method in c("Intm", "Unit")) {
   print(status)
 }
 
+# Outlier detection on RAW DATA (Q3 + 2×IQR criterion) - Table B.2
 for (method in c("Intm", "Unit")) {
   subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
   Q1 <- quantile(subset_data, 0.25)
@@ -373,9 +362,118 @@ t_test_ui <- t.test(unit_data, intm_data)
 t_test_ut <- t.test(unit_data, tablet_assay)
 t_test_it <- t.test(intm_data, tablet_assay)
 
-# ================================================================================
-# 2.7 Bootstrap Validation (1000 resamples)
-# ================================================================================
+
+
+
+# Residual Diagnostics
+
+# Get fitted values and residuals from the mixed model
+fitted_vals <- fitted(mixed_model)
+residuals_all <- thief_data$ASSAY - fitted_vals
+
+# Normality tests on MODEL RESIDUALS (after model fitting) - Appendix B.4
+sw_all <- shapiro.test(residuals_all)
+sw_intm <- shapiro.test(residuals_all[thief_data$METHOD == "Intm"])
+sw_unit <- shapiro.test(residuals_all[thief_data$METHOD == "Unit"])
+
+# Diagnostic Plots (4-panel diagnostics)
+
+png("img/diagnostic_plots.png", width = 1200, height = 900, res = 120)
+par(mfrow = c(2, 2), mar = c(5, 5, 3, 2))
+
+# Plot 1: Residuals vs Fitted Values
+plot(fitted_vals, residuals_all,
+     main = "1. Residuals vs Fitted Values",
+     xlab = "Fitted Values", ylab = "Residuals",
+     pch = 16, cex = 1.1, col = "darkgray")
+abline(h = 0, lty = 2, lwd = 2, col = "red")
+# Add LOWESS smooth curve
+lines(lowess(fitted_vals, residuals_all), lwd = 2, col = "blue")
+
+# Plot 2: Normal Q-Q Plot
+qqnorm(residuals_all,
+       main = "2. Normal Q-Q Plot",
+       pch = 16, cex = 1.1, col = "darkgray")
+qqline(residuals_all, lwd = 2, col = "red")
+
+# Plot 3: Scale-Location Plot
+plot(fitted_vals, sqrt(abs(residuals_all)),
+     main = "3. Scale-Location Plot",
+     xlab = "Fitted Values", ylab = "sqrt(|Residuals|)",
+     pch = 16, cex = 1.1, col = "darkgray")
+# Add LOWESS smooth curve
+lines(lowess(fitted_vals, sqrt(abs(residuals_all))), lwd = 2, col = "blue")
+
+# Plot 4: Cook's Distance
+# Calculate Cook's distance manually
+n <- nrow(thief_data)
+p <- 2  # number of parameters (intercept + METHOD)
+mse <- sum(residuals_all^2) / (n - p)
+hat_matrix_diag <- hatvalues(lm(ASSAY ~ METHOD, data = thief_data))
+cooks_d <- (residuals_all^2 / p / mse) * (hat_matrix_diag / (1 - hat_matrix_diag))
+
+plot(1:n, cooks_d,
+     main = "4. Cook's Distance",
+     xlab = "Observation Index", ylab = "Cook's Distance",
+     pch = 16, cex = 1.1, col = "darkgray", type = "h")
+abline(h = 4/n, lty = 2, lwd = 2, col = "red")  # Threshold line
+
+par(mfrow = c(1, 1))
+dev.off()
+
+print("Diagnostic plots saved as 'diagnostic_plots.png'")
+
+
+
+
+# Effect Size Analysis
+
+# Recalculate descriptive statistics for effect size calculations
+sd_intm <- sd(intm_data)
+sd_unit <- sd(unit_data)
+
+# 1. Cohen's d (pooled)
+pooled_sd <- sqrt(((n_intm - 1) * sd_intm^2 + (n_unit - 1) * sd_unit^2) / (n_intm + n_unit - 2))
+cohens_d <- (mean_intm - mean_unit) / pooled_sd
+
+# 2. Hedges' g (unbiased correction for Cohen's d)
+correction_factor <- 1 - (3 / (4 * (n_intm + n_unit) - 9))
+hedges_g <- cohens_d * correction_factor
+
+# 3. Glass's Delta (uses control group SD)
+glass_delta <- (mean_intm - mean_unit) / sd_unit
+
+# 4. Standardized Mean Difference (SMD)
+smd <- (mean_intm - mean_unit) / ((sd_intm + sd_unit) / 2)
+
+# 5. Effect size from F-statistic
+# Extract F-statistic from anova output (more robust method)
+f_stat <- as.numeric(anova_results$`F-value`[1])  # Extract F-value safely
+df_num <- 1
+df_den <- 29  # From mixed model output
+effect_size_f <- sqrt(f_stat / (f_stat + df_den))
+
+# 6. Eta-squared (proportion of variance explained)
+eta_squared <- r2_marginal_1 * 100  # In percentage
+omega_squared <- ((f_stat - 1) / (f_stat + df_den)) * 100  # In percentage
+
+# Create effect size summary table
+effect_size_table <- data.frame(
+  Measure = c("Cohen's d", "Hedges' g", "Glass's Δ", "SMD", "Effect Size (f)", "Eta-squared (%)", "Omega-squared (%)"),
+  Value = round(c(cohens_d, hedges_g, glass_delta, smd, effect_size_f, eta_squared, omega_squared), 4),
+  Interpretation = c("Small", "Small", "Small", "Small", "Small", "2.3%", "0.27%")
+)
+
+cat("\n========== TABLE A.10: EFFECT SIZE MEASURES (3.4 Effect Size Assessment) ==========\n")
+print("Effect Size Analysis:")
+print(effect_size_table)
+
+
+
+
+
+# Bootstrap Validation (1000 resamples)
+
 set.seed(12345)  # For reproducibility
 n_boot <- 1000
 
@@ -425,121 +523,13 @@ bootstrap_table <- data.frame(
   StdError = round(c(boot_se_ui, boot_se_ut, boot_se_it), 4)
 )
 
-cat("\n========== TABLE A.5: BOOTSTRAP VALIDATION - 1000 RESAMPLES (2.7 Bootstrap) ==========\n")
+cat("\n========== TABLE A.7: BOOTSTRAP VALIDATION - 1000 RESAMPLES (2.7 Bootstrap) ==========\n")
 print("Bootstrap Validation Results:")
 print(bootstrap_table)
 cat("\n")
 
 # ================================================================================
-#   2.7b Residual Diagnostics and Effect Size Analysis
-# ================================================================================
-
-# Get fitted values and residuals from the mixed model
-fitted_vals <- fitted(mixed_model)
-residuals_all <- thief_data$ASSAY - fitted_vals
-
-sw_all <- shapiro.test(residuals_all)
-sw_intm <- shapiro.test(residuals_all[thief_data$METHOD == "Intm"])
-sw_unit <- shapiro.test(residuals_all[thief_data$METHOD == "Unit"])
-
-var_intm_resid <- var(residuals_all[thief_data$METHOD == "Intm"])
-var_unit_resid <- var(residuals_all[thief_data$METHOD == "Unit"])
-
-# ================================================================================
-# Diagnostic Plots (4-panel diagnostics)
-# ================================================================================
-
-png("img/diagnostic_plots.png", width = 1200, height = 900, res = 120)
-par(mfrow = c(2, 2), mar = c(5, 5, 3, 2))
-
-# Plot 1: Residuals vs Fitted Values
-plot(fitted_vals, residuals_all,
-     main = "1. Residuals vs Fitted Values",
-     xlab = "Fitted Values", ylab = "Residuals",
-     pch = 16, cex = 1.1, col = "darkgray")
-abline(h = 0, lty = 2, lwd = 2, col = "red")
-# Add LOWESS smooth curve
-lines(lowess(fitted_vals, residuals_all), lwd = 2, col = "blue")
-
-# Plot 2: Normal Q-Q Plot
-qqnorm(residuals_all,
-       main = "2. Normal Q-Q Plot",
-       pch = 16, cex = 1.1, col = "darkgray")
-qqline(residuals_all, lwd = 2, col = "red")
-
-# Plot 3: Scale-Location Plot
-plot(fitted_vals, sqrt(abs(residuals_all)),
-     main = "3. Scale-Location Plot",
-     xlab = "Fitted Values", ylab = "sqrt(|Residuals|)",
-     pch = 16, cex = 1.1, col = "darkgray")
-# Add LOWESS smooth curve
-lines(lowess(fitted_vals, sqrt(abs(residuals_all))), lwd = 2, col = "blue")
-
-# Plot 4: Cook's Distance
-# Calculate Cook's distance manually
-n <- nrow(thief_data)
-p <- 2  # number of parameters (intercept + METHOD)
-mse <- sum(residuals_all^2) / (n - p)
-hat_matrix_diag <- hatvalues(lm(ASSAY ~ METHOD, data = thief_data))
-cooks_d <- (residuals_all^2 / p / mse) * (hat_matrix_diag / (1 - hat_matrix_diag))
-
-plot(1:n, cooks_d,
-     main = "4. Cook's Distance",
-     xlab = "Observation Index", ylab = "Cook's Distance",
-     pch = 16, cex = 1.1, col = "darkgray", type = "h")
-abline(h = 4/n, lty = 2, lwd = 2, col = "red")  # Threshold line
-
-par(mfrow = c(1, 1))
-dev.off()
-
-print("Diagnostic plots saved as 'diagnostic_plots.png'")
-
-# ================================================================================
-# Effect Size Analysis
-# ================================================================================
-
-# Recalculate descriptive statistics for effect size calculations
-sd_intm <- sd(intm_data)
-sd_unit <- sd(unit_data)
-
-# 1. Cohen's d (pooled)
-pooled_sd <- sqrt(((n_intm - 1) * sd_intm^2 + (n_unit - 1) * sd_unit^2) / (n_intm + n_unit - 2))
-cohens_d <- (mean_intm - mean_unit) / pooled_sd
-
-# 2. Hedges' g (unbiased correction for Cohen's d)
-correction_factor <- 1 - (3 / (4 * (n_intm + n_unit) - 9))
-hedges_g <- cohens_d * correction_factor
-
-# 3. Glass's Delta (uses control group SD)
-glass_delta <- (mean_intm - mean_unit) / sd_unit
-
-# 4. Standardized Mean Difference (SMD)
-smd <- (mean_intm - mean_unit) / ((sd_intm + sd_unit) / 2)
-
-# 5. Effect size from F-statistic
-# Extract F-statistic from anova output (more robust method)
-f_stat <- as.numeric(anova_results$`F-value`[1])  # Extract F-value safely
-df_num <- 1
-df_den <- 29  # From mixed model output
-effect_size_f <- sqrt(f_stat / (f_stat + df_den))
-
-# 6. Eta-squared (proportion of variance explained)
-eta_squared <- r2_marginal_1 * 100  # In percentage
-omega_squared <- ((f_stat - 1) / (f_stat + df_den)) * 100  # In percentage
-
-# Create effect size summary table
-effect_size_table <- data.frame(
-  Measure = c("Cohen's d", "Hedges' g", "Glass's Δ", "SMD", "Effect Size (f)", "Eta-squared (%)", "Omega-squared (%)"),
-  Value = round(c(cohens_d, hedges_g, glass_delta, smd, effect_size_f, eta_squared, omega_squared), 4),
-  Interpretation = c("Small", "Small", "Small", "Small", "Small", "2.3%", "0.27%")
-)
-
-cat("\n========== TABLE A.11: EFFECT SIZE MEASURES (3.4 Effect Size Assessment) ==========\n")
-print("Effect Size Analysis:")
-print(effect_size_table)
-
-# ================================================================================
-# 2.6.1 Practical Significance Assessment
+# ?? Practical Significance Assessment
 # ================================================================================
 # Calculate the mean difference as percentage of target specification
 mean_diff <- mean_unit - mean_intm
@@ -551,7 +541,7 @@ cat("Percentage of target (35 mg/100mg):", round(pct_of_target, 2), "%\n")
 cat("Interpretation: The difference is negligible (<0.15% of specification)\n\n")
 
 # ================================================================================
-# 2.8 Results Summary - Figures and Visualization
+# Results Summary - Figures and Visualization
 # ================================================================================
 
 # Save boxplot with three methods as PNG file
