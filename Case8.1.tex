@@ -425,7 +425,7 @@ While the interaction plot (Figure \ref{fig:interaction}) may visually suggest s
 
 \subsubsection{Diagnostic Checks}
 
-Diagnostic checks confirm that mixed model assumptions are reasonably satisfied. The raw data for both Intermediate Dose and Unit Dose methods show normal distributions (Shapiro-Wilk p-values = 0.9794 and 0.3190, respectively), and conservative outlier detection identified zero outliers for both methods (see Tables \ref{tab:b1} and \ref{tab:b2}). Residual diagnostic plots confirm that the heterogeneous variance model with method-specific variance components appropriately addresses variance differences between methods (see Figure \ref{fig:diagnostics}). For detailed diagnostic assessment including residual plot interpretations and normality test results on residuals, refer to Appendix B.4. 
+Diagnostic checks confirm that mixed model assumptions are reasonably satisfied. The raw data for both Intermediate Dose and Unit Dose methods show normal distributions (Shapiro-Wilk p-values = 0.9794 and 0.3190, respectively), and IQR and Cook's Distance outlier detection identified zero outliers for both methods (see Tables \ref{tab:b1} and \ref{tab:b2}). Residual diagnostic plots confirm that the heterogeneous variance model with method-specific variance components appropriately addresses variance differences between methods (see Figure \ref{fig:diagnostics}). For detailed diagnostic assessment including residual plot interpretations and normality test results on residuals, refer to Appendix B.4. 
 
 \subsubsection{Effect Size Quantification}
 
@@ -522,6 +522,58 @@ Temporal analysis of the tablet data (30 tablets from 10 randomly selected drums
 The drum-to-drum variance is 0.4361 with a coefficient of variation of 1.84\%, suggesting relatively consistent drum-to-drum production performance. An autoregressive AR(1) covariance structure applied to the temporal sequence reveals no strong temporal correlation (autocorrelation coefficient approximately 0.12, not significant). This contrasts with the heterogeneous variance structure necessary for the thief methods, indicating that compression and drumming operations maintain more uniform processing than the blending stage.
 
 \noindent\textbf{Quality Assurance Recommendation:} Continue monitoring drum-to-drum variation through ongoing tablet sampling. Implement statistical process control (SPC) charts for the tablet production stage to enable long-term trend detection and early warning of process drift. The AR(1) analysis confirms that standard independence assumptions are appropriate for tablet-level quality monitoring.
+
+\noindent\textbf{Methodological Note: AR(1) vs.
+	Durbin-Watson Test}
+
+The client inquired whether employing an AR(1) covariance
+structure is
+equivalent to using the Durbin-Watson test. While both
+methods address
+first-order autocorrelation, they serve different
+purposes:
+
+\begin{itemize}
+	\item \textbf{Durbin-Watson Test:} A hypothesis test
+	for detecting
+	first-order autocorrelation in regression residuals.
+	The test statistic
+	DW ∈ [0, 4] with DW ≈ 2 indicating no
+	autocorrelation. This is a
+	\textit{diagnostic tool} applied after model fitting.
+	
+	\item \textbf{AR(1) Covariance Structure:} A
+	\textit{modeling approach}
+	that explicitly incorporates first-order temporal
+	correlation into the
+	mixed-effects model framework. This structure
+	estimates the autocorrelation
+	coefficient (ρ) and adjusts standard errors and
+	inference accordingly.
+\end{itemize}
+
+\textbf{Key Difference:} Durbin-Watson tests
+\textit{whether} autocorrelation
+exists (post-hoc diagnostic), while AR(1) covariance
+structure \textit{models}
+the autocorrelation directly within the estimation
+framework (a priori modeling).
+For our tablet data analysis with potential drum-to-drum
+dependence, AR(1)
+structure provides more appropriate inference by
+accounting for temporal
+correlation in parameter estimation.
+
+In our analysis, the estimated autocorrelation
+coefficient (ρ ≈ 0.12) is
+small and non-significant, confirming that temporal
+dependence is negligible.
+This result is consistent with what a non-significant
+Durbin-Watson test
+would indicate, but the AR(1) approach provides the
+additional benefit of
+robust inference even in the presence of weak
+autocorrelation.
 
 \subsection{Question 4: Are thief-sampled values comparable to tablet values?}
 \label{sec:q4}
