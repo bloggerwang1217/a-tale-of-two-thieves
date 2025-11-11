@@ -87,6 +87,99 @@ print(combined_stats)
 cat("\n")
 
 # ================================================================================
+# Visualization
+# ================================================================================
+
+# Save boxplot with three methods as PNG file
+png("img/boxplot.png", width = 900, height = 650, res = 120)
+
+old_par <- par(mar = c(6, 6, 4, 2))
+
+# Create boxplot
+boxplot(ASSAY ~ METHOD,
+        data = combined_data,
+        main = "Parallel Boxplots of Assay Value by Method",
+        xlab = "Method",
+        ylab = "ASSAY Value (mg/100mg)",
+        boxlwd = 1.5,
+        medlwd = 2,
+        whisklwd = 1.5,
+        outcex = 1.2,
+        outpch = 16,
+        cex.lab = 1.3,
+        cex.axis = 1.2,
+        cex.main = 1.4)
+
+# Add horizontal reference line at target value
+abline(h = 35, lty = 2, lwd = 2)
+
+par(old_par)
+dev.off()
+
+# Save interaction plot as PNG file
+png("img/interaction_plot.png", width = 900, height = 650, res = 120)
+
+# Create interaction plot
+old_par <- par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
+
+# Prepare data for plotting
+locations <- 1:6
+intm_means <- numeric(6)
+unit_means <- numeric(6)
+
+for (loc in 1:6) {
+  intm_vals <- thief_data$ASSAY[thief_data$METHOD == "Intm" & thief_data$LOCATION == loc]
+  unit_vals <- thief_data$ASSAY[thief_data$METHOD == "Unit" & thief_data$LOCATION == loc]
+  intm_means[loc] <- mean(intm_vals)
+  unit_means[loc] <- mean(unit_vals)
+}
+
+# Create interaction plot
+plot(locations, intm_means,
+     type = "b",
+     pch = 16,
+     col = "darkblue",
+     lwd = 2.5,
+     cex = 1.2,
+     ylim = c(33, 41),
+     xlab = "Sampling Location in Blender",
+     ylab = "ASSAY Value (mg/100mg)",
+     main = "Observed METHOD Effects by Sampling Location",
+     xaxt = "n",
+     axes = TRUE)
+
+# Add UNIT line
+lines(locations, unit_means,
+      type = "b",
+      pch = 17,
+      col = "darkred",
+      lwd = 2.5,
+      cex = 1.2)
+
+# Customize x-axis
+axis(1, at = 1:6, labels = paste("Loc", 1:6))
+
+# Add legend
+legend("topright",
+       legend = c("Intermediate Dose (INTM)", "Unit Dose (UNIT)"),
+       col = c("darkblue", "darkred"),
+       pch = c(16, 17),
+       lwd = 2.5,
+       cex = 1.1,
+       bty = "round",
+       bg = "white")
+
+# Add grid for readability
+grid(nx = NA, ny = NULL, col = "lightgray", lty = 3)
+
+# Add horizontal line at overall means for reference
+overall_mean <- mean(c(intm_means, unit_means))
+abline(h = overall_mean, lty = 2, col = "gray", lwd = 1.5)
+
+par(old_par)
+dev.off()
+
+# ================================================================================
 #   3.2 Mixed-Effects Model
 # ================================================================================
 # Load nlme package for proper mixed-effects modeling
@@ -351,6 +444,10 @@ print(anova_comparison)
 #  3.5 Model Assessment
 # ================================================================================
 
+# ================================================================================
+#  3.5.1 Diagnostic Checks
+# ================================================================================
+
 # Normality tests on RAW DATA (before model fitting) - Table B.1
 cat("\n========== Normality Tests on Raw Data ==========\n")
 for (method in c("Intm", "Unit")) {
@@ -545,10 +642,9 @@ legend("topleft",
 dev.off()
 cat("\nCook's Distance plot saved as 'cooks_distance_plot.png'\n")
 
-
-
-
-# Effect Size Analysis
+# ================================================================================
+#  3.5.2 Effect Size Analysis
+# ================================================================================
 
 # Basic statistics and tests
 
@@ -616,9 +712,10 @@ cat("Mean difference:", round(mean_diff, 2), "mg/100mg\n")
 cat("Percentage of target (35 mg/100mg):", round(pct_of_target, 2), "%\n")
 cat("Interpretation: The difference is negligible (<0.15% of specification)\n\n")
 
+# ================================================================================
+#  3.5.3 Bootstrap Validation (1000 resamples)
+# ================================================================================
 
-
-# Bootstrap Validation (1000 resamples)
 # Following Cabrera & McDougall (2002, p. 284):
 # Bootstrap assessment of p-value reliability by resampling observed data
 # and computing the distribution of p-values from repeated t-tests
@@ -680,97 +777,7 @@ cat("\n")
 #   4 Client Question Analysis
 # ================================================================================
 
+# Q3
 
 
-# ================================================================================
-# Results Summary - Figures and Visualization
-# ================================================================================
 
-# Save boxplot with three methods as PNG file
-png("img/boxplot.png", width = 900, height = 650, res = 120)
-
-old_par <- par(mar = c(6, 6, 4, 2))
-
-# Create boxplot
-boxplot(ASSAY ~ METHOD,
-        data = combined_data,
-        main = "Parallel Boxplots of Assay Value by Method",
-        xlab = "Method",
-        ylab = "ASSAY Value (mg/100mg)",
-        boxlwd = 1.5,
-        medlwd = 2,
-        whisklwd = 1.5,
-        outcex = 1.2,
-        outpch = 16,
-        cex.lab = 1.3,
-        cex.axis = 1.2,
-        cex.main = 1.4)
-
-# Add horizontal reference line at target value
-abline(h = 35, lty = 2, lwd = 2)
-
-par(old_par)
-dev.off()
-
-# Save interaction plot as PNG file
-png("img/interaction_plot.png", width = 900, height = 650, res = 120)
-
-# Create interaction plot
-old_par <- par(mfrow = c(1, 1), mar = c(5, 5, 4, 2))
-
-# Prepare data for plotting
-locations <- 1:6
-intm_means <- numeric(6)
-unit_means <- numeric(6)
-
-for (loc in 1:6) {
-  intm_vals <- thief_data$ASSAY[thief_data$METHOD == "Intm" & thief_data$LOCATION == loc]
-  unit_vals <- thief_data$ASSAY[thief_data$METHOD == "Unit" & thief_data$LOCATION == loc]
-  intm_means[loc] <- mean(intm_vals)
-  unit_means[loc] <- mean(unit_vals)
-}
-
-# Create interaction plot
-plot(locations, intm_means,
-     type = "b",
-     pch = 16,
-     col = "darkblue",
-     lwd = 2.5,
-     cex = 1.2,
-     ylim = c(33, 41),
-     xlab = "Sampling Location in Blender",
-     ylab = "ASSAY Value (mg/100mg)",
-     main = "Observed METHOD Effects by Sampling Location",
-     xaxt = "n",
-     axes = TRUE)
-
-# Add UNIT line
-lines(locations, unit_means,
-      type = "b",
-      pch = 17,
-      col = "darkred",
-      lwd = 2.5,
-      cex = 1.2)
-
-# Customize x-axis
-axis(1, at = 1:6, labels = paste("Loc", 1:6))
-
-# Add legend
-legend("topright",
-       legend = c("Intermediate Dose (INTM)", "Unit Dose (UNIT)"),
-       col = c("darkblue", "darkred"),
-       pch = c(16, 17),
-       lwd = 2.5,
-       cex = 1.1,
-       bty = "round",
-       bg = "white")
-
-# Add grid for readability
-grid(nx = NA, ny = NULL, col = "lightgray", lty = 3)
-
-# Add horizontal line at overall means for reference
-overall_mean <- mean(c(intm_means, unit_means))
-abline(h = overall_mean, lty = 2, col = "gray", lwd = 1.5)
-
-par(old_par)
-dev.off()
