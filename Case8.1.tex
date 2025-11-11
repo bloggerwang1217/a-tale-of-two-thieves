@@ -517,11 +517,11 @@ Location-specific variance components account for 31.05\% of total measurement v
 \subsection{Question 3: Do tablet data show drum or time effects?}
 \label{sec:q3}
 
-Temporal analysis of the tablet data (30 tablets from 10 randomly selected drums) reveals no significant drum or time-dependent effects. The sequence of drum sampling was randomly selected from the 30 total drums, and linear regression of assay values against drum sequence order yields a slope of -0.0029 mg/100mg per drum (p = 0.47, not statistically significant). This indicates no meaningful downward drift across the production sequence.
+Temporal analysis of the tablet data (30 tablets from 10 randomly selected drums) reveals no significant drum or time-dependent effects. Two complementary approaches were employed to assess temporal dependencies: autoregressive AR(1) covariance modeling and Durbin-Watson diagnostic testing.
 
-The drum-to-drum variance is 0.4361 with a coefficient of variation of 1.84\%, suggesting relatively consistent drum-to-drum production performance. An autoregressive AR(1) covariance structure applied to the temporal sequence reveals no strong temporal correlation (autocorrelation coefficient approximately 0.12, not significant). This contrasts with the heterogeneous variance structure necessary for the thief methods, indicating that compression and drumming operations maintain more uniform processing than the blending stage.
+\textbf{Drum-to-Drum Variance:} Random effects modeling (DRUM as random intercept) reveals a between-drum variance of 0.4394 and within-drum variance of 1.3729, yielding a coefficient of variation of 1.85\% (Table \ref{tab:c1}, Appendix C). This indicates excellent drum-to-drum consistency, contrasting favorably with the higher location-to-location variability (CV = 2.80\%) observed at the blending stage. The tablet compression process maintains uniformity despite inherent blender heterogeneity.
 
-\noindent\textbf{Quality Assurance Recommendation:} Continue monitoring drum-to-drum variation through ongoing tablet sampling. Implement statistical process control (SPC) charts for the tablet production stage to enable long-term trend detection and early warning of process drift. The AR(1) analysis confirms that standard independence assumptions are appropriate for tablet-level quality monitoring.
+\textbf{Temporal Autocorrelation:} An autoregressive AR(1) covariance structure applied to the temporal sequence reveals weak temporal correlation (autocorrelation coefficient $\rho = 0.251$). The likelihood ratio test comparing AR(1) to an independence model yields p = 0.235 (not significant), indicating the AR(1) structure does not significantly improve model fit (Table \ref{tab:c2}, Appendix C). The Durbin-Watson test further corroborates this finding (DW = 1.565, p = 0.077), showing no significant autocorrelation (Table \ref{tab:c3}, Appendix C).
 
 \noindent\textbf{Methodological Note: AR(1) vs.
 	Durbin-Watson Test}
@@ -538,7 +538,7 @@ purposes:
 	for detecting
 	first-order autocorrelation in regression residuals.
 	The test statistic
-	DW ∈ [0, 4] with DW ≈ 2 indicating no
+	$DW \in [0, 4]$ with $DW \approx 2$ indicating no
 	autocorrelation. This is a
 	\textit{diagnostic tool} applied after model fitting.
 	
@@ -548,11 +548,11 @@ purposes:
 	correlation into the
 	mixed-effects model framework. This structure
 	estimates the autocorrelation
-	coefficient (ρ) and adjusts standard errors and
+	coefficient ($\rho$) and adjusts standard errors and
 	inference accordingly.
 \end{itemize}
 
-\textbf{Key Difference:} Durbin-Watson tests
+Durbin-Watson tests
 \textit{whether} autocorrelation
 exists (post-hoc diagnostic), while AR(1) covariance
 structure \textit{models}
@@ -565,15 +565,17 @@ accounting for temporal
 correlation in parameter estimation.
 
 In our analysis, the estimated autocorrelation
-coefficient (ρ ≈ 0.12) is
-small and non-significant, confirming that temporal
+coefficient ($\rho = 0.251$) is
+small and non-significant (LRT p = 0.235), confirming that temporal
 dependence is negligible.
-This result is consistent with what a non-significant
-Durbin-Watson test
-would indicate, but the AR(1) approach provides the
+This result is consistent with the Durbin-Watson test
+(DW = 1.565, p = 0.077), which also indicates no significant
+autocorrelation.
+The AR(1) approach provides the
 additional benefit of
 robust inference even in the presence of weak
-autocorrelation.
+autocorrelation, while the Durbin-Watson test serves as a complementary
+diagnostic confirmation.
 
 \subsection{Question 4: Are thief-sampled values comparable to tablet values?}
 \label{sec:q4}
@@ -1005,7 +1007,96 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 
 \clearpage
 
-\section{Appendix C: Technical Specifications and Software}
+\section{Appendix C: Client Question Analysis}
+
+
+\subsection{Drum-to-Drum Variance Components}
+
+Table \ref{tab:c1} presents the variance decomposition for tablet data using a random effects model with DRUM as a random intercept. The analysis partitions total variance into between-drum and within-drum components, providing insight into the consistency of the tablet production process.
+
+% --- Table C.1 (Drum-to-Drum Variance) ---
+\begin{table}[H]
+	\centering
+	\caption{Drum-to-Drum Variance Decomposition for Tablet Data}
+	\label{tab:c1}
+	\small
+	\begin{tabular}{l r l}
+		\toprule
+		\textbf{Variance Component} & \textbf{Estimate} & \textbf{Interpretation} \\
+		\midrule
+		Between-Drum Variance & 0.4394 & Drum-to-drum variability \\
+		Within-Drum (Residual) Variance & 1.3729 & Tablet-to-tablet variability \\
+		\midrule
+		Total Variance & 1.8123 & Sum of variance components \\
+		\midrule
+		Mean ASSAY & 35.82 mg/100mg & Overall tablet mean \\
+		Drum Standard Deviation & 0.6629 mg/100mg & Between-drum SD \\
+		Coefficient of Variation (CV) & 1.85\% & Relative variability \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\footnotesize
+	\textbf{Note:} Variance components estimated using REML (Restricted Maximum Likelihood) method with DRUM as random intercept. The low coefficient of variation (1.85\%) indicates excellent drum-to-drum consistency, contrasting favorably with the higher location-to-location variability (CV = 2.80\%) observed in the blending stage. Between-drum variance accounts for 24.2\% of total variance, with within-drum variance representing 75.8\%, indicating that tablet-to-tablet variation within drums is the dominant source of variability.
+\end{table}
+
+The low coefficient of variation indicates highly consistent drum-to-drum production performance, contrasting favorably with the higher location-to-location variability observed in the blending stage.
+
+\subsection{Temporal Autocorrelation Analysis}
+
+Two complementary approaches were employed to assess first-order temporal dependencies in tablet data: AR(1) covariance modeling and Durbin-Watson diagnostic testing.
+
+\subsubsection{AR(1) Covariance Structure}
+
+Table \ref{tab:c2} compares two candidate models: a baseline model assuming independence and a model incorporating AR(1) autocorrelation structure.
+
+% --- Table C.2 (Model Comparison) ---
+\begin{table}[H]
+	\centering
+	\caption{Model Comparison: Independence vs. AR(1) Covariance Structure}
+	\label{tab:c2}
+	\small
+	\begin{tabular}{l c c c c c c}
+		\toprule
+		\textbf{Model} & \textbf{df} & \textbf{AIC} & \textbf{BIC} & \textbf{Test} & \textbf{L.Ratio} & \textbf{p-value} \\
+		\midrule
+		Independence (GLS) & 2 & 105.45 & 108.25 & --- & --- & --- \\
+		AR(1) (GLS+Correlation) & 3 & 106.04 & 110.24 & 1 vs 2 & 1.412 & 0.235 \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\footnotesize
+	\textbf{Note:} Both models fitted using maximum likelihood (ML) estimation. The non-significant likelihood ratio test (p = 0.235 > 0.05) indicates that the AR(1) correlation structure does not provide a statistically significant improvement over the independence assumption. AIC and BIC values favor the simpler independence model (lower values indicate better fit). The estimated autocorrelation coefficient $\rho = 0.251$ indicates weak positive correlation between consecutive observations.
+\end{table}
+
+\subsubsection{Durbin-Watson Test}
+
+Table \ref{tab:c3} presents the Durbin-Watson test results, a post-hoc diagnostic for detecting first-order autocorrelation in model residuals.
+
+% --- Table C.3 (Durbin-Watson Test) ---
+\begin{table}[H]
+	\centering
+	\caption{Durbin-Watson Test for First-Order Autocorrelation}
+	\label{tab:c3}
+	\small
+	\begin{tabular}{l c}
+		\toprule
+		\textbf{Statistic} & \textbf{Value} \\
+		\midrule
+		DW Statistic & 1.565 \\
+		p-value & 0.077 \\
+		Alternative Hypothesis & True autocorrelation $>$ 0 \\
+		\midrule
+		Interpretation & No significant autocorrelation \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\footnotesize
+	\textbf{Note:} The Durbin-Watson statistic ranges from 0 to 4, with DW $\approx$ 2 indicating no autocorrelation. DW $<$ 2 suggests positive autocorrelation, while DW $>$ 2 suggests negative autocorrelation. The observed DW = 1.565 with p = 0.077 (not significant at $\alpha = 0.05$) indicates no substantial first-order autocorrelation in the tablet data. This corroborates the AR(1) model comparison results (Table \ref{tab:c2}), supporting the use of independence assumption for tablet-level quality monitoring.
+\end{table}
+
+\clearpage
+
+\section{Appendix D: Technical Specifications and Software}
 
 \noindent\textbf{Model Specification}: The analysis employed a heterogeneous variance mixed-effects model using maximum likelihood estimation (ML). The model includes:
 \begin{itemize}

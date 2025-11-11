@@ -777,7 +777,86 @@ cat("\n")
 #   4 Client Question Analysis
 # ================================================================================
 
-# Q3
+# ================================================================================
+# Q3: Do tablet data show drum or time effects?
+# ================================================================================
 
+cat("\n========== Q3: TABLET DATA ANALYSIS - DRUM AND TIME EFFECTS ==========\n")
+
+# 1. Drum-to-drum variance analysis
+
+# Fit random effects model with DRUM as random intercept
+tablet_model <- lme(
+  fixed = ASSAY ~ 1,
+  random = ~ 1 | DRUM,
+  data = tablet_data,
+  method = "REML"
+)
+
+# Extract variance components
+var_comp_tablet <- VarCorr(tablet_model)
+drum_variance <- as.numeric(var_comp_tablet[1, 1])  # Between-drum variance
+residual_variance <- as.numeric(var_comp_tablet[2, 1])  # Within-drum variance
+
+cat(sprintf("Between-Drum Variance: %.4f\n", drum_variance))
+cat(sprintf("Within-Drum (Residual) Variance: %.4f\n", residual_variance))
+cat(sprintf("Total Variance: %.4f\n", drum_variance + residual_variance))
+
+# Calculate coefficient of variation
+mean_tablet <- mean(tablet_data$ASSAY)
+sd_drum <- sqrt(drum_variance)
+cv_drum <- (sd_drum / mean_tablet) * 100
+
+cat(sprintf("\nMean ASSAY: %.2f mg/100mg\n", mean_tablet))
+cat(sprintf("Drum SD: %.4f mg/100mg\n", sd_drum))
+cat(sprintf("Coefficient of Variation (Drum): %.2f%%\n", cv_drum))
+
+# 2. AR(1) Covariance Structure Analysis
+cat("\n--- AR(1) Autocorrelation Analysis ---\n")
+
+# Fit model with AR(1) correlation structure
+tablet_ar1 <- gls(
+  ASSAY ~ 1,
+  correlation = corAR1(form = ~ SEQUENCE),
+  data = tablet_data,
+  method = "REML"
+)
+
+# Extract AR(1) correlation coefficient
+ar1_coef <- coef(tablet_ar1$modelStruct$corStruct, unconstrained = FALSE)
+cat(sprintf("AR(1) Autocorrelation Coefficient (ρ): %.4f\n", ar1_coef))
+cat(sprintf("Interpretation: %s\n",
+            ifelse(abs(ar1_coef) > 0.3,
+                   "Moderate to strong autocorrelation",
+                   "Weak or negligible autocorrelation")))
+
+# Compare models with and without AR(1)
+tablet_indep <- gls(
+  ASSAY ~ 1,
+  data = tablet_data,
+  method = "ML"
+)
+
+tablet_ar1_ml <- gls(
+  ASSAY ~ 1,
+  correlation = corAR1(form = ~ SEQUENCE),
+  data = tablet_data,
+  method = "ML"
+)
+
+# Model Comparison: Independence vs AR(1)
+anova_ar1 <- anova(tablet_indep, tablet_ar1_ml)
+print(anova_ar1)
+
+# 3. Durbin-Watson Test (for comparison)
+
+# Need to install lmtest package if not available
+if (!require(lmtest, quietly = TRUE)) {
+  install.packages("lmtest", repos = "https://cran.r-project.org/")
+  library(lmtest)
+}
+
+dw_test <- dwtest(lm_time)
+print(dw_test)
 
 
