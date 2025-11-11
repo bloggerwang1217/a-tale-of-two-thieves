@@ -23,7 +23,8 @@
 
 ### Main Results
 
-- 內容有重複
+- Varaince Decomposition 內容有重複
+- 報表沒有放在 Appendix
 
 ### Model Assessment and Validation
 

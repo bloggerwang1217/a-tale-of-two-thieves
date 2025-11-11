@@ -344,50 +344,8 @@ mixed_interaction
 
 # Compare models using likelihood ratio test
 anova_comparison <- anova(mixed_model, mixed_interaction)
-cat("\n========== MODEL COMPARISON: Base vs Interaction Model (3.3) ==========\n")
+cat("\n========== MODEL COMPARISON: Base vs Interaction Model ==========\n")
 print(anova_comparison)
-
-# Extract global METHOD effect
-global_method_effect <- fixef(mixed_interaction)["METHODUnit"]
-
-# Extract random effects (both intercepts and slopes)
-random_effects_loc <- random.effects(mixed_interaction)
-
-# Create data structure for location-specific effects
-location_slopes <- data.frame()
-
-for (i in 1:6) {
-  intercept_re <- random_effects_loc[i, 1]
-  
-  # Extract METHOD slope if it exists
-  if (ncol(random_effects_loc) > 1) {
-    method_slope_re <- random_effects_loc[i, 2]
-  } else {
-    method_slope_re <- 0
-  }
-  
-  # Total METHOD effect at this location = global + random slope
-  total_method_effect <- global_method_effect + method_slope_re
-  
-  location_slopes <- rbind(location_slopes,
-                           data.frame(
-                             Location = i,
-                             Intercept_RE = intercept_re,
-                             Method_Slope_RE = method_slope_re,
-                             Total_Method_Effect = total_method_effect
-                           ))
-}
-
-slope_var <- var(location_slopes$Method_Slope_RE)
-slope_sd <- sd(location_slopes$Method_Slope_RE)
-
-cat("\n========== LOCATION-SPECIFIC METHOD EFFECTS (3.3) ==========\n")
-print(location_slopes)
-cat("\nGlobal METHOD Effect:", round(global_method_effect, 4), "mg/100mg\n")
-cat("Random Slope SD (Location-specific variations):", round(slope_sd, 4), "\n")
-cat("Range of Location-Specific Effects:", 
-    round(min(location_slopes$Total_Method_Effect), 4), "to", 
-    round(max(location_slopes$Total_Method_Effect), 4), "\n\n")
 
 # ================================================================================
 #  3.5 Model Assessment

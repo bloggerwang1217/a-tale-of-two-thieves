@@ -415,7 +415,11 @@ This decomposition establishes that blender uniformity (LOCATION effects: 31.05\
 
 \subsection{Interaction Analysis: Does METHOD Effect Vary by Location?}
 
-A random slopes mixed model was fitted to test whether METHOD effects vary across sampling locations. The likelihood ratio test yields \(\chi^2\) = 1.21, p = 0.5456 (see Table \ref{tab:a8}), indicating that location-dependent METHOD effects are not statistically significant. The global METHOD effect applies uniformly across sampling positions.
+A random slopes mixed model was
+fitted to test whether METHOD effects vary 
+across sampling locations. The likelihood ratio test yields p = 0.5456 (see Table \ref{tab:b6}), indicating that location-dependent METHOD effects are not statistically significant. Model selection criteria also favor the simpler uniform-effect model. Therefore, the difference between methods applies consistently across all sampling positions.
+
+While the interaction plot (Figure \ref{fig:interaction}) may visually suggest some variability in METHOD effects across locations, the formal statistical test does not provide evidence for significant location-dependent METHOD effects. This could reflect insufficient statistical power due to the limited sample size (n = 6 observations per location: 2 methods $\times$ 3 replicates), which may not be adequate to detect subtle interaction effects. However, from a practical manufacturing perspective, the observed variability appears insufficient to warrant location-specific method selection strategies, and the simpler uniform METHOD effect model remains appropriate for quality control decision-making.
 
 \subsection{Model Assessment}
 
@@ -724,6 +728,37 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 	\textbf{Note:} This table connects the $R^2$ decomposition (hierarchical model variance explained) with Table A.3 (variance components decomposition). Marginal $R^2$ = 2.3025\% represents the variance explained by the fixed METHOD effect alone. Conditional $R^2$ = 33.3564\% includes both fixed and random effects. The additional 31.0539\% explained by LOCATION random intercepts demonstrates that location-specific manufacturing conditions dominate over method choice (13.5-fold ratio).
 \end{table}
 
+\subsection{Random Slopes Model Summary}
+
+For testing location-specific METHOD effects (i.e., whether METHOD effect varies across sampling locations), a random slopes model was fitted allowing the METHOD coefficient to vary by location. The model specification includes both random intercepts and random slopes for METHOD.
+
+% --- Figure B.5 (Random Slopes Model Summary Output) ---
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{img/3-6-model_summary.png}
+	\caption{R Output: Random Slopes Mixed-Effects Model Summary (METHOD + Random Slopes by Location)}
+	\label{fig:random-slopes-summary}
+\end{figure}
+
+% --- Table B.6 (Random Slopes Model Comparison) ---
+\begin{table}[H]
+	\centering
+	\caption{Likelihood Ratio Test: Random Slopes Model vs. Base Random Intercept Model}
+	\label{tab:b6}
+	\small
+	\begin{tabular}{l r r r l r r}
+		\toprule
+		\textbf{Model} & \textbf{df} & \textbf{AIC} & \textbf{BIC} & \textbf{Test} & \textbf{L.Ratio} & \textbf{p-value} \\
+		\midrule
+		mixed\_model & 5 & \fbox{138.8111} & \fbox{146.7287} & & & \\
+		mixed\_interaction & 7 & 141.5994 & 152.6840 & 1 vs 2 & 1.211742 & 0.5456 \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\footnotesize
+	\textbf{Note:} Likelihood ratio test comparing base random intercept model (mixed\_model) versus random slopes model (mixed\_interaction). The test statistic L.Ratio = 1.211742 follows a $\chi^2$ distribution with df = 2. The non-significant p-value (0.5456) indicates that the random slopes model does not provide significantly better fit. Model selection criteria (AIC and BIC) also favor the simpler base model.
+\end{table}
+
 \subsection{Diagnostic Checks}
 
 Diagnostic checks confirm that mixed model assumptions are reasonably satisfied. Individual method groups (INTM and UNIT) show normal residuals with p-values of 0.7511 and 0.1842 respectively. The heterogeneous variance model with method-specific variance components (varIdent structure) appropriately accounts for variance differences between methods.
@@ -865,54 +900,7 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 
 \clearpage
 
-\section{Appendix C: Advanced Analysis}
-
-\subsection{Interaction Analysis: Location-Specific METHOD Effects}
-
-% --- Table A.8 (Random Slopes Model Comparison) ---
-\begin{table}[H]
-	\centering
-	\caption{Random Slopes Model Comparison}
-	\label{tab:a8}
-	\small
-	\begin{tabular}{l l rrrr}
-		\toprule
-		\textbf{Model} & \textbf{Model Specification} & \textbf{df} & \textbf{AIC} & \textbf{LRT} $\chi^2$ & \textbf{p-value} \\
-		\midrule
-		Model 1 & METHOD, random intercept & 5 & 138.81 & --- & --- \\
-		Model 2 & METHOD + random slopes & 7 & 141.60 & 1.21 & 0.5456 \\
-		\bottomrule
-	\end{tabular}
-	\\ \vspace{0.2cm}
-	Random slopes model does not provide significantly better fit, indicating METHOD effect is uniform across locations.
-\end{table}
-
-\subsection{Location-Specific Descriptive Differences}
-
-% --- Table A.9 (Location Means and METHOD Differences) ---
-\begin{table}[H]
-	\centering
-	\caption{Location Means and METHOD Differences}
-	\label{tab:a9}
-	\small
-	\begin{tabular}{l rrrr}
-		\toprule
-		\textbf{Location} & \textbf{INTM Mean} & \textbf{UNIT Mean} & \textbf{Difference} & \textbf{Pattern} \\
-		\midrule
-		1 & 34.99 & 34.25 & -0.73 & INTM slightly higher \\
-		2 & 36.97 & 38.14 & +1.16 & UNIT slightly higher \\
-		3 & 36.40 & 35.84 & -0.56 & INTM slightly higher \\
-		4 & 37.74 & 36.10 & -1.64 & INTM notably higher \\
-		5 & 36.51 & 37.76 & +1.25 & UNIT slightly higher \\
-		6 & 38.84 & 36.29 & -2.55 & INTM notably higher \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-
-\clearpage
-
-\section{Appendix D: Technical Specifications and Software}
+\section{Appendix C: Technical Specifications and Software}
 
 \noindent\textbf{Model Specification}: The analysis employed a heterogeneous variance mixed-effects model using maximum likelihood estimation (ML). The model includes:
 \begin{itemize}
