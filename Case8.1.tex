@@ -190,7 +190,7 @@
 		\vspace{0.3cm}
 		
 		\RaggedRight % 內文使用靠左對齊 (不左右對齊)
-		This analysis compared two pharmaceutical sampling methods---Intermediate Dose (INTM) and Unit Dose (UNIT) thieves---using a heterogeneous variance mixed-effects model. Both methods yielded statistically equivalent mean assay values (p = 0.307), indicating statistical equivalence for average batch assessment. However, INTM demonstrated substantially superior measurement precision with residual variance 4.81 times lower than UNIT, providing superior capability for detecting batch deviations. Most critically, sampling location accounted for 31\% of total measurement variance, with location-specific effects combined with residual variability explaining approximately 98\% of total variance, identifying V-Blender mixture uniformity as the dominant manufacturing concern requiring immediate attention. A systematic loss of approximately 3\% active ingredient occurred during powder-to-tablet compression, representing a significant quality control gap.
+		This analysis compared two pharmaceutical sampling methods---Intermediate Dose (INTM) and Unit Dose (UNIT) thieves---using a heterogeneous variance mixed-effects model. Both methods yielded statistically equivalent mean assay values (p = 0.307), indicating statistical equivalence for average batch assessment. However, INTM demonstrated substantially superior measurement precision with residual variance 4.81 times lower than UNIT, providing superior capability for detecting batch deviations. Most critically, sampling location accounted for 31.05\% of total measurement variance, with location-specific effects combined with residual variability explaining approximately 98\% of total variance, identifying V-Blender mixture uniformity as the dominant manufacturing concern requiring immediate attention. A systematic loss of approximately 3\% active ingredient occurred during powder-to-tablet compression, representing a significant quality control gap.
 	\end{flushleft}
 	
 	\vspace{1cm} % 頁底留白
@@ -397,11 +397,21 @@ A heterogeneous variance mixed-effects model was fitted to compare the two sampl
 
 \noindent\textbf{(1) Precision Assessment by Within-Location Variance}: The Intermediate Dose method exhibits substantially lower residual variance (ML estimates: 0.7069 mg\textsuperscript{2}/100mg\textsuperscript{2}) compared to Unit Dose (3.4001 mg\textsuperscript{2}/100mg\textsuperscript{2}), representing a 4.81-fold improvement in measurement precision. This superior consistency is critical for process monitoring and early detection of batch deviations.
 
-\noindent\textbf{(2) Blending Uniformity by Between-Location Variance}: Between-Location variation accounts for 31.9\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. Table \ref{tab:a4} presents detailed location-specific random intercepts, revealing that Location 1 shows significantly lower values (35.01 mg/100mg) while Location 6 exhibits the highest values (37.98 mg/100mg), spanning a 2.96 mg/100mg range. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with further discussion in Section \ref{sec:q2}.}
+\noindent\textbf{(2) Blending Uniformity by Between-Location Variance}: Between-Location variation accounts for 31.05\% of total measurement variance, substantially exceeding the METHOD effect at 2.30\%, establishing V-Blender mixture uniformity as the primary concern. Table \ref{tab:a4} presents detailed location-specific random intercepts, revealing that Location 1 shows significantly lower values (35.01 mg/100mg) while Location 6 exhibits the highest values (37.98 mg/100mg), spanning a 2.96 mg/100mg range. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with further discussion in Section \ref{sec:q2}.}
 
 \subsection{Regression Perspective: Fixed and Random Effects Decomposition}
 
-Location-specific random effects account for 31.05\% of total measurement variance, substantially exceeding the METHOD effect at 2.30\%, with residual measurement error accounting for 66.64\%. The Marginal R\textsuperscript{2} of 2.30\% reflects the variance explained by METHOD alone, while the Conditional R\textsuperscript{2} of 33.36\% includes both METHOD and LOCATION effects (see Table \ref{tab:a3}). This confirms that location-specific factors dominate the variability in assay measurements.
+The $R^2$ decomposition reveals the relative contribution of each model component to total assay variability (see Table \ref{tab:b3}):
+
+\begin{itemize}
+	\item \textbf{Marginal} $\boldsymbol{R^2} = 2.30\%$: METHOD (fixed effect) explains only 2.30\% of total variance, confirming that instrument choice has minimal impact on assay variability.
+
+	\item \textbf{Conditional} $\boldsymbol{R^2} = 33.36\%$: Combined fixed and random effects explain 33.36\% of total variance. The 31.05\% gap between Conditional and Marginal $R^2$ quantifies the LOCATION random effects contribution---13.5 times larger than the METHOD effect.
+
+	\item \textbf{Residual Error = 66.64\%}: The remaining variance represents within-location measurement variability and random error.
+\end{itemize}
+
+This decomposition establishes that blender uniformity (LOCATION effects: 31.05\%) overwhelmingly dominates measurement variability, far exceeding the influence of sampling method choice (2.30\%). Given this substantial importance of LOCATION effects, a critical question naturally arises: Could the METHOD effect vary systematically across different sampling locations? If location-dependent METHOD effects exist, this would indicate that the relative performance of the two sampling instruments depends on where in the blender they are used, suggesting potential interactions between sampling position and instrument type. To investigate this hypothesis, we employ a random slopes model that allows the METHOD effect to vary by location.
 
 \subsection{Interaction Analysis: Does METHOD Effect Vary by Location?}
 
@@ -440,7 +450,7 @@ The assay values are generally well behaved and suitable for mixed-effects analy
 
 Strong evidence of location effects exists, with profound implications requiring urgent management attention. Location 1 shows significantly lower assay values of 35.01 mg/100mg (random intercept = -1.64, z = -2.801, p = 0.0051), while Location 6 exhibits the highest values of 37.98 mg/100mg (random intercept = +1.33, z = +2.266, p = 0.0235). The total location-to-location range spans 2.96 mg/100mg, representing 8.46\% of the 35 mg/100mg target specification.
 
-Location-specific variance components account for 31.9\% of total measurement variance (see Section 3.2.2 and Table \ref{tab:a3}), which is 13.87 times greater than the METHOD effect. This establishes unambiguously that V-Blender position is the dominant source of product variability.
+Location-specific variance components account for 31.05\% of total measurement variance (see Section 3.2.2 and Table \ref{tab:a3}), which is 13.5 times greater than the METHOD effect. This establishes unambiguously that V-Blender position is the dominant source of product variability.
 
 \noindent\textbf{Manufacturing Implications and Suggestions:} The location effect provides clear evidence of incomplete mixture homogenization within the blender. The current 20-minute mixing protocol appears insufficient, resulting in a 2.96 mg/100mg location-to-location range (8.46\% of target specification). Management should immediately:
 
@@ -490,7 +500,7 @@ The analysis reveals three critical findings with distinct implications for manu
 
 Second, the methods differ substantially in measurement precision. The Intermediate Dose method exhibits 4.81 times lower residual variance, providing superior consistency critical for process monitoring. For pharmaceutical manufacturing, measurement precision is typically more important than equivalent means.
 
-Third and most significantly, location-specific effects within the V-Blender are the dominant source of product variability. Location-to-location variation spans 2.96 mg/100mg (35.01 to 37.98 mg/100mg range), accounting for 31\% of total measurement variance (substantially exceeding the 2.3\% METHOD effect) and far exceeding the method difference. Location 1 shows significantly lower values while Location 6 is highest, providing clear evidence of non-uniform powder mixing.
+Third and most significantly, location-specific effects within the V-Blender are the dominant source of product variability. Location-to-location variation spans 2.96 mg/100mg (35.01 to 37.98 mg/100mg range), accounting for 31.05\% of total measurement variance (substantially exceeding the 2.30\% METHOD effect) and far exceeding the method difference. Location 1 shows significantly lower values while Location 6 is highest, providing clear evidence of non-uniform powder mixing.
 
 \subsection{Sampling Instrument Selection}
 
@@ -512,7 +522,7 @@ Concordance analysis and agreement quantification (e.g., Bland-Altman plots or c
 
 Both the Intermediate and Unit Dose thieves provide statistically equivalent results on average, suggesting that if the priority is overall batch-level assessment, both methods are acceptable. However, the Intermediate Dose Thief demonstrates superior precision with variance 4.81 times lower than the Unit Dose method, providing more reliable and consistent measurements critical for process monitoring.
 
-More significantly, this study revealed process-related issues of greater importance than the choice of sampling instrument. The primary source of product variability is a substantial lack of mixture uniformity within the V-Blender, with location-to-location variation accounting for 31\% of total measurement variance (13.5-fold greater than the METHOD effect). Additionally, a systematic loss of approximately 3\% of the active ingredient occurs during the powder-to-tablet compression stage. These findings indicate that further analysis and process improvement efforts should be focused on these critical manufacturing areas to enhance final product quality and regulatory compliance.
+More significantly, this study revealed process-related issues of greater importance than the choice of sampling instrument. The primary source of product variability is a substantial lack of mixture uniformity within the V-Blender, with location-to-location variation accounting for 31.05\% of total measurement variance (13.5-fold greater than the METHOD effect). Additionally, a systematic loss of approximately 3\% of the active ingredient occurs during the powder-to-tablet compression stage. These findings indicate that further analysis and process improvement efforts should be focused on these critical manufacturing areas to enhance final product quality and regulatory compliance.
 
 % --- REFERENCES (from Page 6) ---
 \begin{thebibliography}{99}
@@ -633,7 +643,7 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 		\textbf{Variance Component} & \textbf{Estimate} &
 		\textbf{Percentage} & \textbf{Interpretation} \\
 		\midrule
-		Between-Location [$\text{Var}(b_i)$] & 0.9976 & 31.9\% &
+		Between-Location [$\text{Var}(b_i)$] & 0.9976 & 31.0539\% &
 		Location-to-location variability \\
 		\midrule
 		Within-Location, INTM [$\text{Var}(\varepsilon_{ijk})$] &
@@ -641,12 +651,12 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 		Within-Location, UNIT [$\text{Var}(\varepsilon_{ijk})$] &
 		3.4001 & -- & Residual - Unit Dose \\
 		Within-Location, Pooled [$\overline{\text{Var}(\varepsilon_{ijk})}$] & 2.0535
-		& 65.7\% & Weighted average residual \\
+		& 66.6436\% & Weighted average residual \\
 		\midrule
-		METHOD Effect [$\text{Var}(\beta \cdot \text{METHOD})$] & 0.0731 &
-		2.3\% & Fixed effect variance \\
+		METHOD Effect [$\text{Var}(\beta \cdot \text{METHOD})$] & 0.0672 &
+		2.3025\% & Fixed effect variance \\
 		\midrule
-		\textbf{Total Variance} & \textbf{3.1242} &
+		\textbf{Total Variance} & \textbf{2.9175} &
 		\textbf{100.0\%} & \\
 		\bottomrule
 	\end{tabular}
@@ -657,9 +667,10 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 	$(18 \times 0.7069 + 18 \times 3.4001) / 36 = 2.0535$.
 	Variance ratio (UNIT/INTM) = 4.81,
 	indicating INTM provides substantially superior
-	measurement precision. The decomposition
-	shows location effects (31.9\%) dominate over method
-	choice (2.3\%).
+	measurement precision. Percentages are based on
+	R\textsuperscript{2} decomposition to ensure they sum to 100\%.
+	The decomposition shows location effects (31.05\%) dominate
+	over method choice (2.30\%), with a 13.5-fold difference.
 \end{table}
 
 \subsection{Location Effects Analysis}
@@ -685,6 +696,32 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 	\\ \vspace{0.2cm}
 	\footnotesize
 	\textbf{Note:} Due to balanced design (6 observations per location: 2 methods × 3 replicates), all locations share the same standard error: SE = 0.585, calculated as SE = $\sqrt{\sigma^2_{\text{pooled}} / n}$ where $\sigma^2_{\text{pooled}}$ = 2.0535. Z-scores and p-values computed using normal approximation (two-tailed test). ``Relative Deviation'' represents the random intercept as a percentage of the grand mean (36.65 mg/100mg). Location 1 shows statistically significant deviation at $\alpha = 0.01$ level (p = 0.0051). Location 6 shows marginally significant deviation at $\alpha = 0.05$ level (p = 0.0235). Location Range Span: 2.96 mg/100mg (from Location 1 at 35.01 to Location 6 at 37.98).
+\end{table}
+
+\subsection{Variance Decomposition: $R^2$ Components}
+
+% --- Table B.3 ($R^2$ Decomposition) ---
+\begin{table}[H]
+	\centering
+	\caption{$R^2$ Decomposition and Variance Component Mapping}
+	\label{tab:b3}
+	\small
+	\begin{tabular}{l r l}
+		\toprule
+		\textbf{$R^2$ Measure} & \textbf{Value} & \textbf{Interpretation \& Table A.3 Connection} \\
+		\midrule
+		Marginal $R^2$ (METHOD only) & 2.3025\% & Fixed METHOD effect (see Table A.3, row 5) \\
+		Conditional $R^2$ (METHOD + LOCATION) & 33.3564\% & Marginal + Random LOCATION effects \\
+		\midrule
+		\multicolumn{3}{l}{\textit{Variance Component Decomposition:}} \\
+		METHOD Effect & 2.3025\% & $\text{Marginal R}^2$ (Table A.3) \\
+		LOCATION Effects & 31.0539\% & $\text{Conditional R}^2 - \text{Marginal R}^2$ \\
+		Residual Error & 66.6436\% & $1 - \text{Conditional R}^2$ \\
+		\bottomrule
+	\end{tabular}
+	\\ \vspace{0.2cm}
+	\footnotesize
+	\textbf{Note:} This table connects the $R^2$ decomposition (hierarchical model variance explained) with Table A.3 (variance components decomposition). Marginal $R^2$ = 2.3025\% represents the variance explained by the fixed METHOD effect alone. Conditional $R^2$ = 33.3564\% includes both fixed and random effects. The additional 31.0539\% explained by LOCATION random intercepts demonstrates that location-specific manufacturing conditions dominate over method choice (13.5-fold ratio).
 \end{table}
 
 \subsection{Diagnostic Checks}

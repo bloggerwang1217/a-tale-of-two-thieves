@@ -128,7 +128,43 @@ print(ci_results)
 
 
 # ================================================================================
-#   3.2.2 Superior Precision of INTM: Variance Heterogeneity by Sampling Method
+#   3.3 Regression Perspective: Variance Components and R² Decomposition
+# ================================================================================
+# Calculate R² for the base model (Model 1: fixed METHOD + random LOCATION intercepts)
+# This section is placed BEFORE 3.2.2 because Table A.3 reuses these results
+
+cat("========== VARIANCE DECOMPOSITION SUMMARY (3.3 R² Decomposition) ==========\n")
+
+# Calculate fitted values at population level
+fitted_marginal_1 <- predict(mixed_model, level = 0)
+fitted_conditional_1 <- predict(mixed_model, level = 1)
+
+n <- nrow(thief_data)
+ss_tot <- sum((thief_data$ASSAY - mean(thief_data$ASSAY))^2)
+
+# Model 1 R² components
+r2_marginal_1 <- 1 - sum((thief_data$ASSAY - fitted_marginal_1)^2) / ss_tot
+r2_conditional_1 <- 1 - sum((thief_data$ASSAY - fitted_conditional_1)^2) / ss_tot
+
+# Calculate variance component contributions for reporting
+method_variance_contribution <- r2_marginal_1 * 100  # 2.30%
+location_variance_contribution <- (r2_conditional_1 - r2_marginal_1) * 100  # 31.05%
+residual_variance_contribution <- 100 - (r2_conditional_1 * 100)  # 66.64%
+
+cat("METHOD Effect Contribution:", round(method_variance_contribution, 4), "% of total variance\n")
+cat("LOCATION Random Effects Contribution:", round(location_variance_contribution, 4), "% of total variance\n")
+cat("Residual Measurement Error:", round(residual_variance_contribution, 4), "% of total variance\n")
+cat("Combined Location Effects (Location + residual influenced):",
+    round(location_variance_contribution + residual_variance_contribution, 4), "%\n\n")
+
+cat("Marginal R² (METHOD only):", round(r2_marginal_1 * 100, 4), "%\n")
+cat("Conditional R² (METHOD + LOCATION):", round(r2_conditional_1 * 100, 4), "%\n")
+cat("Additional Variance Explained by Location Effects:", round((r2_conditional_1 - r2_marginal_1) * 100, 4), "%\n")
+cat("Ratio of Location Effects to Method Effects:",
+    round(location_variance_contribution / method_variance_contribution, 1), "-fold\n\n")
+
+# ================================================================================
+#   3.2.2 Variance Components (Using R² Decomposition Results)
 # ================================================================================
 
 # Extract variance components from the mixed model
@@ -151,19 +187,80 @@ ratio_mixed <- var_unit_mixed / var_intm_mixed
 var_intm <- var_intm_mixed
 var_unit <- var_unit_mixed
 
-# Table A.3: Variance Components Decomposition
+# Table A.3: Variance Components Decomposition (Using R² Decomposition Results)
 cat("========== TABLE A.3: VARIANCE COMPONENTS DECOMPOSITION (3.2.2) ==========\n")
-var_components_table <- data.frame(
-  Component = c("Between-Location (LOC)", "Within-Location (INTM)", "Within-Location (UNIT)"),
-  Estimate = c(round(location_var, 4), round(var_intm, 4), round(var_unit, 4)),
-  Role = c("Variability across locations", "Residual precision - INTM", "Residual precision - UNIT")
-)
-print(var_components_table)
+cat("(Based on R² Decomposition method from Section 3.3)\n\n")
 
-cat("\nVariance Heterogeneity Summary (3.2.2):\n")
-cat("INTM Residual Variance:", round(var_intm, 4), "mg²/100mg²\n")
-cat("UNIT Residual Variance:", round(var_unit, 4), "mg²/100mg²\n")
-cat("Heterogeneity Ratio (UNIT/INTM):", round(ratio_mixed, 2), "× (Unit Dose is more variable)\n\n")
+# Calculate all variance components
+var_between_location <- location_var  # Between-Location variance
+var_within_intm <- var_intm  # Within-Location INTM
+var_within_unit <- var_unit  # Within-Location UNIT
+
+# Calculate pooled within-location variance (weighted average)
+n_intm <- 18
+n_unit <- 18
+var_within_pooled <- (n_intm * var_within_intm + n_unit * var_within_unit) /
+                     (n_intm + n_unit)
+
+# Use R² decomposition percentages from Section 3.3 for Table A.3
+# These ensure percentages sum to exactly 100%
+var_total_raw <- ss_tot / (n - 1)
+
+# Create comprehensive variance components table using R² percentages
+var_components_complete <- data.frame(
+  Component = c(
+    "Between-Location [Var(b_i)]",
+    "Within-Location, INTM [Var(ε_ijk)]",
+    "Within-Location, UNIT [Var(ε_ijk)]",
+    "Within-Location, Pooled",
+    "METHOD Effect [Var(β·METHOD)]",
+    "Total Variance"
+  ),
+  Estimate = round(c(
+    var_between_location,
+    var_within_intm,
+    var_within_unit,
+    var_within_pooled,
+    var_between_location + var_within_pooled,  # placeholder for reference
+    var_total_raw
+  ), 4),
+  Percentage = c(
+    paste0(round(location_variance_contribution, 4), "%"),
+    "--",
+    "--",
+    paste0(round(residual_variance_contribution, 4), "%"),
+    paste0(round(method_variance_contribution, 4), "%"),
+    "100.0%"
+  ),
+  Interpretation = c(
+    "Location-to-location variability",
+    "Residual - Intermediate Dose",
+    "Residual - Unit Dose",
+    "Weighted average residual",
+    "Fixed effect variance",
+    ""
+  )
+)
+
+print(var_components_complete)
+
+cat("\n========== VARIANCE DECOMPOSITION SUMMARY ==========\n")
+cat("Between-Location Variance:", round(var_between_location, 4),
+    paste0("(", round(location_variance_contribution, 2), "%)"), "\n")
+cat("Within-Location Pooled:", round(var_within_pooled, 4),
+    paste0("(", round(residual_variance_contribution, 2), "%)"), "\n")
+cat("METHOD Effect:", round(var_between_location + var_within_pooled, 4),
+    paste0("(", round(method_variance_contribution, 2), "%)"), "\n")
+cat("Total Variance:", round(var_total_raw, 4), "(100.0%)\n\n")
+
+cat("Variance Heterogeneity Summary:\n")
+cat("  INTM Residual Variance:", round(var_intm, 4), "mg²/100mg²\n")
+cat("  UNIT Residual Variance:", round(var_unit, 4), "mg²/100mg²\n")
+cat("  Heterogeneity Ratio (UNIT/INTM):", round(ratio_mixed, 2),
+    "× (Unit Dose is more variable)\n")
+cat("  Pooled Within-Location Calculation: (18 × ", round(var_intm, 4),
+    " + 18 × ", round(var_unit, 4), ") / 36 = ",
+    round(var_within_pooled, 4), "\n\n")
 
 # ================================================================================
 #   3.2.3 Location Effects Dominate: Location-Specific Deviations
@@ -226,36 +323,8 @@ cat("\nLocation Range Span:", round(max(location_intercepts) - min(location_inte
 cat("Lowest Location (1):", round(grand_mean + min(location_intercepts), 2), "mg/100mg\n")
 cat("Highest Location (6):", round(grand_mean + max(location_intercepts), 2), "mg/100mg\n\n")
 
-# ================================================================================
-#   3.3 Regression Perspective: Variance Components and R² Decomposition
-# ================================================================================
-# Calculate R² for the base model (Model 1: fixed METHOD + random LOCATION intercepts)
-fitted_marginal_1 <- predict(mixed_model, level = 0)
-fitted_conditional_1 <- predict(mixed_model, level = 1)
-
-ss_tot <- sum((thief_data$ASSAY - mean(thief_data$ASSAY))^2)
-
-# Model 1 R² components
-r2_marginal_1 <- 1 - sum((thief_data$ASSAY - fitted_marginal_1)^2) / ss_tot
-r2_conditional_1 <- 1 - sum((thief_data$ASSAY - fitted_conditional_1)^2) / ss_tot
-
-# Calculate variance component contributions for reporting
-method_variance_contribution <- r2_marginal_1 * 100  # 2.30%
-location_variance_contribution <- (r2_conditional_1 - r2_marginal_1) * 100  # 34.20%
-residual_variance_contribution <- 100 - (r2_conditional_1 * 100)  # 70.38%
-
-cat("========== VARIANCE DECOMPOSITION SUMMARY (3.3 R² Decomposition) ==========\n")
-cat("METHOD Effect Contribution:", round(method_variance_contribution, 2), "% of total variance\n")
-cat("LOCATION Random Effects Contribution:", round(location_variance_contribution, 2), "% of total variance\n")
-cat("Residual Measurement Error:", round(residual_variance_contribution, 2), "% of total variance\n")
-cat("Combined Location Effects (Location + residual influenced):", 
-    round(location_variance_contribution + residual_variance_contribution, 2), "%\n\n")
-
-cat("Marginal R² (METHOD only):", round(r2_marginal_1 * 100, 2), "%\n")
-cat("Conditional R² (METHOD + LOCATION):", round(r2_conditional_1 * 100, 2), "%\n")
-cat("Additional Variance Explained by Location Effects:", round((r2_conditional_1 - r2_marginal_1) * 100, 2), "%\n")
-cat("Ratio of Location Effects to Method Effects:", 
-    round(location_variance_contribution / method_variance_contribution, 1), "-fold\n\n")
+# Note: Section 3.3 (Regression Perspective) is calculated earlier (before 3.2.2)
+# to provide the R² decomposition results used in Table A.3
 
 
 # ================================================================================
