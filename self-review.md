@@ -21,6 +21,10 @@
 ### EDA
 - Normality/Outliers 應該在 Model Assessment 而不是 EDA
 
+### Main Results
+
+- 內容有重複
+
 ### Model Assessment and Validation
 
 - 沒有詳細的 Diagnotics 的說明（資料有沒有 outlier, 模型假設有沒有成立...）

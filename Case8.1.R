@@ -128,42 +128,8 @@ print(ci_results)
 
 
 # ================================================================================
-#   3.3 Regression Decomposition: Fixed and Random Effects
+#   3.2.2 Superior Precision of INTM: Variance Heterogeneity by Sampling Method
 # ================================================================================
-
-# ================================================================================
-#   3.3.1 Fixed Effects (METHOD Factor)
-# ================================================================================
-# Extract and display fixed effects with statistics
-cat("\n========== FIXED EFFECTS: METHOD FACTOR (3.2.1) ==========\n")
-print("Fixed Effects Estimates:")
-print(fixef(mixed_model))
-
-# Get fixed effects confidence intervals
-ci_results <- intervals(mixed_model, which = "fixed")
-cat("\n95% Confidence Intervals for Fixed Effects:\n")
-print(ci_results)
-
-# Display the ANOVA table for fixed effects
-anova_results <- anova(mixed_model)
-cat("\n========== ANOVA: Fixed Effects Tests ==========\n")
-print(anova_results)
-
-# Extract specific values for reporting
-fixed_effect_method <- fixef(mixed_model)["METHODUnit"]
-f_value_method <- as.numeric(anova_results$`F-value`[2])
-p_value_method <- as.numeric(anova_results$`p-value`[2])
-ci_lower <- ci_results$fixed["METHODUnit", "lower"]
-ci_upper <- ci_results$fixed["METHODUnit", "upper"]
-
-cat("\nMethod Effect Summary:\n")
-cat("Fixed Effect (METHOD):", round(fixed_effect_method, 4), "mg/100mg\n")
-cat("F-statistic:", round(f_value_method, 3), "\n")
-cat("p-value:", round(p_value_method, 4), "\n")
-cat("95% CI: [", round(ci_lower, 2), ",", round(ci_upper, 2), "]\n\n")
-
-
-# Variance Heterogeneity by Sampling Method
 
 # Extract variance components from the mixed model
 var_components <- VarCorr(mixed_model)
@@ -200,7 +166,7 @@ cat("UNIT Residual Variance:", round(var_unit, 4), "mg²/100mg²\n")
 cat("Heterogeneity Ratio (UNIT/INTM):", round(ratio_mixed, 2), "× (Unit Dose is more variable)\n\n")
 
 # ================================================================================
-#   3.3.2 Location Effects (Random Intercepts)
+#   3.2.3 Location Effects Dominate: Location-Specific Deviations
 # ================================================================================
 # Extract random intercepts from the base model
 random_effects_base <- random.effects(mixed_model)
@@ -217,12 +183,15 @@ location_effects_df <- data.frame(
   Pct_Below_Grand_Mean = round((location_intercepts / grand_mean) * 100, 2)
 )
 
-cat("========== TABLE A.4: LOCATION EFFECTS SUMMARY (3.2.1 Random Effects) ==========\n")
+cat("========== TABLE A.4: LOCATION EFFECTS SUMMARY (3.2.3 Random Effects) ==========\n")
 print(location_effects_df)
 cat("\nLocation Range Span:", round(max(location_intercepts) - min(location_intercepts), 2), "mg/100mg\n")
 cat("Lowest Location (1):", round(grand_mean + min(location_intercepts), 2), "mg/100mg\n")
 cat("Highest Location (6):", round(grand_mean + max(location_intercepts), 2), "mg/100mg\n\n")
 
+# ================================================================================
+#   3.3 Regression Perspective: Variance Components and R² Decomposition
+# ================================================================================
 # Calculate R² for the base model (Model 1: fixed METHOD + random LOCATION intercepts)
 fitted_marginal_1 <- predict(mixed_model, level = 0)
 fitted_conditional_1 <- predict(mixed_model, level = 1)
@@ -238,7 +207,7 @@ method_variance_contribution <- r2_marginal_1 * 100  # 2.30%
 location_variance_contribution <- (r2_conditional_1 - r2_marginal_1) * 100  # 34.20%
 residual_variance_contribution <- 100 - (r2_conditional_1 * 100)  # 70.38%
 
-cat("========== VARIANCE DECOMPOSITION SUMMARY (3.2.2 R² Decomposition) ==========\n")
+cat("========== VARIANCE DECOMPOSITION SUMMARY (3.3 R² Decomposition) ==========\n")
 cat("METHOD Effect Contribution:", round(method_variance_contribution, 2), "% of total variance\n")
 cat("LOCATION Random Effects Contribution:", round(location_variance_contribution, 2), "% of total variance\n")
 cat("Residual Measurement Error:", round(residual_variance_contribution, 2), "% of total variance\n")
@@ -253,7 +222,7 @@ cat("Ratio of Location Effects to Method Effects:",
 
 
 # ================================================================================
-#   3.4 Interaction Analysis: Location-Specific METHOD Effects (3.3)
+#   3.4 Interaction Analysis: Location-Specific METHOD Effects
 # ================================================================================
 # Fit model WITH interaction (using Random Slopes)
 mixed_interaction <- lme(

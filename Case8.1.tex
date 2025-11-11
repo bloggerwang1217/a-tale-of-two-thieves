@@ -290,21 +290,21 @@ Where:
 	\item $\varepsilon_{ijk}$ = Error term (method-specific variance)
 \end{itemize}
 
-The \textbf{Fixed Effect (METHOD)} is specified as fixed because the primary research question addresses whether the Unit Dose and Intermediate Dose thieves produce significantly different assay measurements. Since inference applies specifically to these two thief types, we treat METHOD as fixed to generalize findings about these two methods across all possible future uses.
+The \textbf{Fixed Effect (METHOD)} [$\text{Var}(\beta \cdot \text{METHOD})$] is specified as fixed because the primary research question addresses whether the Unit Dose and Intermediate Dose thieves produce significantly different assay measurements. Since inference applies specifically to these two thief types, we treat METHOD as fixed to generalize findings about these two methods across all possible future uses.
 
 \noindent\textbf{Random Effect (LOCATION) and Variance Decomposition}:
 
-The six sampling locations are a random sample from all possible locations within the blender. By treating LOCATION as random, we enable \textbf{generalization of findings beyond these six specific locations} to any location that could be sampled from the blender in the future. The model partitions total variance into three distinct components, each corresponding to specific elements of the mathematical model in Equation (1):
+The six sampling locations are a random sample from all possible locations within the blender. By treating LOCATION as random, we enable \textbf{generalization of findings beyond these six specific locations} to any location that could be sampled from the blender in the future. The location-specific random intercepts [$b_i$] represent batch-level manufacturing conditions and individual deviations from the overall mean $\mu$ at each location. These are not generalizable to future batches but are essential for understanding current batch-specific characteristics and for partitioning the total variability appropriately in the current analysis.
+
+The model partitions total variance into two primary variance components, each corresponding to specific elements of the mathematical model in Equation (1):
 
 \begin{enumerate}
 	\item \textbf{Between-Location Variance} [$\text{Var}(b_i)$]: Quantifies the systematic differences in blender composition across the six sampling positions. This variance component reflects how much the location-specific random intercepts $b_i$ deviate from zero, indicating location-to-location heterogeneity in the blender contents. Large between-location variance signals that sampling position is a critical factor in determining assay values.
 
 	\item \textbf{Within-Location Variance (Method-Specific)} [$\text{Var}(\varepsilon_{ijk})$]: Reflects measurement precision specific to each sampling method, modeled through the heterogeneous variance structure. The error term $\varepsilon_{ijk}$ is allowed to have different variance for INTM and UNIT methods ($\sigma^2_{\text{INTM}} \neq \sigma^2_{\text{UNIT}}$), enabling direct comparison of measurement consistency between methods independent of location effects.
-
-	\item \textbf{Location-Specific Random Intercepts} [$b_i$]: Represent batch-level manufacturing conditions and individual deviations from the overall mean $\mu$ at each location. These are not generalizable to future batches but are essential for understanding current batch-specific characteristics and for partitioning the total variability appropriately in the current analysis.
 \end{enumerate}
 
-This three-way variance decomposition enables us to simultaneously answer three critical questions: (1) Do the two sampling methods differ on average? (2) Which source of variation—location or method—is more important? (3) Which method provides more reliable, consistent measurements for quality control purposes?
+This variance decomposition enables us to simultaneously answer critical questions: (1) Do the two sampling methods differ on average? (2) Which source of variation—location or method—is more important? (3) Which method provides more reliable, consistent measurements for quality control purposes?
 
 \noindent\textbf{Heterogeneous Variance Structure (Precision Assessment)}:
 
@@ -389,23 +389,17 @@ Assay values range from 32.77 to 39.80 mg/100mg (see Table \ref{tab:a1}), indica
 
 \subsection{Mixed-Effects Model Results}
 
-A heterogeneous variance mixed-effects model was fitted to compare the two sampling methods while properly accounting for location-specific effects (see Table \ref{tab:a2a}, Table \ref{tab:a2b}, and Table \ref{tab:a3}). The analysis reveals three critical findings:
+A heterogeneous variance mixed-effects model was fitted to compare the two sampling methods while properly accounting for location-specific effects (see Figure \ref{fig:model-summary} for the R model output summary, Table \ref{tab:a2a} and Table \ref{tab:a2b} for detailed results). The analysis reveals three critical findings:
 
-\noindent\textbf{(1) Statistical Equivalence}: The METHOD factor is not statistically significant (F(1,29) = 1.081, p = 0.307, 95\% CI: [-1.49, 0.47] mg/100mg), indicating equivalent mean assay values between methods.
+\noindent\textbf{No Significant Difference in Mean Assay Values}: The METHOD factor is not statistically significant (F(1,29) = 1.081, p = 0.307, 95\% CI: [-1.49, 0.47] mg/100mg), indicating that both sampling methods produce similar average results.
 
-\noindent\textbf{(2) Superior Precision of INTM}: The Intermediate Dose method exhibits substantially lower residual variance (ML estimates: 0.7069 mg\textsuperscript{2}/100mg\textsuperscript{2}) compared to Unit Dose (3.4001 mg\textsuperscript{2}/100mg\textsuperscript{2}), representing a 4.81-fold improvement in measurement precision. This superior consistency is critical for process monitoring and early detection of batch deviations.
+\noindent\textbf{Variance Components Analysis}: To understand the sources of measurement variability, we decomposed the total variance into three components: between-location variation, within-location (residual) variation, and METHOD effect (see Table \ref{tab:a3} for detailed decomposition). This analysis reveals two key findings:
 
-\noindent\textbf{(3) Location Effects Dominate}: Location-specific variation accounts for 31\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with detailed location effects presented in Table \ref{tab:a4} and further discussed in Section \ref{sec:q2}.} Detailed location effects are presented in Table \ref{tab:a4}.
+\noindent\textbf{(1) Precision Assessment by Within-Location Variance}: The Intermediate Dose method exhibits substantially lower residual variance (ML estimates: 0.7069 mg\textsuperscript{2}/100mg\textsuperscript{2}) compared to Unit Dose (3.4001 mg\textsuperscript{2}/100mg\textsuperscript{2}), representing a 4.81-fold improvement in measurement precision. This superior consistency is critical for process monitoring and early detection of batch deviations.
+
+\noindent\textbf{(2) Blending Uniformity by Between-Location Variance}: Between-Location variation accounts for 31.9\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with detailed location effects presented in Table \ref{tab:a4} and further discussed in Section \ref{sec:q2}.} Detailed location effects are presented in Table \ref{tab:a4}.
 
 \subsection{Regression Perspective: Fixed and Random Effects Decomposition}
-
-\subsubsection{Fixed and Random Effects Analysis}
-
-\noindent\textbf{Fixed Effects (METHOD Factor)}: The fixed METHOD effect of -0.51 mg/100mg (95\% CI: [-1.49, 0.47]) represents the universal mean difference between methods. This effect is not statistically significant (F(1,29) = 1.081, p = 0.307), indicating that both sampling methods are scientifically equivalent in terms of mean assay values. See Table \ref{tab:a2b} for fixed effects estimates.
-
-\noindent\textbf{Random Effects (Location-Specific Deviations)}: Location-specific random intercepts quantify systematic deviations across the six sampling positions within the V-Blender (Table \ref{tab:a4}). Location 1 shows significantly lower values at 35.01 mg/100mg (random intercept = -1.64), while Location 6 exhibits the highest values at 37.98 mg/100mg (random intercept = +1.33), with a total span of approximately 2.96 mg/100mg.
-
-\subsubsection{Variance Components and R\textsuperscript{2} Decomposition}
 
 Location-specific random effects account for 31.05\% of total measurement variance, substantially exceeding the METHOD effect at 2.30\%, with residual measurement error accounting for 66.64\%. The Marginal R\textsuperscript{2} of 2.30\% reflects the variance explained by METHOD alone, while the Conditional R\textsuperscript{2} of 33.36\% includes both METHOD and LOCATION effects (see Table \ref{tab:a3}). This confirms that location-specific factors dominate the variability in assay measurements.
 
@@ -581,26 +575,18 @@ Figure \ref{fig:interaction} presents an interaction plot showing location-speci
 
 The mixed-effects model was fitted using R's nlme package with maximum likelihood estimation (ML). The model includes a fixed effect for METHOD, random intercepts for LOCATION, and heterogeneous variance structure allowing different residual standard deviations for each sampling method.
 
-% --- Table A.2a (Type III Tests) ---
-\begin{table}[H]
+% --- Figure B.1 (Model Summary Output) ---
+\begin{figure}[H]
 	\centering
-	\caption{Type III Tests of Fixed Effects (ANOVA)}
-	\label{tab:a2a}
-	\small
-	\begin{tabular}{l rrrr}
-		\toprule
-		\textbf{Effect} & \textbf{Num DF} & \textbf{Den DF} & \textbf{F-value} & \textbf{p-value} \\
-		\midrule
-		(Intercept) & 1 & 29 & 6441.024 & $<$0.0001 \\
-		METHOD & 1 & 29 & 1.081 & 0.307 \\
-		\bottomrule
-	\end{tabular}
-\end{table}
+	\includegraphics[width=0.85\textwidth]{img/3-2-model_summary.png}
+	\caption{R Output: Mixed-Effects Model Summary}
+	\label{fig:model-summary}
+\end{figure}
 
-% --- Table A.2b (Fixed Effects Estimates) ---
+% --- Table B.1 (Fixed Effects Estimates) ---
 \begin{table}[H]
 	\centering
-	\caption{Fixed Effects Estimates and 95\% Confidence Intervals}
+	\caption{95\% Confidence Intervals of the Mixed-Effects Model}
 	\label{tab:a2b}
 	\small
 	\begin{tabular}{l rrrrr}
@@ -613,6 +599,22 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 	\end{tabular}
 \end{table}
 
+% --- Table B.1 (Wald F-Test) ---
+\begin{table}[H]
+	\centering
+	\caption{Wald F-Test of Fixed Effects}
+	\label{tab:a2a}
+	\small
+	\begin{tabular}{l rrrr}
+		\toprule
+		\textbf{Effect} & \textbf{Num DF} & \textbf{Den DF} & \textbf{F-value} & \textbf{p-value} \\
+		\midrule
+		(Intercept) & 1 & 29 & 6441.024 & $<$0.0001 \\
+		METHOD & 1 & 29 & 1.081 & 0.307 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
 \subsection{Variance Components (Heterogeneous Variance Model)}
 
 % --- Table A.3 (Variance Components) ---
@@ -621,15 +623,38 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 	\caption{Variance Components Decomposition}
 	\label{tab:a3}
 	\small
-	\begin{tabular}{l rr}
+	\begin{tabular}{l rrc}
 		\toprule
-		\textbf{Variance Component} & \textbf{Estimate} & \textbf{Interpretation} \\
+		\textbf{Variance Component} & \textbf{Estimate} &
+		\textbf{Percentage} & \textbf{Interpretation} \\
 		\midrule
-		Between-Location (LOC) & 0.9976 & Variability across 6 sampling locations \\
-		Within-Location (INTM) & 0.7069 & Residual precision - Intermediate Dose \\
-		Within-Location (UNIT) & 3.4001 & Residual precision - Unit Dose \\
+		Between-Location [$\text{Var}(b_i)$] & 0.9976 & 31.9\% &
+		Location-to-location variability \\
+		\midrule
+		Within-Location, INTM [$\text{Var}(\varepsilon_{ijk})$] &
+		0.7069 & -- & Residual - Intermediate Dose \\
+		Within-Location, UNIT [$\text{Var}(\varepsilon_{ijk})$] &
+		3.4001 & -- & Residual - Unit Dose \\
+		Within-Location, Pooled [$\overline{\text{Var}(\varepsilon_{ijk})}$] & 2.0535
+		& 65.7\% & Weighted average residual \\
+		\midrule
+		METHOD Effect [$\text{Var}(\beta \cdot \text{METHOD})$] & 0.0731 &
+		2.3\% & Fixed effect variance \\
+		\midrule
+		\textbf{Total Variance} & \textbf{3.1242} &
+		\textbf{100.0\%} & \\
 		\bottomrule
 	\end{tabular}
+	\\ \vspace{0.2cm}
+	\footnotesize
+	\textbf{Note:} Pooled within-location variance
+	calculated as weighted average:
+	$(18 \times 0.7069 + 18 \times 3.4001) / 36 = 2.0535$.
+	Variance ratio (UNIT/INTM) = 4.81,
+	indicating INTM provides substantially superior
+	measurement precision. The decomposition
+	shows location effects (31.9\%) dominate over method
+	choice (2.3\%).
 \end{table}
 
 \subsection{Location Effects Analysis}
