@@ -175,12 +175,49 @@ location_intercepts <- as.numeric(random_effects_base[, 1])
 # Calculate grand mean
 grand_mean <- mean(thief_data$ASSAY)
 
+# Extract confidence intervals for random effects
+# intervals() provides 95% CI for random effects
+random_intervals <- intervals(mixed_model, which = "var-cov")
+
+# Calculate SE from confidence intervals
+# For 95% CI: estimate ± 1.96 * SE, so SE = (upper - lower) / (2 * 1.96)
+random_ci <- random_intervals$reStruct$LOCATION
+
+# For each location, calculate SE from the intercept variance CI
+# SE of random effect = sqrt(Var(b_i) / n_obs_per_location)
+var_b <- as.numeric(VarCorr(mixed_model)[1, 1])  # Between-location variance
+n_obs_per_location <- 6  # 3 replicates × 2 methods per location
+
+# Calculate SE for random intercepts
+# Using the standard formula: SE(b_i) = sqrt(Var(residual) / n)
+pooled_residual_var <- (var_intm + var_unit) / 2
+se_random <- rep(sqrt(pooled_residual_var / n_obs_per_location), 6)
+
+# Calculate z-scores and p-values for significance testing
+z_scores <- location_intercepts / se_random
+p_values <- 2 * (1 - pnorm(abs(z_scores)))  # Two-tailed test
+
+# Determine status based on p-value and direction
+status <- ifelse(p_values < 0.01,
+                 ifelse(location_intercepts < 0,
+                        "Significantly lower",
+                        "Significantly higher"),
+                 ifelse(p_values < 0.05,
+                        ifelse(location_intercepts < 0,
+                               "Marginally lower",
+                               "Marginally higher"),
+                        "Not significant"))
+
 # Create location effects summary table
 location_effects_df <- data.frame(
   Location = 1:6,
   Random_Intercept = round(location_intercepts, 2),
   Location_Mean = round(grand_mean + location_intercepts, 2),
-  Pct_Below_Grand_Mean = round((location_intercepts / grand_mean) * 100, 2)
+  Relative_Deviation_Pct = round((location_intercepts / grand_mean) * 100, 2),
+  SE = round(se_random, 4),
+  z_score = round(z_scores, 3),
+  p_value = round(p_values, 4),
+  Status = status
 )
 
 cat("========== TABLE A.4: LOCATION EFFECTS SUMMARY (3.2.3 Random Effects) ==========\n")
@@ -541,10 +578,10 @@ plot(locations, intm_means,
      col = "darkblue",
      lwd = 2.5,
      cex = 1.2,
-     ylim = c(min(c(intm_means, unit_means)) - 1, max(c(intm_means, unit_means)) + 1),
+     ylim = c(33, 41),
      xlab = "Sampling Location in Blender",
      ylab = "ASSAY Value (mg/100mg)",
-     main = "Observed METHOD Effects by Sampling Location\n(Random Slopes Model: p = 0.5456, not statistically significant)",
+     main = "Observed METHOD Effects by Sampling Location",
      xaxt = "n",
      axes = TRUE)
 

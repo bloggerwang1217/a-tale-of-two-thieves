@@ -397,7 +397,7 @@ A heterogeneous variance mixed-effects model was fitted to compare the two sampl
 
 \noindent\textbf{(1) Precision Assessment by Within-Location Variance}: The Intermediate Dose method exhibits substantially lower residual variance (ML estimates: 0.7069 mg\textsuperscript{2}/100mg\textsuperscript{2}) compared to Unit Dose (3.4001 mg\textsuperscript{2}/100mg\textsuperscript{2}), representing a 4.81-fold improvement in measurement precision. This superior consistency is critical for process monitoring and early detection of batch deviations.
 
-\noindent\textbf{(2) Blending Uniformity by Between-Location Variance}: Between-Location variation accounts for 31.9\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with detailed location effects presented in Table \ref{tab:a4} and further discussed in Section \ref{sec:q2}.} Detailed location effects are presented in Table \ref{tab:a4}.
+\noindent\textbf{(2) Blending Uniformity by Between-Location Variance}: Between-Location variation accounts for 31.9\% of total measurement variance, substantially exceeding the METHOD effect at 2.3\%, establishing V-Blender mixture uniformity as the primary concern. Table \ref{tab:a4} presents detailed location-specific random intercepts, revealing that Location 1 shows significantly lower values (35.01 mg/100mg) while Location 6 exhibits the highest values (37.98 mg/100mg), spanning a 2.96 mg/100mg range. \textit{This result comprehensively answers the client's Question 2 about evidence of location effects, with further discussion in Section \ref{sec:q2}.}
 
 \subsection{Regression Perspective: Fixed and Random Effects Decomposition}
 
@@ -438,19 +438,24 @@ The assay values are generally well behaved and suitable for mixed-effects analy
 \subsection{Question 2: Is there evidence of a location effect?}
 \label{sec:q2}
 
-Strong evidence of location effects exists, with profound implications requiring urgent management attention. Location 1 shows significantly lower assay values of 35.01 mg/100mg (random intercept = -1.64, p $<$ 0.01), while Location 6 exhibits the highest values of 37.98 mg/100mg (random intercept = +1.33, p $<$ 0.05). The total location-to-location range spans 2.96 mg/100mg, representing 8.46\% of the 35 mg/100mg target specification.
+Strong evidence of location effects exists, with profound implications requiring urgent management attention. Location 1 shows significantly lower assay values of 35.01 mg/100mg (random intercept = -1.64, z = -2.801, p = 0.0051), while Location 6 exhibits the highest values of 37.98 mg/100mg (random intercept = +1.33, z = +2.266, p = 0.0235). The total location-to-location range spans 2.96 mg/100mg, representing 8.46\% of the 35 mg/100mg target specification.
 
-Location-specific variance components account for 31\% of total measurement variance (see Section 3.2.2 and Table \ref{tab:a3}), which is 13.5 times greater than the METHOD effect. This establishes unambiguously that V-Blender position is the dominant source of product variability.
+Location-specific variance components account for 31.9\% of total measurement variance (see Section 3.2.2 and Table \ref{tab:a3}), which is 13.87 times greater than the METHOD effect. This establishes unambiguously that V-Blender position is the dominant source of product variability.
 
-\noindent\textbf{Manufacturing Implications:} The location effect provides clear evidence of incomplete mixture homogenization within the blender. The current 20-minute mixing protocol appears insufficient. Management should immediately:
+\noindent\textbf{Manufacturing Implications and Suggestions:} The location effect provides clear evidence of incomplete mixture homogenization within the blender. The current 20-minute mixing protocol appears insufficient, resulting in a 2.96 mg/100mg location-to-location range (8.46\% of target specification). Management should immediately:
 
 \begin{enumerate}
-	\item Review mixing time adequacy (potential primary cause)
-	\item Examine mixer rotation speed, direction, and mechanical integrity
-	\item Audit powder loading sequence for ingredient segregation effects
-	\item Assess blender geometry for dead spots or stratification patterns
-	\item Implement a multi-location quality assurance monitoring protocol
-	\item Consider equipment upgrades if parameter optimization cannot achieve acceptable uniformity
+	\item \textbf{Review mixing time adequacy} (potential primary cause). Conduct validation studies with extended mixing times (e.g., 25, 30, 35 minutes) to establish optimal duration. Given the current 20-minute protocol produces significant location effects (Location 1: 35.01 mg/100mg vs Location 6: 37.98 mg/100mg), incremental increases of 5-minute intervals with multi-location sampling at each duration are recommended.
+
+	\item \textbf{Conduct blender loading level experiments (fill ratio).} V-Blenders typically operate optimally at certain fill capacity. Conduct systematic experiments with varying fill levels (e.g., 40\%, 60\%, 80\%) using multi-location sampling at each level to identify the optimal loading volume that minimizes location-to-location variation.
+
+	\item \textbf{Audit powder loading sequence for ingredient segregation effects.} Evaluate whether current loading sequence (order of active and inactive ingredient addition) contributes to stratification. Consider alternating layering technique or pre-blending of components with similar particle size distributions to minimize segregation during loading.
+
+	\item \textbf{Assess blender geometry for dead spots or stratification patterns,} particularly near the V-junction and at extremities where Location 1 (lowest assay: 35.01 mg/100mg, p = 0.0051) and Location 6 (highest assay: 37.98 mg/100mg, p = 0.0235) sampling points are situated. Conduct tracer studies or flow visualization to identify zones of poor mixing.
+	
+	\item \textbf{Examine mixer rotation speed, direction, and mechanical integrity.} Verify rotation parameters (RPM) against manufacturer specifications. Inspect for mechanical wear, wobble, or imbalanced rotation that could create preferential flow patterns. Document current rotation speed and compare with optimal operating range specified for this V-Blender model.
+
+
 \end{enumerate}
 
 \subsection{Question 3: Do tablet data show drum or time effects?}
@@ -662,23 +667,24 @@ The mixed-effects model was fitted using R's nlme package with maximum likelihoo
 % --- Table A.4 (Location Effects) ---
 \begin{table}[H]
 	\centering
-	\caption{Random Effects for Sampling Location}
+	\caption{Random Effects for Sampling Location with Significance Testing}
 	\label{tab:a4}
-	\small
-	\begin{tabular}{l rrrr}
+	\footnotesize
+	\begin{tabular}{l rrrrrl}
 		\toprule
-		\textbf{Location} & \textbf{Random Intercept} & \textbf{Location Mean} & \textbf{Pct Below Grand Mean} & \textbf{Status} \\
+		\textbf{Loc} & \textbf{Random Intercept} & \textbf{Loc} & \textbf{Relative Deviation (\%)} & \textbf{z-score} & \textbf{p-value} & \textbf{Status} \\
 		\midrule
-		1 & -1.64 & 35.01 & -4.47\% & Significantly lower \\
-		2 & +0.30 & 36.95 & +0.81\% & Not significant \\
-		3 & -0.43 & 36.22 & -1.18\% & Not significant \\
-		4 & +0.53 & 37.18 & +1.45\% & Not significant \\
-		5 & -0.08 & 36.57 & -0.22\% & Not significant \\
-		6 & +1.33 & 37.98 & +3.62\% & Not significant \\
+		1 & -1.64 & 35.01 & -4.47 & -2.801 & 0.0051 & Significantly lower \\
+		2 & +0.30 & 36.95 & +0.81 & +0.506 & 0.6130 & Not significant \\
+		3 & -0.43 & 36.22 & -1.18 & -0.742 & 0.4581 & Not significant \\
+		4 & +0.53 & 37.18 & +1.45 & +0.907 & 0.3642 & Not significant \\
+		5 & -0.08 & 36.57 & -0.22 & -0.135 & 0.8923 & Not significant \\
+		6 & +1.33 & 37.98 & +3.62 & +2.266 & 0.0235 & Marginally higher \\
 		\bottomrule
 	\end{tabular}
 	\\ \vspace{0.2cm}
-	Location Range Span: 2.96 mg/100mg (from Location 1 at 35.01 to Location 6 at 37.98)
+	\footnotesize
+	\textbf{Note:} Due to balanced design (6 observations per location: 2 methods × 3 replicates), all locations share the same standard error: SE = 0.585, calculated as SE = $\sqrt{\sigma^2_{\text{pooled}} / n}$ where $\sigma^2_{\text{pooled}}$ = 2.0535. Z-scores and p-values computed using normal approximation (two-tailed test). ``Relative Deviation'' represents the random intercept as a percentage of the grand mean (36.65 mg/100mg). Location 1 shows statistically significant deviation at $\alpha = 0.01$ level (p = 0.0051). Location 6 shows marginally significant deviation at $\alpha = 0.05$ level (p = 0.0235). Location Range Span: 2.96 mg/100mg (from Location 1 at 35.01 to Location 6 at 37.98).
 \end{table}
 
 \subsection{Diagnostic Checks}
