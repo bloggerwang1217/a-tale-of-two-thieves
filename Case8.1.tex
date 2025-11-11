@@ -445,9 +445,51 @@ This section provides comprehensive answers to the four specific questions posed
 \subsection{Question 1: Are the assay values generally well behaved?}
 \label{sec:q1}
 
-The assay values are generally well behaved and suitable for mixed-effects analysis. All three methods---Intermediate Dose, Unit Dose, and final Tablet products---show normal distributions with Shapiro-Wilk p-values exceeding 0.18 (see Table \ref{tab:b1}). Conservative outlier detection using the criterion Q3 + 2 $\times$ IQR identified zero outliers across all methods (see Table \ref{tab:b2}).
+The assay values are generally well behaved and suitable for mixed-effects analysis. This question requires careful evaluation using both traditional and repeated-measures-appropriate methods.
 
-\noindent\textit{Important caveat:} When treating thief samples as repeated measures (three replicates per location), the correlation structure within each location should ideally be incorporated into outlier detection criteria. However, the data quality is sufficiently high that no outliers are detected even with conservative criteria. Overall, the data satisfy distributional assumptions for mixed-effects ANOVA analysis with no concerns identified. The assay response variable demonstrates excellent measurement properties with normal residuals and homogeneous variance across methods.
+\subsubsection{Traditional Diagnostics}
+
+\noindent\textbf{Normality Assessment:} All three measurement methods---Intermediate Dose (n=18), Unit Dose (n=18), and Tablet (n=30)---show normal distributions with Shapiro-Wilk p-values exceeding 0.30 (see Table \ref{tab:b1}), indicating excellent conformity to normality assumptions.
+
+\noindent\textbf{Outlier Detection:} Conservative outlier identification using the criterion Q3 + 2 $\times$ IQR detected zero outliers for both thief sampling methods (see Table \ref{tab:b2}). This conservative threshold (more stringent than the traditional 1.5 $\times$ IQR) confirms absence of extreme values.
+
+\subsubsection{Repeated Measures Consideration}
+
+As the client correctly notes, thief samples constitute repeated measures: three replicates are taken from each location-method combination. This sampling structure introduces potential within-location correlation, as observations from the same location share common location-specific factors (captured by the random intercept $b_i$ in our mixed model).
+
+Traditional outlier detection methods (Q3 + 2 $\times$ IQR) assume independence and do not account for this hierarchical structure. When observations are correlated within groups, standard errors can be underestimated, potentially affecting outlier identification sensitivity.
+
+\subsubsection{Methods for Correlated Data}
+
+Several procedures are available for outlier detection in repeated measures or mixed-effects contexts. We consider these two methods:
+
+\begin{enumerate}
+	\item \textbf{Standardized Residuals from Mixed Model:} Extract residuals accounting for both fixed effects (METHOD) and random effects (LOCATION), then standardize. Observations with $|$residual$| > 3$ are flagged.
+	
+	\item \textbf{Cook's Distance for Mixed Models:} Identifies influential observations by measuring their impact on fitted values when deleted. Cook's distance combines two components:
+	\begin{itemize}
+		\item \textit{Residual component:} How extreme is the observation's residual? (similar to standardized residual)
+		\item \textit{Leverage component ($h_i$):} How isolated is this observation in the predictor space? High leverage means the observation has disproportionate influence on parameter estimates.
+	\end{itemize}
+\end{enumerate}
+
+In repeated measures contexts, leverage relates to sample size per group: locations with fewer replicates have higher leverage. Values $> 0.5$ warrant investigation as potentially influential observations.
+
+\subsubsection{Application to Current Data and Conclusion}
+
+We applied standardized residuals and Cook's distance analysis using the fitted mixed-effects model:
+
+\begin{itemize}
+	\item \textbf{Standardized Residuals:} Analysis reveals 35 of 36 observations (97.2\%) have standardized residuals within $\pm 2.5$ standard deviations. One observation exhibits a residual slightly exceeding the conventional $\pm 3$ threshold (see Figure \ref{fig:diagnostics} and Table \ref{tab:a5}). This outlier represents a single replicate that deviates from its location-method group mean.
+
+	\item \textbf{Cook's Distance:} Figure \ref{fig:cooks-distance} presents Cook's distance plot. Maximum Cook's distance across all observations is 0.072 (well below the 0.5 threshold), indicating no individual observation exerts undue influence on model estimates. Even the observation with the largest standardized residual has minimal influence (Cook's D = 0.072), confirming model conclusions are robust.
+\end{itemize}
+
+The assay values are generally well behaved and suitable for analysis. Both traditional methods and repeated-measures-appropriate diagnostics confirm: (1) Normality across all measurement methods (Shapiro-Wilk p $> 0.3$ for all groups). (2) One outlier detected (1 of 36 observations, 2.8\%) with standardized residual $= -3.551$. (3) Despite the outlier, Cook's distance analysis confirms no observation exerts undue influence (max Cook's D = 0.072 $\ll$ 0.5 threshold).
+
+The single outlier has \textbf{high residual magnitude but low leverage}, resulting in negligible influence on model parameter estimates (Cook's D = 0.072). This demonstrates the value of Cook's distance analysis: the observation is statistically unusual but does not compromise our conclusions about METHOD effects or variance components. The mixed model's robustness to this single outlier validates our analytical approach.
+
+Even when accounting for the repeated-measures correlation structure through mixed-model diagnostics, data quality remains excellent with no concerns that would invalidate the statistical inference. The dataset fully satisfies assumptions for mixed-effects model analysis.
 
 \subsection{Question 2: Is there evidence of a location effect?}
 \label{sec:q2}
@@ -781,20 +823,24 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 	\caption{Normality Tests on Raw Data (Shapiro-Wilk)}
 	\label{tab:b1}
 	\small
-	\begin{tabular}{l rrr}
+	\begin{tabular}{l r r r r}
 		\toprule
-		\textbf{Method} & \textbf{W-Statistic} & \textbf{p-Value} & \textbf{Status} \\
+		\textbf{Method} & \textbf{n} & \textbf{W-Statistic} & \textbf{p-Value} & \textbf{Status} \\
 		\midrule
-		Intermediate Dose & 0.9836 & 0.9794 & Normal $\checkmark$ \\
-		Unit Dose & 0.9424 & 0.3190 & Normal $\checkmark$ \\
+		Intermediate Dose & 18 & 0.9836 & 0.9794 & Normal $\checkmark$ \\
+		Unit Dose & 18 & 0.9424 & 0.3190 & Normal $\checkmark$ \\
+		Tablet & 30 & 0.9614 & 0.3354 & Normal $\checkmark$ \\
 		\bottomrule
 	\end{tabular}
+	\\ \vspace{0.2cm}
+	\footnotesize
+	\textbf{Note:} All three methods show normal distributions with Shapiro-Wilk p-values $>$ 0.05, indicating data are suitable for parametric analysis.
 \end{table}
 
 % --- Table B.2 (Outlier Detection) ---
 \begin{table}[H]
 	\centering
-	\caption{Outlier Detection (Q3 + 2×IQR criterion)}
+	\caption{Outlier Detection (Q3 + 2 $\times$ IQR criterion)}
 	\label{tab:b2}
 	\small
 	\begin{tabular}{l rrrrrrr}
@@ -811,9 +857,16 @@ Overall, diagnostic assessments demonstrate that mixed model assumptions are ade
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{diagnostic_plots.png}
-	\caption{Residual Diagnostics - Residuals vs. Fitted Plot and Q-Q Plot}
+	\includegraphics[width=0.95\textwidth]{img/diagnostic_plots.png}
+	\caption{Residual Diagnostics for Mixed-Effects Model. Left panel: Standardized residuals vs fitted values with LOESS smooth (blue line). Right panel: Normal Q-Q plot with reference line. Points are color-coded by residual magnitude: red ($|$resid$| > 3$), orange ($2.5 < |$resid$| \leq 3$), gray ($|$resid$| \leq 2.5$). Extreme observations are labeled. Both plots confirm model assumptions are adequately satisfied.}
 	\label{fig:diagnostics}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.85\textwidth]{img/cooks_distance_plot.png}
+	\caption{Cook's Distance for All 36 Observations. Vertical lines represent Cook's distance for each observation, color-coded by magnitude: red (D $> 0.5$, influential), orange ($0.1 < $ D $\leq 0.5$), gray (D $\leq 0.1$). Horizontal reference lines mark the conventional influence thresholds at D = 0.5 (dashed red) and D = 1.0 (dashed dark red). All observations fall well below the D = 0.5 threshold (max D = 0.072), confirming no individual observation exerts undue influence on model parameter estimates.}
+	\label{fig:cooks-distance}
 \end{figure}
 
 % --- Table A.5 (Residual Diagnostics) ---

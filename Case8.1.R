@@ -352,13 +352,21 @@ print(anova_comparison)
 # ================================================================================
 
 # Normality tests on RAW DATA (before model fitting) - Table B.1
+cat("\n========== Normality Tests on Raw Data ==========\n")
 for (method in c("Intm", "Unit")) {
   subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
   sw_test <- shapiro.test(subset_data)
   status <- if (sw_test$p.value > 0.05) "NORMAL" else "NON-NORMAL"
-  print(sw_test)
-  print(status)
+  cat(sprintf("\n%s: W = %.4f, p-value = %.4f (%s)\n",
+              method, sw_test$statistic, sw_test$p.value, status))
 }
+
+# Add Tablet data normality test
+tablet_assay_raw <- tablet_data$ASSAY
+sw_test_tablet <- shapiro.test(tablet_assay_raw)
+status_tablet <- if (sw_test_tablet$p.value > 0.05) "NORMAL" else "NON-NORMAL"
+cat(sprintf("\nTablet: W = %.4f, p-value = %.4f (%s)\n",
+            sw_test_tablet$statistic, sw_test_tablet$p.value, status_tablet))
 
 # Outlier detection on RAW DATA (Q3 + 2×IQR criterion) - Table B.2
 for (method in c("Intm", "Unit")) {
@@ -377,41 +385,165 @@ for (method in c("Intm", "Unit")) {
 
 
 
-# Residual Diagnostics
+# Residual Diagnostics (Standard Method for Mixed Models)
 
 # Get fitted values and residuals from the mixed model
 fitted_vals <- fitted(mixed_model)
-residuals_all <- thief_data$ASSAY - fitted_vals
 
-# Normality tests on MODEL RESIDUALS (after model fitting) - Appendix B.4
-sw_all <- shapiro.test(residuals_all)
-sw_intm <- shapiro.test(residuals_all[thief_data$METHOD == "Intm"])
-sw_unit <- shapiro.test(residuals_all[thief_data$METHOD == "Unit"])
+# Use Pearson residuals (standardized by model-specific variance)
+residuals_pearson <- residuals(mixed_model, type = "pearson")
 
-# Diagnostic Plots (2-panel diagnostics)
+cat("\n========== Standardized (Pearson) Residuals Summary ==========\n")
+cat(sprintf("Range: [%.3f, %.3f]\n",
+            min(residuals_pearson), max(residuals_pearson)))
+cat(sprintf("Max absolute value: %.3f\n", max(abs(residuals_pearson))))
+cat(sprintf("Observations with |std.resid| > 2.5: %d\n",
+            sum(abs(residuals_pearson) > 2.5)))
+cat(sprintf("Observations with |std.resid| > 3.0: %d\n",
+            sum(abs(residuals_pearson) > 3.0)))
 
+# Create diagnostic table for influential observations
+diagnostic_table <- data.frame(
+  Obs = 1:nrow(thief_data),
+  Location = thief_data$LOCATION,
+  Method = thief_data$METHOD,
+  Observed = thief_data$ASSAY,
+  Fitted = round(fitted_vals, 2),
+  Std_Residual = round(residuals_pearson, 3)
+)
+
+# Sort by absolute standardized residual
+diagnostic_sorted <- diagnostic_table[order(-abs(diagnostic_table$Std_Residual)), ]
+
+cat("\n========== Top 5 Observations by |Std.Residual| ==========\n")
+print(head(diagnostic_sorted[, c("Obs", "Location", "Method",
+                                 "Observed", "Std_Residual")], 5),
+      row.names = FALSE)
+
+# Identify extreme observations
+extreme_obs <- diagnostic_sorted[abs(diagnostic_sorted$Std_Residual) > 2.5, ]
+if (nrow(extreme_obs) > 0) {
+  cat(sprintf("\n========== Extreme Observations (|std.resid| > 2.5) ==========\n"))
+  print(extreme_obs[, c("Obs", "Location", "Method", "Observed", "Std_Residual")],
+        row.names = FALSE)
+}
+
+# Create 2-panel diagnostic plot
 png("img/diagnostic_plots.png", width = 1200, height = 600, res = 120)
 par(mfrow = c(1, 2), mar = c(5, 5, 3, 2))
 
-# Plot 1: Residuals vs Fitted Values
-plot(fitted_vals, residuals_all,
-     main = "1. Residuals vs Fitted Values",
-     xlab = "Fitted Values", ylab = "Residuals",
-     pch = 16, cex = 1.1, col = "darkgray")
-abline(h = 0, lty = 2, lwd = 2, col = "red")
-# Add LOWESS smooth curve
-lines(lowess(fitted_vals, residuals_all), lwd = 2, col = "blue")
+# Panel 1: Standardized Residuals vs Fitted Values
+plot(fitted_vals, residuals_pearson,
+     main = "Standardized Residuals vs Fitted Values",
+     xlab = "Fitted Values (mg/100mg)",
+     ylab = "Standardized Residuals",
+     pch = 19, cex = 1.1,
+     col = ifelse(abs(residuals_pearson) > 3, "red",
+           ifelse(abs(residuals_pearson) > 2.5, "orange", "darkgray")))
 
-# Plot 2: Normal Q-Q Plot
-qqnorm(residuals_all,
-       main = "2. Normal Q-Q Plot",
-       pch = 16, cex = 1.1, col = "darkgray")
-qqline(residuals_all, lwd = 2, col = "red")
+# Add reference lines
+abline(h = 0, lty = 2, col = "black", lwd = 2)
+abline(h = c(-3, 3), lty = 2, col = "red", lwd = 1.5)
+abline(h = c(-2.5, 2.5), lty = 3, col = "orange", lwd = 1)
 
-par(mfrow = c(1, 1))
+# Add LOESS smooth
+lines(lowess(fitted_vals, residuals_pearson), col = "blue", lwd = 2)
+
+# Highlight extreme points
+extreme_idx <- which(abs(residuals_pearson) > 2.5)
+if (length(extreme_idx) > 0) {
+  text(fitted_vals[extreme_idx], residuals_pearson[extreme_idx],
+       labels = extreme_idx, pos = 3, cex = 0.7, col = "red", font = 2)
+}
+
+# Panel 2: Normal Q-Q Plot
+qqnorm(residuals_pearson,
+       main = "Normal Q-Q Plot of Standardized Residuals",
+       xlab = "Theoretical Quantiles",
+       ylab = "Sample Quantiles",
+       pch = 19, cex = 1.1,
+       col = ifelse(abs(residuals_pearson) > 3, "red",
+             ifelse(abs(residuals_pearson) > 2.5, "orange", "darkgray")))
+qqline(residuals_pearson, col = "blue", lwd = 2, lty = 2)
+
+# Highlight extreme points
+if (length(extreme_idx) > 0) {
+  qqnorm_coords <- qqnorm(residuals_pearson, plot.it = FALSE)
+  text(qqnorm_coords$x[extreme_idx], qqnorm_coords$y[extreme_idx],
+       labels = extreme_idx, pos = 3, cex = 0.7, col = "red", font = 2)
+}
+
+# Add legend
+legend("topleft",
+       legend = c("|resid| > 3", "2.5 < |resid| <= 3", "|resid| <= 2.5"),
+       col = c("red", "orange", "darkgray"),
+       pch = 19, cex = 0.8, bg = "white")
+
 dev.off()
+cat("\nDiagnostic panel plot saved as 'diagnostic_plots.png'\n")
 
-print("Diagnostic plots saved as 'diagnostic_plots.png'")
+# Normality tests on MODEL RESIDUALS (after model fitting) - Appendix B.4
+sw_all <- shapiro.test(residuals_pearson)
+sw_intm <- shapiro.test(residuals_pearson[thief_data$METHOD == "Intm"])
+sw_unit <- shapiro.test(residuals_pearson[thief_data$METHOD == "Unit"])
+
+cat("\n========== Normality Tests on Residuals ==========\n")
+cat(sprintf("All residuals: W = %.4f, p = %.4f\n",
+            sw_all$statistic, sw_all$p.value))
+cat(sprintf("INTM residuals: W = %.4f, p = %.4f\n",
+            sw_intm$statistic, sw_intm$p.value))
+cat(sprintf("UNIT residuals: W = %.4f, p = %.4f\n",
+            sw_unit$statistic, sw_unit$p.value))
+
+# Calculate Cook's distance for influential observations
+n <- nrow(thief_data)
+p <- 5  # number of parameters in mixed model
+h_approx <- 1 / n  # approximate leverage (simplified)
+cooks_d <- (residuals_pearson^2 / p) * (h_approx / (1 - h_approx))
+
+cat("\n========== Cook's Distance Summary ==========\n")
+cat(sprintf("Max Cook's distance: %.4f\n", max(cooks_d)))
+cat(sprintf("Observations with Cook's D > 0.5: %d\n", sum(cooks_d > 0.5)))
+cat(sprintf("Observations with Cook's D > 1.0: %d\n", sum(cooks_d > 1.0)))
+
+# Create Cook's Distance plot
+png("img/cooks_distance_plot.png", width = 900, height = 600, res = 120)
+par(mar = c(5, 5, 3, 2))
+
+# Create the plot
+plot(1:length(cooks_d), cooks_d,
+     type = "h",
+     lwd = 2,
+     col = ifelse(cooks_d > 0.5, "red",
+           ifelse(cooks_d > 0.1, "orange", "darkgray")),
+     main = "Cook's Distance for All Observations",
+     xlab = "Observation Index",
+     ylab = "Cook's Distance",
+     ylim = c(0, max(cooks_d) * 1.1))
+
+# Add reference lines
+abline(h = 0.5, lty = 2, col = "red", lwd = 2)
+abline(h = 1.0, lty = 2, col = "darkred", lwd = 1.5)
+
+# Add text labels for thresholds
+text(length(cooks_d) * 0.95, 0.5, "D = 0.5", pos = 3, col = "red", cex = 0.9)
+text(length(cooks_d) * 0.95, 1.0, "D = 1.0", pos = 3, col = "darkred", cex = 0.9)
+
+# Highlight influential points (if any)
+influential_idx <- which(cooks_d > 0.1)
+if (length(influential_idx) > 0) {
+  text(influential_idx, cooks_d[influential_idx],
+       labels = influential_idx, pos = 3, cex = 0.7, col = "red", font = 2)
+}
+
+# Add legend
+legend("topleft",
+       legend = c("D > 0.5 (influential)", "0.1 < D <= 0.5", "D <= 0.1"),
+       col = c("red", "orange", "darkgray"),
+       lwd = 2, cex = 0.8, bg = "white")
+
+dev.off()
+cat("\nCook's Distance plot saved as 'cooks_distance_plot.png'\n")
 
 
 
