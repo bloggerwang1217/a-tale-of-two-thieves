@@ -1080,23 +1080,13 @@ Table \ref{tab:c3} presents the Durbin-Watson test results, a post-hoc diagnosti
 
 \clearpage
 
-\section{Appendix D: Technical Specifications and Software}
+\section{Appendix D: Software and Packages}
 
-\noindent\textbf{Model Specification}: The analysis employed a heterogeneous variance mixed-effects model using maximum likelihood estimation (ML). The model includes:
-\begin{itemize}
-	\item METHOD as a fixed effect (INTM vs. UNIT)
-	\item LOCATION as a random intercept (6 sampling positions)
-	\item Method-specific residual variance parameters to capture differences in measurement precision
-	\item Formula: ASSAY $\sim$ METHOD + (1 $\mid$ LOCATION) with heterogeneous variance
-\end{itemize}
-
-\noindent\textbf{Software and Packages}: All analyses were conducted using R version 4.5.0 (2025-04-11) with the following packages:
+All analyses were conducted using R version 4.5.0 (2025-04-11) with the following packages:
 \begin{itemize}
 	\item \texttt{nlme} (version 3.1.168): Mixed-effects model fitting with heterogeneous variance
-	\item \texttt{boot} (version 1.3.31): Bootstrap resampling for robustness assessment
+	\item \texttt{lmtest} (version 0.9.40): For Durbin-Watson test.
 \end{itemize}
-
-\noindent\textbf{Estimation Method}: Maximum likelihood estimation (ML) was used for parameter estimation. While restricted maximum likelihood (REML) can provide less biased variance component estimates, ML was selected to enable likelihood ratio testing for the fixed METHOD effect, which is the primary focus of this analysis.
 
 % --- DOCUMENT END ---
 \end{document}
