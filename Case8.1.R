@@ -82,9 +82,9 @@ combined_stats <- data.frame(
 )
 
 # Table A.1: Summary Statistics for Assay Value by Method
-cat("\n========== TABLE A.1: SUMMARY STATISTICS (3.1 Exploratory Data Analysis) ==========\n")
+# ========== TABLE A.1: SUMMARY STATISTICS (3.1 Exploratory Data Analysis) ==========
 print(combined_stats)
-cat("\n")
+
 
 # ================================================================================
 # Visualization
@@ -214,9 +214,9 @@ anova_results <- anova(mixed_model)
 ci_results <- intervals(mixed_model, which = "fixed")
 
 # Table A.2: Type III Tests of Fixed Effects
-cat("\n========== TABLE A.2: FIXED EFFECTS TESTS (3.2 Mixed-Effects Results) ==========\n")
+# ========== TABLE A.2: FIXED EFFECTS TESTS (3.2 Mixed-Effects Results) ==========
 print(anova_results)
-cat("\n========== CONFIDENCE INTERVALS FOR FIXED EFFECTS ==========\n")
+# ========== CONFIDENCE INTERVALS FOR FIXED EFFECTS ==========
 print(ci_results)
 
 
@@ -226,7 +226,7 @@ print(ci_results)
 # Calculate R² for the base model (Model 1: fixed METHOD + random LOCATION intercepts)
 # This section is placed BEFORE 3.2.2 because Table A.3 reuses these results
 
-cat("========== VARIANCE DECOMPOSITION SUMMARY (3.3 R² Decomposition) ==========\n")
+# ========== VARIANCE DECOMPOSITION SUMMARY (3.3 R² Decomposition) ==========
 
 # Calculate fitted values at population level
 fitted_marginal_1 <- predict(mixed_model, level = 0)
@@ -281,8 +281,8 @@ var_intm <- var_intm_mixed
 var_unit <- var_unit_mixed
 
 # Table A.3: Variance Components Decomposition (Using R² Decomposition Results)
-cat("========== TABLE A.3: VARIANCE COMPONENTS DECOMPOSITION (3.2.2) ==========\n")
-cat("(Based on R² Decomposition method from Section 3.3)\n\n")
+# ========== TABLE A.3: VARIANCE COMPONENTS DECOMPOSITION (3.2.2) ==========
+# (Based on R² Decomposition method from Section 3.3)
 
 # Calculate all variance components
 var_between_location <- location_var  # Between-Location variance
@@ -337,7 +337,7 @@ var_components_complete <- data.frame(
 
 print(var_components_complete)
 
-cat("\n========== VARIANCE DECOMPOSITION SUMMARY ==========\n")
+# ========== VARIANCE DECOMPOSITION SUMMARY ==========
 cat("Between-Location Variance:", round(var_between_location, 4),
     paste0("(", round(location_variance_contribution, 2), "%)"), "\n")
 cat("Within-Location Pooled:", round(var_within_pooled, 4),
@@ -346,7 +346,8 @@ cat("METHOD Effect:", round(var_between_location + var_within_pooled, 4),
     paste0("(", round(method_variance_contribution, 2), "%)"), "\n")
 cat("Total Variance:", round(var_total_raw, 4), "(100.0%)\n\n")
 
-cat("Variance Heterogeneity Summary:\n")
+# Variance Heterogeneity Summary
+
 cat("  INTM Residual Variance:", round(var_intm, 4), "mg²/100mg²\n")
 cat("  UNIT Residual Variance:", round(var_unit, 4), "mg²/100mg²\n")
 cat("  Heterogeneity Ratio (UNIT/INTM):", round(ratio_mixed, 2),
@@ -410,7 +411,7 @@ location_effects_df <- data.frame(
   Status = status
 )
 
-cat("========== TABLE A.4: LOCATION EFFECTS SUMMARY (3.2.3 Random Effects) ==========\n")
+# ========== TABLE A.4: LOCATION EFFECTS SUMMARY (3.2.3 Random Effects) ==========
 print(location_effects_df)
 cat("\nLocation Range Span:", round(max(location_intercepts) - min(location_intercepts), 2), "mg/100mg\n")
 cat("Lowest Location (1):", round(grand_mean + min(location_intercepts), 2), "mg/100mg\n")
@@ -437,7 +438,7 @@ mixed_interaction
 
 # Compare models using likelihood ratio test
 anova_comparison <- anova(mixed_model, mixed_interaction)
-cat("\n========== MODEL COMPARISON: Base vs Interaction Model ==========\n")
+# ========== MODEL COMPARISON: Base vs Interaction Model ==========
 print(anova_comparison)
 
 # ================================================================================
@@ -449,7 +450,7 @@ print(anova_comparison)
 # ================================================================================
 
 # Normality tests on RAW DATA (before model fitting) - Table B.1
-cat("\n========== Normality Tests on Raw Data ==========\n")
+
 for (method in c("Intm", "Unit")) {
   subset_data <- thief_data$ASSAY[thief_data$METHOD == method]
   sw_test <- shapiro.test(subset_data)
@@ -490,7 +491,7 @@ fitted_vals <- fitted(mixed_model)
 # Use Pearson residuals (standardized by model-specific variance)
 residuals_pearson <- residuals(mixed_model, type = "pearson")
 
-cat("\n========== Standardized (Pearson) Residuals Summary ==========\n")
+# ========== Standardized (Pearson) Residuals Summary ==========
 cat(sprintf("Range: [%.3f, %.3f]\n",
             min(residuals_pearson), max(residuals_pearson)))
 cat(sprintf("Max absolute value: %.3f\n", max(abs(residuals_pearson))))
@@ -512,15 +513,16 @@ diagnostic_table <- data.frame(
 # Sort by absolute standardized residual
 diagnostic_sorted <- diagnostic_table[order(-abs(diagnostic_table$Std_Residual)), ]
 
-cat("\n========== Top 5 Observations by |Std.Residual| ==========\n")
+# ========== Top 5 Observations by |Std.Residual| ==========
 print(head(diagnostic_sorted[, c("Obs", "Location", "Method",
                                  "Observed", "Std_Residual")], 5),
       row.names = FALSE)
 
 # Identify extreme observations
 extreme_obs <- diagnostic_sorted[abs(diagnostic_sorted$Std_Residual) > 2.5, ]
+
+# ========== Extreme Observations (|std.resid| > 2.5) ==========
 if (nrow(extreme_obs) > 0) {
-  cat(sprintf("\n========== Extreme Observations (|std.resid| > 2.5) ==========\n"))
   print(extreme_obs[, c("Obs", "Location", "Method", "Observed", "Std_Residual")],
         row.names = FALSE)
 }
@@ -577,14 +579,13 @@ legend("topleft",
        pch = 19, cex = 0.8, bg = "white")
 
 dev.off()
-cat("\nDiagnostic panel plot saved as 'diagnostic_plots.png'\n")
 
 # Normality tests on MODEL RESIDUALS (after model fitting) - Appendix B.4
 sw_all <- shapiro.test(residuals_pearson)
 sw_intm <- shapiro.test(residuals_pearson[thief_data$METHOD == "Intm"])
 sw_unit <- shapiro.test(residuals_pearson[thief_data$METHOD == "Unit"])
 
-cat("\n========== Normality Tests on Residuals ==========\n")
+# ========== Normality Tests on Residuals ==========
 cat(sprintf("All residuals: W = %.4f, p = %.4f\n",
             sw_all$statistic, sw_all$p.value))
 cat(sprintf("INTM residuals: W = %.4f, p = %.4f\n",
@@ -598,7 +599,7 @@ p <- 5  # number of parameters in mixed model
 h_approx <- 1 / n  # approximate leverage (simplified)
 cooks_d <- (residuals_pearson^2 / p) * (h_approx / (1 - h_approx))
 
-cat("\n========== Cook's Distance Summary ==========\n")
+# ========== Cook's Distance Summary ==========
 cat(sprintf("Max Cook's distance: %.4f\n", max(cooks_d)))
 cat(sprintf("Observations with Cook's D > 0.5: %d\n", sum(cooks_d > 0.5)))
 cat(sprintf("Observations with Cook's D > 1.0: %d\n", sum(cooks_d > 1.0)))
@@ -640,7 +641,6 @@ legend("topleft",
        lwd = 2, cex = 0.8, bg = "white")
 
 dev.off()
-cat("\nCook's Distance plot saved as 'cooks_distance_plot.png'\n")
 
 # ================================================================================
 #  3.5.2 Effect Size Analysis
@@ -697,8 +697,8 @@ effect_size_table <- data.frame(
   Interpretation = c("Small", "2.30%", "0.27%")
 )
 
-cat("\n========== TABLE A.10: EFFECT SIZE MEASURES (3.4 Effect Size Assessment) ==========\n")
-print("Effect Size Analysis:")
+# ========== TABLE A.10: EFFECT SIZE MEASURES (3.4 Effect Size Assessment) ==========
+
 print(effect_size_table)
 
 # Practical Significance Assessment
@@ -707,10 +707,9 @@ print(effect_size_table)
 mean_diff <- mean_unit - mean_intm
 pct_of_target <- (abs(mean_diff) / 35) * 100
 
-cat("\n=== Practical Significance ===\n")
+# === Practical Significance ===
 cat("Mean difference:", round(mean_diff, 2), "mg/100mg\n")
 cat("Percentage of target (35 mg/100mg):", round(pct_of_target, 2), "%\n")
-cat("Interpretation: The difference is negligible (<0.15% of specification)\n\n")
 
 # ================================================================================
 #  3.5.3 Bootstrap Validation (1000 resamples)
@@ -768,10 +767,9 @@ bootstrap_table <- data.frame(
   Std_Error = round(c(boot_se_ui, boot_se_ut, boot_se_it), 4)
 )
 
-cat("\n========== TABLE A.7: BOOTSTRAP VALIDATION - 1000 RESAMPLES (2.7 Bootstrap) ==========\n")
-print("Bootstrap Validation Results:")
+# ========== TABLE A.7: BOOTSTRAP VALIDATION - 1000 RESAMPLES (2.7 Bootstrap) ==========
+
 print(bootstrap_table)
-cat("\n")
 
 # ================================================================================
 #   4 Client Question Analysis
@@ -780,8 +778,6 @@ cat("\n")
 # ================================================================================
 # Q3: Do tablet data show drum or time effects?
 # ================================================================================
-
-cat("\n========== Q3: TABLET DATA ANALYSIS - DRUM AND TIME EFFECTS ==========\n")
 
 # 1. Drum-to-drum variance analysis
 
