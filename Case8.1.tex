@@ -51,6 +51,7 @@
 \usepackage{calc}            % For \widthof
 \usepackage{xcolor}          % For fill-in boxes in invoice
 \usepackage{array}           % 用於增強表格功能
+\usepackage[colorlinks=true, urlcolor=black, linkcolor=black, citecolor=black]{hyperref}
 
 % --- DOCUMENT START ---
 \begin{document}
@@ -198,6 +199,10 @@
 \end{titlepage}
 
 \clearpage
+
+\tableofcontents
+\clearpage
+\setcounter{tocdepth}{2}
 
 % ======================================================
 % 3. MAIN REPORT BODY
