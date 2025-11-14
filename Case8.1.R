@@ -56,6 +56,8 @@ thief_data
 tablet_data$DRUM <- factor(tablet_data$DRUM)
 tablet_data$TABLET <- factor(tablet_data$TABLET)
 
+tablet_data$SEQUENCE <- 1:nrow(tablet_data)
+
 tablet_data
 
 # Create combined dataset for three-way comparison
@@ -808,7 +810,6 @@ cat(sprintf("Drum SD: %.4f mg/100mg\n", sd_drum))
 cat(sprintf("Coefficient of Variation (Drum): %.2f%%\n", cv_drum))
 
 # 2. AR(1) Covariance Structure Analysis
-cat("\n--- AR(1) Autocorrelation Analysis ---\n")
 
 # Fit model with AR(1) correlation structure
 tablet_ar1 <- gls(
@@ -821,10 +822,6 @@ tablet_ar1 <- gls(
 # Extract AR(1) correlation coefficient
 ar1_coef <- coef(tablet_ar1$modelStruct$corStruct, unconstrained = FALSE)
 cat(sprintf("AR(1) Autocorrelation Coefficient (ρ): %.4f\n", ar1_coef))
-cat(sprintf("Interpretation: %s\n",
-            ifelse(abs(ar1_coef) > 0.3,
-                   "Moderate to strong autocorrelation",
-                   "Weak or negligible autocorrelation")))
 
 # Compare models with and without AR(1)
 tablet_indep <- gls(
@@ -852,6 +849,7 @@ if (!require(lmtest, quietly = TRUE)) {
   library(lmtest)
 }
 
+lm_time <- lm(ASSAY ~ SEQUENCE, data = tablet_data)
 dw_test <- dwtest(lm_time)
 print(dw_test)
 
